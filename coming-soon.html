@@ -378,6 +378,20 @@ body::before{
 .page-btn:hover:not(:disabled){background:var(--burgundy-deep);}
 .page-btn:disabled{opacity:.4;cursor:not-allowed;}
 .page-info{font-family:"DM Mono",monospace;font-size:.8rem;color:var(--ink-soft);}
+
+/* Loading skeleton */
+.skeleton{
+  background:linear-gradient(90deg,var(--cream-warm) 25%,var(--cream-shadow) 50%,var(--cream-warm) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.5s infinite;
+}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.skeleton-card{aspect-ratio:2/3;border-radius:3px;margin-bottom:16px;}
+.skeleton-text{height:1em;border-radius:4px;margin-bottom:8px;}
+.skeleton-text.short{width:60%;}
+
+/* Lazy image fade in */
+.cover-img{transition:background-image .3s ease;}
 </style>
 </head>
 <body>
@@ -427,7 +441,15 @@ body::before{
     <p id="countText">Loading...</p>
   </div>
 
-  <div class="shelf" id="comingGrid"></div>
+  <div class="shelf" id="comingGrid">
+    <!-- Loading skeletons -->
+    <div class="book skeleton-book"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+    <div class="book skeleton-book"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+    <div class="book skeleton-book"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+    <div class="book skeleton-book"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+    <div class="book skeleton-book"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+    <div class="book skeleton-book"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+  </div>
   
   <div class="pagination" id="pagination">
     <button class="page-btn" id="prevBtn" onclick="prevPage()">← Previous</button>
@@ -501,8 +523,9 @@ body::before{
 
   function coverHTML(book){
     const hasImg = !!book.cover;
-    const style = hasImg ? `background-image:url('${esc(book.cover)}');` : '';
-    return `<div class="cover-img ${hasImg?'has-img':''}" style="${style}">
+    // Use data-bg for lazy loading - IntersectionObserver will load when visible
+    const bgAttr = hasImg ? `data-bg="${esc(book.cover)}"` : '';
+    return `<div class="cover-img ${hasImg?'has-img':''}" ${bgAttr}>
       <div class="pub">${esc(padNo(book.title))}</div>
       <div>
         <div class="ttl">${esc(book.title)}</div>
@@ -510,6 +533,25 @@ body::before{
       </div>
       <div class="auth">BVPH</div>
     </div>`;
+  }
+
+  // Lazy load images with IntersectionObserver
+  const lazyObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const bg = el.dataset.bg;
+        if (bg) {
+          el.style.backgroundImage = `url('${bg}')`;
+          delete el.dataset.bg;
+        }
+        lazyObserver.unobserve(el);
+      }
+    });
+  }, { rootMargin: '100px' });
+
+  function observeLazyImages() {
+    document.querySelectorAll('[data-bg]').forEach(el => lazyObserver.observe(el));
   }
 
   const HEART_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
@@ -749,6 +791,9 @@ body::before{
     const pageBooks = allComing.slice(start, start + PAGE_SIZE);
     
     grid.innerHTML = pageBooks.map(bookCard).join('');
+    
+    // Lazy load images
+    observeLazyImages();
     
     document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
     document.getElementById('prevBtn').disabled = currentPage === 1;
