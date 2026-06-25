@@ -341,25 +341,27 @@ body::before{
 .bd-info .btn-reserve{display:inline-block;font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;background:var(--copper);color:var(--burgundy-deep);padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:600;transition:transform .2s,box-shadow .2s;}
 .bd-info .btn-reserve:hover{transform:translateY(-2px);box-shadow:0 8px 20px -8px rgba(255,155,0,.5);}
 
-/* Modal nav buttons */
+/* Modal nav buttons - only show when modal is open */
 .bd-nav{
-  position:fixed;top:50%;transform:translateY(-50%);
-  width:48px;height:48px;border-radius:50%;border:0;
-  background:rgba(253,248,243,.95);color:var(--burgundy);
-  font-size:1.5rem;cursor:pointer;z-index:300;
-  display:grid;place-items:center;
-  box-shadow:0 4px 20px rgba(0,0,0,.3);
-  transition:all .2s;
+  display:none;
 }
-.bd-nav:hover{background:var(--copper);color:var(--burgundy-deep);transform:translateY(-50%) scale(1.1);}
-.bd-nav:disabled{opacity:.3;cursor:not-allowed;background:rgba(253,248,243,.5);}
-.bd-nav:disabled:hover{transform:translateY(-50%);background:rgba(253,248,243,.5);}
-.bd-nav.prev{left:24px;}
-.bd-nav.next{right:24px;}
+.bd-bg.show .bd-nav{
+  position:fixed;top:50%;transform:translateY(-50%);
+  width:52px;height:52px;border-radius:50%;border:0;
+  background:#FDF8F3;color:#4A1C2A;
+  font-size:1.6rem;cursor:pointer;z-index:9999;
+  display:grid;place-items:center;
+  box-shadow:0 4px 24px rgba(0,0,0,.4);
+}
+.bd-bg.show .bd-nav:hover{background:#FF9B00;color:#2E0F1A;transform:translateY(-50%) scale(1.1);}
+.bd-bg.show .bd-nav:disabled{opacity:.4;cursor:not-allowed;background:rgba(253,248,243,.6);}
+.bd-bg.show .bd-nav:disabled:hover{transform:translateY(-50%);}
+.bd-nav.prev{left:20px;}
+.bd-nav.next{right:20px;}
 @media (max-width:900px){
-  .bd-nav{width:40px;height:40px;font-size:1.2rem;}
-  .bd-nav.prev{left:12px;}
-  .bd-nav.next{right:12px;}
+  .bd-bg.show .bd-nav{width:44px;height:44px;font-size:1.3rem;}
+  .bd-nav.prev{left:10px;}
+  .bd-nav.next{right:10px;}
 }
 
 /* NOTIFY BANNER */
