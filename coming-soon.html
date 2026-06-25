@@ -523,9 +523,8 @@ body::before{
 
   function coverHTML(book){
     const hasImg = !!book.cover;
-    // Use data-bg for lazy loading - IntersectionObserver will load when visible
-    const bgAttr = hasImg ? `data-bg="${esc(book.cover)}"` : '';
-    return `<div class="cover-img ${hasImg?'has-img':''}" ${bgAttr}>
+    const style = hasImg ? `background-image:url('${esc(book.cover)}');` : '';
+    return `<div class="cover-img ${hasImg?'has-img':''}" style="${style}">
       <div class="pub">${esc(padNo(book.title))}</div>
       <div>
         <div class="ttl">${esc(book.title)}</div>
@@ -533,37 +532,6 @@ body::before{
       </div>
       <div class="auth">BVPH</div>
     </div>`;
-  }
-
-  // Lazy load images with IntersectionObserver
-  const lazyObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        const bg = el.dataset.bg;
-        if (bg) {
-          el.style.backgroundImage = `url('${bg}')`;
-          el.removeAttribute('data-bg');
-        }
-        lazyObserver.unobserve(el);
-      }
-    });
-  }, { rootMargin: '300px', threshold: 0 });
-
-  function observeLazyImages() {
-    document.querySelectorAll('[data-bg]').forEach(el => {
-      // Check if already in viewport - load immediately
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight + 300 && rect.bottom > -300) {
-        const bg = el.dataset.bg;
-        if (bg) {
-          el.style.backgroundImage = `url('${bg}')`;
-          el.removeAttribute('data-bg');
-        }
-      } else {
-        lazyObserver.observe(el);
-      }
-    });
   }
 
   const HEART_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
@@ -803,9 +771,6 @@ body::before{
     const pageBooks = allComing.slice(start, start + PAGE_SIZE);
     
     grid.innerHTML = pageBooks.map(bookCard).join('');
-    
-    // Lazy load images
-    observeLazyImages();
     
     document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
     document.getElementById('prevBtn').disabled = currentPage === 1;
