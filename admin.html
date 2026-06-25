@@ -2198,7 +2198,7 @@
   // ----- mode toggle -----
   const applyMode = (mode) => {
     studioMode = mode;
-    $('#studioModes button').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+    $$('#studioModes button').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
     const isOnHand = mode === 'on_hand';
     $('#singleBookRow').style.display = isOnHand ? 'none' : '';
     $('#onHandPickerWrap').style.display = isOnHand ? '' : 'none';
@@ -2214,7 +2214,7 @@
     refreshStudio();
   };
 
-  $('#studioModes button').forEach(btn => btn.addEventListener('click', () => applyMode(btn.dataset.mode)));
+  $$('#studioModes button').forEach(btn => btn.addEventListener('click', () => applyMode(btn.dataset.mode)));
 
   // ----- on-hand grid -----
   const renderOnHandGrid = () => {
