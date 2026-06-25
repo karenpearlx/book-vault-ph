@@ -1,0 +1,2676 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>The Vault · Admin</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="theme-color" content="#1A0810">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --burgundy:#4A1C2A;
+    --burgundy-deep:#2E0F1A;
+    --burgundy-ink:#1A0810;
+    --copper:#FF9B00;
+    --copper-bright:#FFAD33;
+    --cream:#FFFFFF;
+    --cream-warm:#F4E9D8;
+    --cream-shadow:#E8D9C2;
+    --ink:#2A1410;
+    --danger:#a14040;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{min-height:100vh;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+  body{
+    font-family:"Cormorant Garamond",Georgia,serif;font-size:17px;color:var(--cream);
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(216,154,85,.1), transparent 55%),
+      linear-gradient(160deg, #1A0810, #2E0F1A 60%, #3A1422);
+    min-height:100vh;
+  }
+  .mono{font-family:"DM Mono",ui-monospace,monospace;letter-spacing:.18em;text-transform:uppercase;font-size:.7rem;}
+  .display{font-family:"Playfair Display",serif;}
+  a{color:var(--copper-bright);}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+  input,select,textarea{font-family:"Cormorant Garamond",serif;font-size:1rem;}
+
+  /* paper grain */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;mix-blend-mode:overlay;z-index:1;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* =========== LOGIN =========== */
+  .login-wrap{min-height:100vh;display:grid;place-items:center;padding:24px;position:relative;z-index:2;}
+  .login-card{
+    width:100%;max-width:420px;background:rgba(26,8,16,.7);border:1px solid rgba(216,154,85,.25);
+    border-radius:8px;padding:48px 36px;backdrop-filter:blur(8px);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.6), 0 0 0 1px rgba(216,154,85,.08) inset;
+    text-align:center;
+  }
+  .login-card .mark{width:64px;height:64px;margin:0 auto 18px;}
+  .login-card h1{font-family:"Playfair Display",serif;font-style:italic;font-weight:500;font-size:2.2rem;color:var(--cream);line-height:1;}
+  .login-card h1 .b{display:block;font-style:normal;font-weight:900;color:var(--copper-bright);font-size:1.6rem;letter-spacing:.04em;margin-top:6px;}
+  .login-card p.sub{color:#C9B89A;margin-top:14px;margin-bottom:28px;font-size:.95rem;font-style:italic;}
+  .login-card input{
+    width:100%;padding:14px 16px;background:rgba(0,0,0,.3);border:1px solid rgba(216,154,85,.3);
+    border-radius:4px;color:var(--cream);font-size:1.05rem;letter-spacing:.05em;
+    transition:border-color .2s;
+  }
+  .login-card input:focus{outline:none;border-color:var(--copper-bright);}
+  .login-card .err{color:#e87a7a;font-size:.85rem;margin-top:10px;min-height:18px;font-style:italic;}
+  .login-card button{
+    width:100%;margin-top:18px;padding:14px;background:var(--copper-bright);color:var(--burgundy-ink);
+    font-family:"DM Mono",monospace;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+    border-radius:999px;transition:all .25s;
+  }
+  .login-card button:hover{background:var(--cream);}
+  .login-card .back{display:inline-block;margin-top:24px;color:#C9B89A;text-decoration:none;font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;}
+  .login-card .back:hover{color:var(--copper-bright);}
+
+  /* =========== APP =========== */
+  .app{display:none;position:relative;z-index:2;}
+  .app.show{display:block;}
+
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 36px;border-bottom:1px solid rgba(216,154,85,.18);
+    background:rgba(26,8,16,.6);backdrop-filter:blur(6px);position:sticky;top:0;z-index:10;
+  }
+  .topbar .brand{display:flex;align-items:center;gap:12px;font-family:"Playfair Display",serif;font-style:italic;font-size:1.1rem;}
+  .topbar .brand svg{width:36px;height:36px;}
+  .topbar .tag{font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--copper-bright);padding:5px 10px;border:1px solid var(--copper-bright);border-radius:999px;margin-left:6px;}
+  .topbar .actions{display:flex;align-items:center;gap:14px;}
+  .topbar a, .topbar button{font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:#C9B89A;text-decoration:none;padding:8px 14px;border-radius:999px;border:1px solid transparent;transition:all .2s;}
+  .topbar a:hover, .topbar button:hover{border-color:rgba(216,154,85,.4);color:var(--cream);}
+  .topbar button.logout:hover{border-color:var(--danger);color:#e87a7a;}
+
+  .container{max-width:1600px;margin:0 auto;padding:40px 36px 80px;}
+  @media (max-width:780px){ 
+  .container{padding:30px 16px 60px;} 
+  .topbar{padding:14px 16px;flex-wrap:wrap;gap:12px;} 
+  .topbar .brand{font-size:.95rem;} 
+  .topbar .tag{display:none;} 
+  .topbar .actions{width:100%;justify-content:center;gap:8px;} 
+  .topbar a, .topbar button{padding:6px 10px;font-size:.55rem;}
+}
+  @media (max-width:560px){ .topbar .brand svg{width:28px;height:28px;} }
+
+  .panel{
+    background:rgba(26,8,16,.55);border:1px solid rgba(216,154,85,.18);border-radius:8px;
+    padding:32px;margin-bottom:30px;
+  }
+  @media(max-width:560px){.panel{padding:20px 16px;border-radius:6px;} .panel h2{font-size:1.4rem;}}
+  .panel h2{font-family:"Playfair Display",serif;font-style:italic;font-weight:500;font-size:1.7rem;color:var(--cream);margin-bottom:6px;}
+  .panel h2 .accent{color:var(--copper-bright);font-style:normal;font-weight:900;}
+  .panel .sub{font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--copper);margin-bottom:24px;}
+
+
+  /* ===== TRAFFIC DASHBOARD ===== */
+  .traffic-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:18px 0 24px;}
+  @media(max-width:980px){.traffic-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+  @media(max-width:560px){.traffic-grid{grid-template-columns:1fr;}}
+  .metric-card{background:rgba(0,0,0,.28);border:1px solid rgba(216,154,85,.18);border-radius:8px;padding:18px;position:relative;overflow:hidden;}
+  .metric-card::after{content:"";position:absolute;right:-24px;top:-24px;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle,rgba(255,155,0,.16),transparent 70%);}
+  .metric-label{font-family:"DM Mono",monospace;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);margin-bottom:8px;}
+  .metric-value{font-family:"Playfair Display",serif;font-size:2rem;font-weight:700;color:var(--cream);line-height:1;}
+  .metric-note{margin-top:8px;color:#B8A898;font-size:.9rem;font-style:italic;}
+  .traffic-columns{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:980px){.traffic-columns{grid-template-columns:1fr;}}
+  .traffic-box{background:rgba(0,0,0,.22);border:1px solid rgba(216,154,85,.15);border-radius:8px;padding:18px;}
+  .traffic-box h4{font-family:"DM Mono",monospace;font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:var(--copper-bright);margin-bottom:14px;}
+  .traffic-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(216,154,85,.1);}
+  .traffic-row:last-child{border-bottom:0;}
+  .traffic-name{color:#F5EEE6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .traffic-num{font-family:"DM Mono",monospace;font-size:.72rem;color:var(--copper-bright);}
+  .traffic-bar{grid-column:1/-1;height:4px;border-radius:999px;background:rgba(216,154,85,.12);overflow:hidden;margin-top:-5px;}
+  .traffic-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--copper),var(--copper-bright));border-radius:999px;}
+  .funnel{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  @media(max-width:480px){.funnel{grid-template-columns:1fr;} .funnel-step{padding:10px;} .funnel-step .n{font-size:1.4rem;}}
+  .funnel-step{padding:14px;background:rgba(216,154,85,.08);border:1px solid rgba(216,154,85,.16);border-radius:6px;text-align:center;}
+  .funnel-step .n{font-family:"Playfair Display",serif;font-size:1.8rem;color:var(--copper-bright);line-height:1;}
+  .funnel-step .t{font-family:"DM Mono",monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:#C9B89A;margin-top:8px;}
+  .activity-feed{max-height:320px;overflow:auto;padding-right:4px;}
+  .activity-item{display:grid;grid-template-columns:88px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid rgba(216,154,85,.1);}
+  .activity-time{font-family:"DM Mono",monospace;font-size:.58rem;color:#8B7A66;text-transform:uppercase;}
+  .activity-text{font-size:.92rem;color:#E8D9C2;line-height:1.25;}
+
+  /* form */
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+  .row.thirds{grid-template-columns:1fr 1fr 1fr;}
+  @media (max-width:680px){ .row, .row.thirds{grid-template-columns:1fr;} }
+  .field label{display:block;font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-bright);margin-bottom:6px;font-weight:500;}
+  .field input, .field select, .field textarea{
+    width:100%;padding:11px 13px;background:rgba(0,0,0,.3);border:1px solid rgba(216,154,85,.25);
+    border-radius:4px;color:var(--cream);transition:border-color .15s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{outline:none;border-color:var(--copper-bright);}
+  .field textarea{min-height:80px;resize:vertical;font-family:"Cormorant Garamond",serif;line-height:1.5;}
+  .field .hint{font-size:.8rem;color:#B8A898;margin-top:4px;font-style:italic;}
+  .checkrow{display:flex;align-items:center;gap:10px;padding:11px 0;}
+  .checkrow input{width:18px;height:18px;accent-color:var(--copper-bright);}
+  .checkrow label{font-family:"Cormorant Garamond",serif;text-transform:none;letter-spacing:0;font-size:1rem;color:var(--cream);margin:0;}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
+    padding:12px 22px;border-radius:999px;transition:all .2s;cursor:pointer;
+  }
+  .btn-primary{background:var(--copper-bright);color:var(--burgundy-ink);}
+  .btn-primary:hover{background:var(--cream);}
+  .btn-ghost{border:1px solid rgba(216,154,85,.4);color:var(--cream);background:transparent;}
+  .btn-ghost:hover{border-color:var(--copper-bright);color:var(--copper-bright);}
+  .btn-danger{color:#e87a7a;border:1px solid rgba(232,122,122,.3);background:transparent;}
+  .btn-danger:hover{background:rgba(232,122,122,.1);border-color:#e87a7a;}
+  .btn-row{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;}
+
+  /* book table */
+  .booklist{margin-top:24px;}
+  .toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap;}
+  @media(max-width:560px){.toolbar{flex-direction:column;align-items:stretch;} .toolbar .search{max-width:100%;}}
+  .toolbar .search{flex:1;max-width:340px;}
+  .toolbar .search input{width:100%;padding:10px 14px;background:rgba(0,0,0,.3);border:1px solid rgba(216,154,85,.25);border-radius:999px;color:var(--cream);}
+  .toolbar .count{font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-bright);}
+
+  .booklist-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .booktable{width:100%;border-collapse:separate;border-spacing:0 10px;min-width:600px;}
+  .booktable th{
+    text-align:left;font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);
+    padding:0 14px 6px;
+  }
+  .booktable td{
+    padding:12px 14px;background:rgba(0,0,0,.35);vertical-align:middle;
+    border-top:1px solid rgba(216,154,85,.15);border-bottom:1px solid rgba(216,154,85,.15);
+    color:#F5EEE6;
+  }
+  .booktable td:first-child{border-left:1px solid rgba(216,154,85,.1);border-radius:4px 0 0 4px;}
+  .booktable td:last-child{border-right:1px solid rgba(216,154,85,.1);border-radius:0 4px 4px 0;}
+  .booktable tr.featured td{background:rgba(216,154,85,.08);}
+  .booktable tr.sold-row td{opacity:.6;}
+  .booktable .cover-cell, .booktable .title-cell{cursor:pointer;}
+  .booktable .cover-cell:hover .mini, .booktable .title-cell:hover{opacity:.8;}
+
+  /* Book detail modal */
+  .bd-bg{position:fixed;inset:0;background:rgba(20,8,12,.8);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:300;padding:24px;opacity:0;transition:opacity .25s;}
+  .bd-bg.show{display:flex;opacity:1;}
+  .bd-modal{width:100%;max-width:780px;max-height:90vh;overflow-y:auto;background:var(--cream);border-radius:8px;display:grid;grid-template-columns:260px 1fr;box-shadow:0 40px 80px -20px rgba(0,0,0,.6);transform:translateY(16px) scale(.98);transition:transform .25s;position:relative;}
+  .bd-bg.show .bd-modal{transform:translateY(0) scale(1);}
+  @media(max-width:680px){.bd-modal{grid-template-columns:1fr;}}
+  .bd-close{position:absolute;top:12px;right:12px;font-size:1.3rem;color:var(--burgundy);background:rgba(253,248,243,.95);border:0;width:32px;height:32px;border-radius:50%;z-index:3;cursor:pointer;}
+  .bd-cover-pane{padding:32px 20px;background:linear-gradient(160deg,#3A1422,#1A0810);display:flex;align-items:center;justify-content:center;border-radius:8px 0 0 8px;}
+  @media(max-width:680px){.bd-cover-pane{border-radius:8px 8px 0 0;}}
+  .bd-cover{width:200px;aspect-ratio:2/3;border-radius:3px;background:linear-gradient(160deg,var(--burgundy),var(--burgundy-deep));background-size:cover;background-position:center;box-shadow:0 20px 40px -12px rgba(0,0,0,.6);display:flex;flex-direction:column;justify-content:space-between;padding:16px 12px;color:var(--cream);position:relative;overflow:hidden;}
+  .bd-cover.has-img > *{display:none;}
+  .bd-cover::after{content:"";position:absolute;left:5px;top:8px;bottom:8px;width:1px;background:rgba(255,255,255,.18);}
+  .bd-cover .pub{font-family:"DM Mono",monospace;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;opacity:.7;}
+  .bd-cover .ttl{font-family:"Playfair Display",serif;font-style:italic;font-size:1.1rem;line-height:1.05;}
+  .bd-cover .auth{font-family:"DM Mono",monospace;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;opacity:.85;margin-top:6px;}
+  .bd-info{padding:32px 28px;display:flex;flex-direction:column;color:var(--ink);}
+  .bd-info .meta-row{font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);margin-bottom:8px;display:flex;gap:12px;flex-wrap:wrap;}
+  .bd-info h3{font-family:"Playfair Display",serif;font-weight:500;font-size:1.6rem;color:var(--burgundy);line-height:1.1;margin:0 0 4px;}
+  .bd-info .by{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--ink-soft);margin:0 0 14px;font-size:1rem;}
+  .bd-info .summary{color:var(--ink);font-size:.95rem;line-height:1.5;margin-bottom:18px;}
+  .bd-info .summary.empty{font-style:italic;color:#8B7A66;}
+  .bd-info .gr-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+  .bd-info .gr-rating{display:flex;align-items:center;gap:5px;font-family:"DM Mono",monospace;font-size:.75rem;letter-spacing:.1em;color:var(--copper);}
+  .bd-info .gr-rating .stars{color:var(--copper-soft);font-size:.9rem;letter-spacing:-1px;}
+  .bd-info .gr-link{font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--copper);text-decoration:none;padding:5px 10px;border:1px solid rgba(255,155,0,.4);border-radius:999px;}
+  .bd-info .gr-link:hover{border-color:var(--copper);background:rgba(255,155,0,.1);}
+  .bd-info .pricerow{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:14px;border-top:1px dashed rgba(74,28,42,.2);}
+  .bd-info .price{font-family:"Playfair Display",serif;font-weight:600;color:var(--copper);font-size:1.6rem;line-height:1;}
+  .bd-info .cond-badge{font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--burgundy);padding:6px 12px;background:rgba(74,28,42,.1);border-radius:999px;}
+  .booktable .cover-cell{width:48px;}
+  .booktable .cover-cell .mini{
+    width:42px;height:60px;background:linear-gradient(160deg,#4A1C2A,#2E0F1A);border-radius:2px;
+    background-size:cover;background-position:center;box-shadow:0 4px 8px rgba(0,0,0,.4);
+  }
+  .booktable .title-cell{font-family:"Playfair Display",serif;font-style:italic;font-size:1.05rem;color:var(--cream);}
+  .booktable .title-cell .a{display:block;font-family:"Cormorant Garamond",serif;font-style:normal;font-size:.9rem;color:#E0D4C4;margin-top:2px;}
+  .booktable .badge{display:inline-block;padding:3px 8px;background:rgba(216,154,85,.15);border:1px solid rgba(216,154,85,.3);border-radius:3px;font-family:"DM Mono",monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--copper-bright);}
+  .booktable .price-cell{font-family:"Playfair Display",serif;color:var(--copper-bright);font-weight:700;}
+  .booktable .actions-cell{text-align:right;white-space:nowrap;}
+  .booktable .icon-btn{padding:6px 10px;font-size:.6rem;letter-spacing:.18em;border-radius:4px;border:1px solid transparent;}
+  .booktable .icon-btn.edit{color:var(--copper-bright);}
+  .booktable .icon-btn.edit:hover{border-color:var(--copper-bright);}
+  .booktable .icon-btn.del{color:#e87a7a;}
+  .booktable .icon-btn.del:hover{border-color:#e87a7a;background:rgba(232,122,122,.08);}
+  .booktable .icon-btn.star{color:#C9B89A;font-size:.75rem;letter-spacing:0;}
+  .booktable .icon-btn.star.on{color:var(--copper-bright);}
+  .booktable .icon-btn.star:hover{color:var(--copper-bright);}
+  .empty{text-align:center;padding:40px;color:#8B7A66;font-style:italic;}
+
+  /* modal */
+  .modal-bg{
+    position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
+    display:none;align-items:flex-start;justify-content:center;z-index:100;padding:30px 20px;overflow-y:auto;
+  }
+  .modal-bg.show{display:flex;}
+  .modal{
+    width:100%;max-width:680px;background:linear-gradient(170deg,#1A0810,#2E0F1A);
+    border:1px solid rgba(216,154,85,.3);border-radius:8px;padding:36px;
+    box-shadow:0 40px 80px -20px rgba(0,0,0,.7);
+  }
+  .modal h3{font-family:"Playfair Display",serif;font-style:italic;font-size:1.8rem;color:var(--cream);margin-bottom:24px;}
+  .modal h3 .accent{color:var(--copper-bright);font-style:normal;font-weight:900;}
+  .modal .close{position:absolute;top:18px;right:24px;color:#C9B89A;font-size:1.4rem;cursor:pointer;}
+
+  /* cover preview in form */
+  .cover-preview{
+    display:flex;gap:18px;align-items:flex-start;margin-top:8px;
+  }
+  .cover-preview .pv{width:80px;height:115px;border-radius:3px;background:linear-gradient(160deg,#4A1C2A,#2E0F1A);background-size:cover;background-position:center;flex-shrink:0;box-shadow:0 6px 14px rgba(0,0,0,.4);}
+  .cover-preview .pv-empty{display:flex;align-items:center;justify-content:center;color:#8B7A66;font-size:.65rem;font-family:"DM Mono",monospace;letter-spacing:.15em;text-transform:uppercase;text-align:center;padding:8px;}
+
+  /* ===== CONTENT STUDIO ===== */
+  .studio-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:8px;}
+  @media (max-width:900px){ .studio-grid{grid-template-columns:1fr;} }
+  .studio-card{
+    background:rgba(0,0,0,.25);border:1px solid rgba(216,154,85,.15);
+    border-radius:6px;padding:22px;
+  }
+  .studio-card h4{
+    font-family:"DM Mono",monospace;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;
+    color:var(--copper-bright);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;
+  }
+  .studio-card h4 .glyph{font-family:"Playfair Display",serif;font-style:italic;color:var(--copper);font-size:1.4rem;line-height:0;}
+  .studio-textarea{
+    width:100%;min-height:140px;padding:14px 16px;background:rgba(0,0,0,.4);
+    border:1px solid rgba(216,154,85,.2);border-radius:4px;color:var(--cream);
+    font-family:"Cormorant Garamond",serif;font-size:1rem;line-height:1.5;resize:vertical;
+  }
+  .studio-textarea:focus{outline:none;border-color:var(--copper-bright);}
+  .studio-textarea.mono{font-family:"DM Mono",monospace;font-size:.85rem;letter-spacing:.02em;line-height:1.6;}
+  .studio-btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+  .btn-sm{
+    font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+    padding:9px 16px;border-radius:999px;cursor:pointer;transition:all .2s;
+    border:1px solid rgba(216,154,85,.4);color:var(--cream);background:transparent;
+  }
+  .btn-sm:hover{border-color:var(--copper-bright);color:var(--copper-bright);}
+  .btn-sm.fill{background:var(--copper-bright);color:var(--burgundy-ink);border-color:var(--copper-bright);}
+  .btn-sm.fill:hover{background:var(--cream);}
+  .btn-sm:disabled{opacity:.5;cursor:wait;}
+
+  /* graphic preview */
+  .graphic-controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px;}
+  .toggle-group{display:inline-flex;background:rgba(0,0,0,.4);border:1px solid rgba(216,154,85,.25);border-radius:999px;padding:4px;}
+  .toggle-group button{
+    font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+    padding:8px 16px;border-radius:999px;color:#C9B89A;transition:all .2s;
+  }
+  .toggle-group button.active{background:var(--copper-bright);color:var(--burgundy-ink);}
+  /* mode tabs */
+  .studio-modes{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  .studio-modes button{
+    font-family:"DM Mono",monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;
+    padding:11px 18px;border-radius:999px;cursor:pointer;transition:all .2s;
+    border:1px solid rgba(216,154,85,.3);color:#C9B89A;background:rgba(0,0,0,.3);
+  }
+  .studio-modes button:hover{border-color:var(--copper-bright);color:var(--copper-bright);}
+  .studio-modes button.active{background:var(--copper-bright);color:var(--burgundy-ink);border-color:var(--copper-bright);}
+  /* on-hand multi-select */
+  .onhand-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;max-height:380px;overflow:auto;padding:8px;background:rgba(0,0,0,.3);border:1px solid rgba(216,154,85,.15);border-radius:6px;}
+  .onhand-item{display:flex;gap:10px;align-items:center;padding:8px;border:1px solid rgba(216,154,85,.15);border-radius:4px;cursor:pointer;transition:all .15s;background:rgba(0,0,0,.2);}
+  .onhand-item:hover{border-color:var(--copper-bright);}
+  .onhand-item.selected{border-color:var(--copper-bright);background:rgba(216,154,85,.08);}
+  .onhand-item input{margin:0;accent-color:var(--copper-bright);}
+  .onhand-item .oh-cover{width:34px;height:50px;border-radius:2px;background:#2E0F1A center/cover;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.4);}
+  .onhand-item .oh-meta{font-family:"Cormorant Garamond",serif;font-size:.85rem;line-height:1.2;color:var(--cream);overflow:hidden;}
+  .onhand-item .oh-meta b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .onhand-item .oh-meta span{font-size:.72rem;color:#A99680;}
+  .onhand-toolbar{display:flex;gap:10px;align-items:center;margin-bottom:10px;font-family:"DM Mono",monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:#A99680;}
+  .onhand-toolbar .count{color:var(--copper-bright);}
+  .graphic-stage-wrap{
+    background:repeating-conic-gradient(rgba(216,154,85,.04) 0% 25%, transparent 0% 50%) 50%/24px 24px;
+    border:1px dashed rgba(216,154,85,.2);border-radius:8px;padding:20px;
+    display:flex;justify-content:center;overflow:hidden;
+  }
+  .graphic-viewport{position:relative;overflow:hidden;border-radius:6px;box-shadow:0 30px 60px -20px rgba(0,0,0,.6);}
+  .graphic-viewport.square{width:380px;height:380px;}
+  .graphic-viewport.story{width:240px;height:427px;}
+  .graphic-stage{
+    position:absolute;top:0;left:0;
+    transform-origin:top left;
+    background:linear-gradient(165deg,#3A1422 0%,#1A0810 60%,#2E0F1A 100%);
+    color:var(--cream);overflow:hidden;
+  }
+  .graphic-stage.square{width:1080px;height:1080px;transform:scale(0.352);}
+  .graphic-stage.story{width:1080px;height:1920px;transform:scale(0.222);}
+  .graphic-stage::before{
+    content:"";position:absolute;inset:40px;border:2px solid rgba(216,154,85,.4);border-radius:8px;pointer-events:none;
+  }
+  .graphic-stage::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse at 75% 25%, rgba(216,154,85,.18), transparent 55%);
+  }
+  .gs-stamp{
+    position:absolute;top:80px;left:80px;
+    font-family:"DM Mono",monospace;font-size:22px;letter-spacing:.3em;text-transform:uppercase;
+    color:#1A0810;background:#D89A55;padding:14px 26px;border-radius:999px;font-weight:500;
+    box-shadow:0 10px 30px rgba(184,115,51,.45);
+    z-index:3;
+  }
+  .gs-brand{
+    position:absolute;top:90px;right:90px;text-align:right;z-index:3;
+    font-family:"Playfair Display",serif;font-style:italic;font-size:28px;color:#FDF8F3;
+  }
+  .gs-brand .b{display:block;font-style:normal;font-weight:900;font-size:18px;letter-spacing:.25em;text-transform:uppercase;color:#D89A55;margin-top:6px;}
+  .gs-content{position:absolute;left:80px;right:80px;display:flex;gap:60px;z-index:2;}
+  .gs-cover{
+    background:linear-gradient(160deg,#4A1C2A,#2E0F1A);background-size:cover;background-position:center;
+    border-radius:6px;box-shadow:0 30px 60px rgba(0,0,0,.5), inset 0 0 0 1px rgba(216,154,85,.2);
+    flex-shrink:0;display:flex;flex-direction:column;justify-content:space-between;padding:30px 24px;
+    color:#FDF8F3;position:relative;overflow:hidden;
+  }
+  .gs-cover::before{content:"";position:absolute;inset:0;background:linear-gradient(125deg,rgba(255,255,255,.06),transparent 30%,transparent 70%,rgba(0,0,0,.25));}
+  .gs-cover::after{content:"";position:absolute;left:10px;top:14px;bottom:14px;width:2px;background:rgba(255,255,255,.18);}
+  .gs-cover .pub-no{font-family:"DM Mono",monospace;font-size:18px;letter-spacing:.25em;text-transform:uppercase;opacity:.7;}
+  .gs-cover .cv-ttl{font-family:"Playfair Display",serif;font-style:italic;font-size:42px;line-height:1.05;}
+  .gs-cover .cv-auth{font-family:"DM Mono",monospace;font-size:16px;letter-spacing:.22em;text-transform:uppercase;opacity:.9;margin-top:8px;}
+  .gs-text{flex:1;display:flex;flex-direction:column;justify-content:center;}
+  .gs-label{font-family:"DM Mono",monospace;font-size:22px;letter-spacing:.32em;text-transform:uppercase;color:#D89A55;margin-bottom:24px;}
+  .gs-title{font-family:"Playfair Display",serif;font-style:italic;font-weight:500;font-size:88px;line-height:.95;color:#FDF8F3;margin-bottom:18px;}
+  .gs-author{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:36px;color:#C9B89A;margin-bottom:36px;}
+  .gs-price{font-family:"Playfair Display",serif;font-weight:700;font-size:72px;color:#D89A55;line-height:1;}
+  .gs-tag{font-family:"DM Mono",monospace;font-size:18px;letter-spacing:.22em;text-transform:uppercase;color:#C9B89A;margin-top:14px;}
+  .gs-foot{
+    position:absolute;bottom:90px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:center;
+    font-family:"DM Mono",monospace;font-size:18px;letter-spacing:.25em;text-transform:uppercase;color:#C9B89A;z-index:3;
+  }
+  .gs-foot .cta{color:#D89A55;}
+  /* story-specific layout overrides */
+  .graphic-stage.story .gs-content{flex-direction:column;top:340px;gap:60px;align-items:center;text-align:center;}
+  .graphic-stage.story .gs-cover{width:520px;height:780px;align-self:center;}
+  .graphic-stage.story .gs-cover .cv-ttl{font-size:48px;}
+  .graphic-stage.story .gs-title{font-size:96px;}
+  .graphic-stage.story .gs-author{font-size:42px;}
+  .graphic-stage.story .gs-price{font-size:96px;}
+  .graphic-stage.story .gs-foot{bottom:140px;flex-direction:column;gap:14px;justify-content:center;}
+  /* square layout */
+  .graphic-stage.square .gs-content{top:260px;align-items:stretch;}
+  .graphic-stage.square .gs-cover{width:380px;height:570px;}
+
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--copper-bright);color:var(--burgundy-ink);
+    padding:12px 22px;border-radius:999px;
+    font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
+    opacity:0;transition:all .35s;z-index:200;pointer-events:none;
+    box-shadow:0 20px 40px -10px rgba(0,0,0,.5);
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* Stats Grid */
+.stats-grid {
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;
+}
+.stat-card {
+  background:rgba(0,0,0,.3); border:1px solid rgba(216,154,85,.15);
+  border-radius:12px; padding:20px; text-align:center;
+}
+.stat-card.accent { border-color:rgba(216,154,85,.4); background:rgba(216,154,85,.08); }
+.stat-value { font-family:'DM Mono',monospace; font-size:1.8rem; color:var(--cream); margin-bottom:4px; }
+.stat-card.accent .stat-value { color:var(--copper); }
+.stat-label { font-size:.75rem; color:#8B7A66; text-transform:uppercase; letter-spacing:.1em; }
+
+/* Tab Navigation */
+.tab-nav {
+  display:flex; gap:4px; padding:0 32px; background:rgba(0,0,0,.3);
+  border-bottom:1px solid rgba(216,154,85,.15);
+}
+.tab-btn {
+  padding:16px 24px; background:transparent; border:none;
+  color:#8B7A66; font-family:'Cormorant Garamond',serif; font-size:1rem;
+  cursor:pointer; transition:all .2s; position:relative;
+}
+.tab-btn:hover { color:var(--cream); }
+.tab-btn.active { color:var(--copper); }
+.tab-btn.active::after {
+  content:''; position:absolute; bottom:0; left:0; right:0;
+  height:2px; background:var(--copper);
+}
+.tab-content { display:none; }
+.tab-content.active { display:block; }
+@media(max-width:680px){
+  .tab-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 16px;gap:0;}
+  .tab-btn{padding:14px 16px;font-size:.9rem;white-space:nowrap;flex-shrink:0;}
+}
+
+/* Sub-Tab Navigation */
+.sub-tab-nav {
+  display:flex; gap:8px; padding:16px 0; margin-bottom:8px;
+  border-bottom:1px solid rgba(216,154,85,.1);
+}
+.sub-tab-btn {
+  padding:10px 18px; background:rgba(0,0,0,.2); border:1px solid rgba(216,154,85,.15);
+  border-radius:8px; color:#8B7A66; font-family:'Cormorant Garamond',serif; font-size:.95rem;
+  cursor:pointer; transition:all .2s; display:flex; align-items:center; gap:8px;
+}
+.sub-tab-btn:hover { border-color:rgba(216,154,85,.3); color:var(--cream); }
+.sub-tab-btn.active { background:rgba(216,154,85,.15); border-color:var(--copper); color:var(--copper); }
+.tab-badge {
+  background:rgba(216,154,85,.25); color:var(--copper); padding:2px 8px;
+  border-radius:10px; font-size:.7rem; font-family:'DM Mono',monospace;
+}
+.sub-tab-btn.active .tab-badge { background:rgba(216,154,85,.4); }
+.sub-tab-content { display:none; }
+.sub-tab-content.active { display:block; }
+@media(max-width:680px){
+  .sub-tab-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:12px 0;gap:6px;}
+  .sub-tab-btn{white-space:nowrap;flex-shrink:0;padding:8px 12px;font-size:.6rem;}
+}
+
+/* Expense category badges with colors */
+.expense-cat {
+  padding:2px 8px; border-radius:4px; font-size:.7rem; text-transform:uppercase;
+}
+.expense-cat[data-cat="books"] { background:rgba(129,199,132,.2); color:#81c784; }
+.expense-cat[data-cat="freebies"] { background:rgba(240,98,146,.2); color:#f06292; }
+.expense-cat[data-cat="shipping"] { background:rgba(255,183,77,.2); color:#ffb74d; }
+.expense-cat[data-cat="packaging"] { background:rgba(149,117,205,.2); color:#9575cd; }
+.expense-cat[data-cat="other"] { background:rgba(144,164,174,.2); color:#90a4ae; }
+.expense-batch-col {
+  width:70px; min-width:70px; padding:8px 10px;
+  border-radius:6px; font-size:.8rem; font-family:'DM Mono',monospace;
+  text-align:center; font-weight:600;
+}
+
+/* Messages */
+.messages-list { display:flex; flex-direction:column; gap:12px; }
+.message-card {
+  padding:16px; background:rgba(0,0,0,.25);
+  border:1px solid rgba(216,154,85,.15); border-radius:10px;
+}
+.message-card.unread { border-left:3px solid var(--copper); }
+.message-card.read { opacity:.7; }
+.message-header { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:8px; }
+.message-from strong { color:var(--cream); font-size:.95rem; }
+.message-email { color:#8B7A66; font-size:.8rem; margin-left:8px; }
+.message-date { color:#8B7A66; font-size:.75rem; font-family:'DM Mono',monospace; }
+.message-subject { color:var(--copper); font-size:.9rem; margin-bottom:8px; font-weight:600; }
+.message-body { color:var(--cream); font-size:.85rem; line-height:1.5; white-space:pre-wrap; }
+.message-actions { margin-top:12px; display:flex; gap:8px; }
+@media(max-width:560px){
+  .message-header{flex-direction:column;gap:4px;}
+  .message-email{margin-left:0;}
+  .message-card{padding:14px;}
+}
+
+.status-list { display:flex; flex-direction:column; gap:8px; }
+.status-card {
+  display:flex; flex-wrap:wrap; align-items:center; gap:12px 16px;
+  padding:16px; background:rgba(0,0,0,.25);
+  border:1px solid rgba(216,154,85,.15); border-radius:10px;
+}
+.status-card:hover { border-color:rgba(216,154,85,.35); }
+.status-card .cover { width:50px; height:75px; object-fit:cover; border-radius:4px; background:#1a1a1a; flex-shrink:0; }
+.status-card .info { flex:1; min-width:200px; }
+.status-card .title { font-weight:600; color:var(--cream); font-size:.95rem; }
+.status-card .author { font-size:.8rem; color:#8B7A66; margin-top:2px; }
+.status-card .meta { font-size:.75rem; color:#8B7A66; margin-top:6px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.status-card .price { font-family:'DM Mono',monospace; color:var(--copper); font-size:.95rem; font-weight:600; }
+.status-card .actions { display:flex; gap:8px; flex-wrap:wrap; }
+@media(max-width:560px){
+  .status-card{padding:12px;}
+  .status-card .info{min-width:0;}
+  .status-card .cover{width:40px;height:60px;}
+}
+.status-card .actions button { padding:8px 14px; font-size:.75rem; border-radius:6px; cursor:pointer; white-space:nowrap; }
+.status-card .btn-mark { background:rgba(125,201,125,.2); border:1px solid rgba(125,201,125,.4); color:#7dc97d; }
+.status-card .btn-edit { background:rgba(216,154,85,.15); border:1px solid rgba(216,154,85,.3); color:var(--copper); }
+.status-card .btn-undo { background:rgba(180,180,180,.15); border:1px solid rgba(180,180,180,.3); color:#aaa; }
+.status-card .paid-badge { background:rgba(125,201,125,.2); color:#7dc97d; padding:3px 10px; border-radius:4px; font-size:.7rem; text-transform:uppercase; font-weight:600; }
+.status-card .unpaid-badge { background:rgba(255,193,7,.15); color:#ffc107; padding:3px 10px; border-radius:4px; font-size:.7rem; text-transform:uppercase; font-weight:600; }
+</style>
+</head>
+<body>
+
+<!-- pom mark for the topbar -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="pom-mark" viewBox="0 0 80 80">
+      <circle cx="40" cy="42" r="32" fill="url(#mk1)"/>
+      <circle cx="14" cy="42" r="8" fill="#9a5524"/>
+      <circle cx="22" cy="20" r="8" fill="#b8682f"/>
+      <circle cx="40" cy="12" r="9" fill="#b8682f"/>
+      <circle cx="58" cy="20" r="8" fill="#b8682f"/>
+      <circle cx="66" cy="42" r="8" fill="#9a5524"/>
+      <path d="M22,22 L28,32 L32,22 Z" fill="#3a1c08"/>
+      <path d="M48,22 L52,32 L58,22 Z" fill="#3a1c08"/>
+      <ellipse cx="40" cy="48" rx="20" ry="17" fill="#e8b075"/>
+      <ellipse cx="32" cy="44" rx="3" ry="4" fill="#1a0a05"/>
+      <ellipse cx="48" cy="44" rx="3" ry="4" fill="#1a0a05"/>
+      <path d="M37,54 Q40,52 43,54 Q43,57 40,58 Q37,57 37,54 Z" fill="#1a0a05"/>
+      <defs>
+        <radialGradient id="mk1" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#c47538"/>
+          <stop offset="100%" stop-color="#7a4019"/>
+        </radialGradient>
+      </defs>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============= LOGIN ============= -->
+<div class="login-wrap" id="loginScreen">
+  <form class="login-card" id="loginForm" autocomplete="off">
+    <svg class="mark"><use href="#pom-mark"/></svg>
+    <h1>the vault<span class="b">admin entrance</span></h1>
+    <p class="sub">whispers only. enter the keyword to unlock.</p>
+    <input type="password" id="pwInput" placeholder="password" autofocus>
+    <div class="err" id="loginErr"></div>
+    <button type="submit">unlock the vault →</button>
+    <a class="back" href="/">← back to the shop</a>
+  </form>
+</div>
+
+<!-- ============= APP ============= -->
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="brand">
+      <svg><use href="#pom-mark"/></svg>
+      The Book Vault <span class="tag">admin</span>
+    </div>
+    <div class="actions">
+      <span id="backendPill" title="data backend mode" style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:#8B7A66;padding:8px 12px;border:1px solid rgba(216,154,85,.18);border-radius:999px;">● connecting…</span>
+      <span id="sessionPill" title="auto-logs out 30 minutes after login" style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:#8B7A66;padding:8px 12px;border:1px solid rgba(216,154,85,.18);border-radius:999px;">session · —</span>
+      <a href="/" target="_blank">view shop ↗</a>
+      <button class="logout" id="logoutBtn">log out</button>
+    </div>
+  </div>
+
+  <!-- TAB NAVIGATION -->
+  <div class="tab-nav">
+    <button class="tab-btn active" data-tab="overview">overview</button>
+    <button class="tab-btn" data-tab="catalogue">the catalogue</button>
+    <button class="tab-btn" data-tab="expenses">expenses</button>
+    <button class="tab-btn" data-tab="messages">messages <span id="msgBadge" class="tab-badge" style="display:none;">0</span></button>
+    <button class="tab-btn" data-tab="traffic">traffic watch</button>
+    <button class="tab-btn" data-tab="studio">content studio</button>
+  </div>
+
+  <div class="container">
+
+    <!-- ============= OVERVIEW TAB ============= -->
+    <div class="tab-content active" id="tab-overview">
+
+    <!-- QUICK STATS -->
+    <div class="panel">
+      <h2>quick <span class="accent">stats</span></h2>
+      <div class="stats-grid" id="overviewStats">
+        <div class="stat-card">
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-label">total books</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statAvailable">0</div>
+          <div class="stat-label">available</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statReserved">0</div>
+          <div class="stat-label">reserved</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statCredit">0</div>
+          <div class="stat-label">on credit</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statSold">0</div>
+          <div class="stat-label">sold</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statRevenue">₱0</div>
+          <div class="stat-label">revenue</div>
+        </div>
+        <div class="stat-card" style="border-color:rgba(232,122,122,.3);">
+          <div class="stat-value" id="statExpenses" style="color:#e87a7a;">₱0</div>
+          <div class="stat-label">expenses</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-value" id="statProfit">₱0</div>
+          <div class="stat-label">net profit</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURED PANEL -->
+    <div class="panel">
+      <h2>featured <span class="accent">of the month</span></h2>
+      <div class="sub">— curated picks shown at the top of the landing page</div>
+
+      <div class="row">
+        <div class="field">
+          <label>featured book of the month</label>
+          <select id="featBookSelect"></select>
+          <div class="hint">pick from your saved books · mark a book as featured here or in the list below</div>
+        </div>
+        <div class="field">
+          <label>book description (optional)</label>
+          <textarea id="featBookDesc" placeholder="a short blurb for the featured book…"></textarea>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>featured author of the month</label>
+          <input type="text" id="featAuthorName" placeholder="e.g. Shirley Jackson">
+        </div>
+        <div class="field">
+          <label>author bio (optional)</label>
+          <textarea id="featAuthorBio" placeholder="a short note about why you love them…"></textarea>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="saveFeatBtn">save featured</button>
+        <button class="btn btn-ghost" id="clearFeatBtn">clear all</button>
+      </div>
+    </div>
+
+    </div><!-- end tab-overview -->
+
+    <!-- ============= TRAFFIC TAB ============= -->
+    <div class="tab-content" id="tab-traffic">
+    <div class="panel">
+      <h2>traffic <span class="accent">watch</span></h2>
+      <button onclick="resetAnalytics()" style="margin-bottom:16px;padding:8px 16px;background:rgba(200,80,80,.2);border:1px solid rgba(200,80,80,.4);color:#e87a7a;border-radius:6px;font-size:.75rem;cursor:pointer;">reset all data</button>
+      <div class="sub">— homepage visits, clicks, wishlists, and order funnel</div>
+      <div id="trafficDashboard">
+        <div class="empty">v5</div>
+      </div>
+    </div>
+    </div><!-- end tab-traffic -->
+
+    <!-- ============= CATALOGUE TAB ============= -->
+    <div class="tab-content" id="tab-catalogue">
+    
+    <!-- SUB-TAB NAVIGATION -->
+    <div class="sub-tab-nav">
+      <button class="sub-tab-btn active" data-subtab="all-books">all books</button>
+      <button class="sub-tab-btn" data-subtab="reservations">reservations <span id="reservedBadge" class="tab-badge">0</span></button>
+      <button class="sub-tab-btn" data-subtab="on-credit">on credit <span id="creditBadge" class="tab-badge">0</span></button>
+      <button class="sub-tab-btn" data-subtab="sold">sold <span id="soldBadge" class="tab-badge">0</span></button>
+    </div>
+
+    <!-- SUB-TAB: ALL BOOKS -->
+    <div class="sub-tab-content active" id="subtab-all-books">
+    <div class="panel">
+      <h2>the <span class="accent">catalogue</span></h2>
+      <div class="sub">— add, edit, remove books in the vault</div>
+
+      <div class="toolbar">
+        <div class="search">
+          <input type="text" id="searchInput" placeholder="search by title or author…">
+        </div>
+        <div class="field" style="margin:0;min-width:160px;">
+          <select id="sortSelect" style="padding:10px 14px;background:rgba(0,0,0,.3);border:1px solid rgba(216,154,85,.25);border-radius:999px;color:var(--cream);font-size:.85rem;">
+            <option value="newest">newest first</option>
+            <option value="rating_high">rating ↓ high to low</option>
+            <option value="rating_low">rating ↑ low to high</option>
+            <option value="price_high">price ↓ high to low</option>
+            <option value="price_low">price ↑ low to high</option>
+            <option value="cost_high">cost ↓ high to low</option>
+            <option value="cost_low">cost ↑ low to high</option>
+            <option value="sold">sold first</option>
+            <option value="credit">credit first</option>
+            <option value="reserved">reserved first</option>
+            <option value="available">available first</option>
+            <option value="condition">condition</option>
+          </select>
+        </div>
+        <div class="count" id="bookCount">0 books</div>
+        <button class="btn btn-primary" id="addBookBtn">+ add new book</button>
+      </div>
+
+      <div class="booklist">
+        <div class="booklist-wrap">
+        <table class="booktable">
+          <thead>
+            <tr>
+              <th></th>
+              <th>title / author</th>
+              <th>genre</th>
+              <th>condition</th>
+              <th>cost</th>
+              <th>price</th>
+              <th>qty</th>
+              <th>rating</th>
+              <th>featured</th>
+              <th>status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="bookRows"></tbody>
+        </table>
+        </div>
+        <div class="empty" id="emptyState" style="display:none;">no books yet. add your first one above.</div>
+      </div>
+
+      </div>
+    </div><!-- end subtab-all-books -->
+
+    <!-- SUB-TAB: RESERVATIONS -->
+    <div class="sub-tab-content" id="subtab-reservations">
+    <div class="panel">
+      <h2><span class="accent">reservations</span> <span id="reservedCount" style="opacity:.6;font-weight:normal;font-size:1rem;">(0)</span></h2>
+      <div class="sub">— books set aside for customers</div>
+      <div id="reservedList" class="status-list" style="margin-top:20px;"></div>
+      <div id="reservedEmpty" class="empty" style="padding:24px;font-size:.9rem;">no reservations yet</div>
+    </div>
+    </div><!-- end subtab-reservations -->
+
+    <!-- SUB-TAB: ON CREDIT -->
+    <div class="sub-tab-content" id="subtab-on-credit">
+    <div class="panel">
+      <h2>on <span class="accent">credit</span> <span id="creditCount" style="opacity:.6;font-weight:normal;font-size:1rem;">(0)</span></h2>
+      <div class="sub">— books sold on credit, pending payment</div>
+      <div id="creditList" class="status-list" style="margin-top:20px;"></div>
+      <div id="creditEmpty" class="empty" style="padding:24px;font-size:.9rem;">no credit sales yet</div>
+    </div>
+    </div><!-- end subtab-on-credit -->
+
+    <!-- SUB-TAB: SOLD -->
+    <div class="sub-tab-content" id="subtab-sold">
+    <div class="panel">
+      <h2><span class="accent">sold</span> <span id="soldCount" style="opacity:.6;font-weight:normal;font-size:1rem;">(0)</span></h2>
+      <div class="sub">— completed sales</div>
+      <div id="soldList" class="status-list" style="margin-top:20px;"></div>
+      <div id="soldEmpty" class="empty" style="padding:24px;font-size:.9rem;">no sold books yet</div>
+    </div>
+    </div><!-- end subtab-sold -->
+
+    </div><!-- end tab-catalogue -->
+
+    <!-- ============= EXPENSES TAB ============= -->
+    <div class="tab-content" id="tab-expenses">
+    <div class="panel">
+      <h2><span class="accent">expenses</span></h2>
+      <div class="sub">— track money spent on book orders, freebies, shipping supplies</div>
+      
+      <div class="expense-form" style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
+        <div class="field" style="width:160px;">
+          <label>batch/order</label>
+          <input type="text" id="expenseBatch" list="batchList" placeholder="e.g. A1, B2...">
+          <datalist id="batchList"></datalist>
+        </div>
+        <div class="field" style="flex:1; min-width:180px;">
+          <label>description</label>
+          <input type="text" id="expenseDesc" placeholder="e.g. wholesale books, packaging...">
+        </div>
+        <div class="field" style="width:120px;">
+          <label>amount (₱)</label>
+          <input type="number" id="expenseAmount" placeholder="0" min="0" step="0.01">
+        </div>
+        <div class="field" style="width:130px;">
+          <label>type</label>
+          <select id="expenseCategory">
+            <option value="books">book orders</option>
+            <option value="freebies">freebies</option>
+            <option value="shipping">shipping</option>
+            <option value="packaging">packaging</option>
+            <option value="other">other</option>
+          </select>
+        </div>
+        <div class="field" style="width:130px;">
+          <label>date</label>
+          <input type="date" id="expenseDate">
+        </div>
+        <button class="btn btn-primary" id="addExpenseBtn" style="height:42px;">+ add</button>
+        <button class="btn" id="cancelExpenseBtn" style="height:42px; display:none; background:rgba(180,180,180,.15); border:1px solid rgba(180,180,180,.3); color:#aaa;">cancel</button>
+      </div>
+
+      <div class="expense-summary" style="margin-top:24px; display:flex; gap:16px; flex-wrap:wrap;">
+        <div class="stat-card" style="flex:1; min-width:120px;">
+          <div class="stat-value" id="expenseTotal">₱0</div>
+          <div class="stat-label">total expenses</div>
+        </div>
+        <div class="stat-card" style="flex:1; min-width:120px;">
+          <div class="stat-value" id="expenseBooks">₱0</div>
+          <div class="stat-label">book orders</div>
+        </div>
+        <div class="stat-card" style="flex:1; min-width:120px;">
+          <div class="stat-value" id="expenseFreebies">₱0</div>
+          <div class="stat-label">freebies</div>
+        </div>
+        <div class="stat-card" style="flex:1; min-width:120px;">
+          <div class="stat-value" id="expenseOther">₱0</div>
+          <div class="stat-label">other</div>
+        </div>
+      </div>
+
+      <div id="expenseList" class="status-list" style="margin-top:24px;"></div>
+      <div id="expenseEmpty" class="empty" style="padding:24px;font-size:.9rem;">no expenses tracked yet</div>
+    </div>
+    </div><!-- end tab-expenses -->
+
+    <!-- ============= MESSAGES TAB ============= -->
+    <div class="tab-content" id="tab-messages">
+    <div class="panel">
+      <h2><span class="accent">messages</span></h2>
+      <div class="sub">— contact form submissions</div>
+      
+      <div id="messagesList" class="messages-list" style="margin-top:20px;"></div>
+      <div id="messagesEmpty" class="empty" style="padding:24px;font-size:.9rem;">no messages yet</div>
+    </div>
+    </div><!-- end tab-messages -->
+
+    <!-- ============= STUDIO TAB ============= -->
+    <div class="tab-content" id="tab-studio">
+    <!-- CONTENT STUDIO PANEL -->
+    <div class="panel">
+      <h2>the <span class="accent">content studio</span></h2>
+      <div class="sub">— pick a mode, pick a book, let the pom do the rest</div>
+
+      <div class="studio-modes" id="studioModes" style="margin-top:18px;">
+        <button data-mode="coming_soon" class="active">📚 coming soon post</button>
+        <button data-mode="on_hand">🗂 on hand books</button>
+        <button data-mode="featured">✨ featured of the day</button>
+      </div>
+
+      <!-- single book picker (coming_soon + featured) -->
+      <div class="row" id="singleBookRow">
+        <div class="field">
+          <label id="bookSelectLabel">choose a book to promote</label>
+          <select id="studioBookSelect"></select>
+        </div>
+        <div class="field">
+          <label>format</label>
+          <div class="graphic-controls" style="margin:0;">
+            <div class="toggle-group" id="formatToggle">
+              <button data-format="square" class="active">square · 1:1</button>
+              <button data-format="story">story · 9:16</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- featured suggest -->
+      <div class="studio-btnrow" id="featuredSuggestRow" style="display:none;margin-top:-6px;margin-bottom:14px;">
+        <button class="btn-sm" id="suggestFeaturedBtn">✦ suggest a featured pick</button>
+        <span class="hint" style="font-family:'Cormorant Garamond',serif;font-style:italic;color:#8B7A66;align-self:center;">prioritizes 4.0+ ratings + popular authors</span>
+      </div>
+
+      <!-- on-hand multi picker -->
+      <div id="onHandPickerWrap" style="display:none;margin-top:8px;">
+        <label style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-bright);display:block;margin-bottom:8px;">pick books on hand</label>
+        <div class="onhand-toolbar">
+          <span><span class="count" id="onHandCount">0</span> selected</span>
+          <button class="btn-sm" id="onHandSelectAll">select all</button>
+          <button class="btn-sm" id="onHandClear">clear</button>
+        </div>
+        <div class="onhand-grid" id="onHandGrid"></div>
+      </div>
+
+      <!-- preset caption (matches the chosen mode template) -->
+      <div class="studio-card" style="margin-top:18px;">
+        <h4 id="presetCaptionTitle">coming soon caption <span class="glyph">✦</span></h4>
+        <textarea class="studio-textarea mono" id="presetCaption" placeholder="click generate to draft a caption using the chosen mode template…" style="min-height:200px;"></textarea>
+        <div class="studio-btnrow">
+          <button class="btn-sm fill" id="genPresetBtn">generate caption</button>
+          <button class="btn-sm" id="copyPresetBtn">copy</button>
+        </div>
+      </div>
+
+      <!-- summary -->
+      <div class="studio-card" style="margin-top:14px;">
+        <h4>book summary <span class="glyph">"</span></h4>
+        <textarea class="studio-textarea" id="studioSummary" placeholder="a short description of the book. fetch one from Open Library or write your own."></textarea>
+        <div class="studio-btnrow">
+          <button class="btn-sm fill" id="fetchSummaryBtn">✦ fetch from open library</button>
+          <button class="btn-sm" id="copySummaryBtn">copy</button>
+        </div>
+      </div>
+
+      <!-- captions -->
+      <div class="studio-grid" style="margin-top:18px;">
+        <div class="studio-card">
+          <h4>instagram caption <span class="glyph">◎</span></h4>
+          <textarea class="studio-textarea mono" id="igCaption" placeholder="click generate to draft an IG caption…"></textarea>
+          <div class="studio-btnrow">
+            <button class="btn-sm fill" id="genIgBtn">generate instagram caption</button>
+            <button class="btn-sm" id="copyIgBtn">copy</button>
+          </div>
+        </div>
+        <div class="studio-card">
+          <h4>facebook caption <span class="glyph">f</span></h4>
+          <textarea class="studio-textarea mono" id="fbCaption" placeholder="click generate to draft a FB caption…"></textarea>
+          <div class="studio-btnrow">
+            <button class="btn-sm fill" id="genFbBtn">generate facebook caption</button>
+            <button class="btn-sm" id="copyFbBtn">copy</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- graphic -->
+      <div class="studio-card" style="margin-top:18px;">
+        <h4>promotional graphic <span class="glyph">✦</span></h4>
+        <div class="graphic-stage-wrap">
+          <div class="graphic-viewport square" id="graphicViewport">
+            <div class="graphic-stage square" id="graphicStage">
+              <div class="gs-stamp" id="gsStamp">✦ just in</div>
+              <div class="gs-brand">the book vault<span class="b">ph</span></div>
+              <div class="gs-content">
+                <div class="gs-cover" id="gsCover">
+                  <div class="pub-no">No. 001</div>
+                  <div>
+                    <div class="cv-ttl" id="gsCovTtl">—</div>
+                    <div class="cv-auth" id="gsCovAuth">—</div>
+                  </div>
+                </div>
+                <div class="gs-text">
+                  <div class="gs-label">now available</div>
+                  <div class="gs-title" id="gsTitle">select a book</div>
+                  <div class="gs-author" id="gsAuthor">to preview the graphic</div>
+                  <div class="gs-price" id="gsPrice">₱—</div>
+                  <div class="gs-tag" id="gsTag">— · —</div>
+                </div>
+              </div>
+              <div class="gs-foot">
+                <span>ships nationwide</span>
+                <span class="cta">dm to claim →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="studio-btnrow" style="margin-top:16px;">
+          <button class="btn-sm fill" id="downloadGraphicBtn">⬇ download as PNG</button>
+          <span class="hint" style="font-family:'Cormorant Garamond',serif;font-size:.9rem;color:#8B7A66;font-style:italic;align-self:center;">renders at full 1080px on download</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+    </div><!-- end tab-studio -->
+</div><!-- end container -->
+</div><!-- end app -->
+
+<!-- ============= MODAL ============= -->
+<div class="modal-bg" id="modal">
+  <div class="modal" style="position:relative;">
+    <span class="close" id="modalClose">×</span>
+    <h3 id="modalTitle">add a <span class="accent">new book</span></h3>
+    <form id="bookForm">
+      <input type="hidden" id="bookId">
+      <div class="row">
+        <div class="field"><label>book title *</label><input type="text" id="f_title" required></div>
+        <div class="field"><label>author *</label><input type="text" id="f_author" required></div>
+      </div>
+      <div class="row thirds">
+        <div class="field">
+          <label>genre *</label>
+          <select id="f_genre" required></select>
+        </div>
+        <div class="field">
+          <label>condition *</label>
+          <select id="f_condition" required></select>
+        </div>
+        <div class="field">
+          <label>status</label>
+          <select id="f_status">
+            <option value="available">Available Now</option>
+            <option value="coming_soon">Coming Soon</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>quantity</label>
+          <input type="number" id="f_quantity" min="1" step="1" value="1" placeholder="1">
+          <div class="hint">number of copies in stock</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>featured</label>
+          <div class="checkrow"><input type="checkbox" id="f_featured"><label for="f_featured">mark as featured book of the month</label></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>price bought (₱) · internal</label>
+          <input type="number" id="f_cost" min="0" step="1" placeholder="0">
+          <div class="hint">cost to you. never shown on the public site.</div>
+        </div>
+        <div class="field">
+          <label>selling price (₱) *</label>
+          <input type="number" id="f_price" min="0" step="1" required placeholder="220">
+          <div class="hint">shown on the public site.</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>cover image URL</label>
+          <input type="url" id="f_coverUrl" placeholder="https://...">
+        </div>
+        <div class="field">
+          <label>or upload a cover</label>
+          <input type="file" id="f_coverFile" accept="image/*">
+          <div class="hint">auto-resized to ~800px to save space</div>
+        </div>
+      </div>
+      <div class="cover-preview">
+        <div class="pv pv-empty" id="coverPreview"><span>no cover yet</span></div>
+        <div style="flex:1;font-size:.92rem;color:#8B7A66;font-style:italic;">if no cover is provided, the public site will render a stylized gradient spine with the title and author — still very cozy.</div>
+      </div>
+      <div class="field" style="margin-top:18px;">
+        <label>summary (optional)</label>
+        <textarea id="f_summary" placeholder="a short description shown to shoppers when they click the book…"></textarea>
+        <div class="btn-row" style="margin-top:10px;">
+          <button type="button" class="btn btn-ghost" id="f_fetchSummary" style="font-size:.62rem;padding:9px 16px;">✦ fetch from open library</button>
+          <span class="hint" style="font-style:italic;color:#8B7A66;font-size:.85rem;align-self:center;">uses title + author</span>
+        </div>
+      </div>
+      <div class="row" style="margin-top:18px;">
+        <div class="field">
+          <label>goodreads rating (optional)</label>
+          <input type="number" id="f_rating" min="0" max="5" step="0.01" placeholder="4.25">
+          <div class="hint">e.g. 4.25 out of 5 stars</div>
+        </div>
+        <div class="field">
+          <label>goodreads link (optional)</label>
+          <input type="url" id="f_goodreads" placeholder="https://www.goodreads.com/book/show/...">
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:24px;">
+        <button type="submit" class="btn btn-primary" id="saveBtn">save book</button>
+        <button type="button" class="btn btn-ghost" id="cancelBtn">cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ============= CREDIT MODAL ============= -->
+<div class="modal-bg" id="reserveModal">
+  <div class="modal" style="position:relative;max-width:480px;">
+    <span class="close" id="reserveModalClose">×</span>
+    <h3>reserve <span class="accent">details</span></h3>
+    <form id="reserveForm">
+      <input type="hidden" id="reserveBookId">
+      <div class="field" style="margin-bottom:18px;">
+        <label>customer name *</label>
+        <input type="text" id="res_name" required placeholder="e.g. Juan Dela Cruz">
+      </div>
+      <div class="field" style="margin-bottom:18px;">
+        <label>phone number</label>
+        <input type="tel" id="res_phone" placeholder="e.g. 09171234567">
+      </div>
+      <div class="field" style="margin-bottom:18px;">
+        <label>address</label>
+        <textarea id="res_address" placeholder="delivery address…" style="min-height:60px;"></textarea>
+      </div>
+      <div class="field" style="margin-bottom:18px;">
+        <label>notes (optional)</label>
+        <textarea id="res_notes" placeholder="any extra notes…" style="min-height:50px;"></textarea>
+      </div>
+      <div class="checkrow" style="margin-bottom:18px;">
+        <input type="checkbox" id="res_paid">
+        <label for="res_paid">Paid</label>
+      </div>
+      <div class="btn-row">
+        <button type="submit" class="btn btn-primary" id="saveReserveBtn">save reservation</button>
+        <button type="button" class="btn btn-ghost" id="cancelReserveBtn">cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-bg" id="creditModal">
+  <div class="modal" style="position:relative;max-width:480px;">
+    <span class="close" id="creditModalClose">×</span>
+    <h3>credit <span class="accent">details</span></h3>
+    <form id="creditForm">
+      <input type="hidden" id="creditBookId">
+      <div class="field" style="margin-bottom:18px;">
+        <label>creditor name *</label>
+        <input type="text" id="cr_name" required placeholder="e.g. Juan Dela Cruz">
+      </div>
+      <div class="field" style="margin-bottom:18px;">
+        <label>phone number *</label>
+        <input type="tel" id="cr_phone" required placeholder="e.g. 09171234567">
+      </div>
+      <div class="field" style="margin-bottom:18px;">
+        <label>address</label>
+        <textarea id="cr_address" placeholder="full address for follow-up…" style="min-height:60px;"></textarea>
+      </div>
+      <div class="field" style="margin-bottom:18px;">
+        <label>notes (optional)</label>
+        <textarea id="cr_notes" placeholder="any extra notes about this credit…" style="min-height:50px;"></textarea>
+      </div>
+      <div class="btn-row">
+        <button type="submit" class="btn btn-primary" id="saveCreditBtn">save credit</button>
+        <button type="button" class="btn btn-ghost" id="cancelCreditBtn">cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script src="/shared.js"></script>
+<script>
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => document.querySelectorAll(sel);
+
+  // ===== LOGIN =====
+  const loginScreen = $('#loginScreen');
+  const app = $('#app');
+  const showApp = () => { localStorage.setItem('bvph_admin','1'); loginScreen.style.display='none'; app.classList.add('show'); render(); };
+  const showLogin = () => { loginScreen.style.display=''; app.classList.remove('show'); };
+
+  // boot: load data from Supabase (or localStorage fallback) and then render
+  (async () => {
+    try { await BVPH.init(); } catch(e) { console.error('[init]', e); }
+    updateBackendPill();
+    if (BVPH.isAuthed()) showApp();
+    // live updates from other tabs/devices via Supabase realtime
+    BVPH.onChange(() => { if (app.classList.contains('show')) render(); });
+  })();
+
+  function updateBackendPill() {
+    const pill = $('#backendPill');
+    if (!pill) return;
+    const s = BVPH.status();
+    if (s.mode === 'supabase') { pill.textContent = '● supabase live'; pill.style.color = '#7dc97d'; pill.style.borderColor = 'rgba(125,201,125,.4)'; }
+    else { pill.textContent = '● local only'; pill.style.color = '#e87a7a'; pill.style.borderColor = 'rgba(232,122,122,.4)'; }
+  }
+
+  $('#loginForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const pw = $('#pwInput').value;
+    if (BVPH.login(pw)) {
+      $('#loginErr').textContent='';
+      showApp();
+      startSessionWatcher();
+    } else {
+      $('#loginErr').textContent='wrong password. try again.';
+      $('#pwInput').select();
+    }
+  });
+
+  const doLogout = (reason) => {
+    BVPH.logout();
+    $('#pwInput').value='';
+    showLogin();
+    if (reason === 'timeout') {
+      $('#loginErr').textContent = 'session expired after 30 minutes. please log in again.';
+    }
+  };
+
+  $('#logoutBtn').addEventListener('click', () => doLogout('manual'));
+
+  // ===== TAB NAVIGATION =====
+  $$('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabId = btn.dataset.tab;
+      // Update active button
+      $$('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      // Update active content
+      $$('.tab-content').forEach(t => t.classList.remove('active'));
+      $(`#tab-${tabId}`).classList.add('active');
+      // Save to localStorage
+      localStorage.setItem('bvph_active_tab', tabId);
+    });
+  });
+  // Restore last active tab
+  const savedTab = localStorage.getItem('bvph_active_tab');
+  if (savedTab && $(`#tab-${savedTab}`)) {
+    $$('.tab-btn').forEach(b => b.classList.remove('active'));
+    $(`.tab-btn[data-tab="${savedTab}"]`).classList.add('active');
+    $$('.tab-content').forEach(t => t.classList.remove('active'));
+    $(`#tab-${savedTab}`).classList.add('active');
+  }
+
+  // ===== SUB-TAB NAVIGATION (inside catalogue) =====
+  $$('.sub-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const subtabId = btn.dataset.subtab;
+      // Update active button
+      $$('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      // Update active content
+      $$('.sub-tab-content').forEach(t => t.classList.remove('active'));
+      $(`#subtab-${subtabId}`).classList.add('active');
+      // Save to localStorage
+      localStorage.setItem('bvph_active_subtab', subtabId);
+    });
+  });
+  // Restore last active sub-tab
+  const savedSubtab = localStorage.getItem('bvph_active_subtab');
+  if (savedSubtab && $(`#subtab-${savedSubtab}`)) {
+    $$('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+    $(`.sub-tab-btn[data-subtab="${savedSubtab}"]`).classList.add('active');
+    $$('.sub-tab-content').forEach(t => t.classList.remove('active'));
+    $(`#subtab-${savedSubtab}`).classList.add('active');
+  }
+
+  // ===== SESSION TIMEOUT (30 min absolute) =====
+  let sessionTimerId = null;
+  const startSessionWatcher = () => {
+    if (sessionTimerId) clearInterval(sessionTimerId);
+    // schedule a precise timeout for the exact moment
+    const left = BVPH.sessionMsLeft();
+    if (left <= 0) { doLogout('timeout'); return; }
+    setTimeout(() => doLogout('timeout'), left + 200);
+    // also poll every 30s as a backup (e.g. clock changes, tab waking)
+    sessionTimerId = setInterval(() => {
+      if (!BVPH.enforceSession()) doLogout('timeout');
+      else updateSessionPill();
+    }, 30000);
+    updateSessionPill();
+  };
+  const updateSessionPill = () => {
+    const pill = $('#sessionPill');
+    if (!pill) return;
+    const left = BVPH.sessionMsLeft();
+    if (left <= 0) { pill.textContent = 'expired'; return; }
+    const m = Math.ceil(left / 60000);
+    pill.textContent = `session · ${m}m left`;
+  };
+  if (BVPH.isAuthed()) startSessionWatcher();
+
+  // also re-check whenever the tab regains focus
+  window.addEventListener('focus', () => {
+    if (app.classList.contains('show') && !BVPH.enforceSession()) doLogout('timeout');
+    else updateSessionPill();
+  });
+
+  // ===== CROSS-TAB / STORAGE SYNC =====
+  // If books or featured data are changed elsewhere (another tab,
+  // another window, etc.), re-render the admin so it never shows stale data.
+  window.addEventListener('storage', e => {
+    if (!e.key) return;
+    if (e.key.startsWith('bvph_books') || e.key.startsWith('bvph_featured')) {
+      if (app.classList.contains('show')) render();
+    }
+    // also kick the user out if auth was cleared in another tab
+    if (e.key.startsWith('bvph_auth') && app.classList.contains('show')) {
+      if (!BVPH.isAuthed()) doLogout('manual');
+    }
+  });
+  // and re-render whenever the tab regains focus (catches same-tab edits while away)
+  window.addEventListener('focus', () => {
+    if (app.classList.contains('show')) render();
+  });
+
+  // ===== TOAST =====
+  const toast = (msg) => {
+    const t = $('#toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._tid);
+    t._tid = setTimeout(()=>t.classList.remove('show'), 2200);
+  };
+
+  // ===== MODAL =====
+  const modal = $('#modal');
+  const openModal = (book=null) => {
+    $('#modalTitle').innerHTML = book ? 'edit <span class="accent">book</span>' : 'add a <span class="accent">new book</span>';
+    $('#bookId').value = book?.id || '';
+    $('#f_title').value = book?.title || '';
+    $('#f_author').value = book?.author || '';
+    $('#f_genre').value = book?.genre || BVPH.GENRES[0];
+    $('#f_condition').value = book?.condition || BVPH.CONDITIONS[0];
+    $('#f_status').value = book?.status || 'available';
+    $('#f_quantity').value = book?.quantity || 1;
+    $('#f_featured').checked = !!book?.featured;
+    $('#f_cost').value = book?.costPrice ?? '';
+    $('#f_price').value = book?.sellPrice ?? '';
+    $('#f_coverUrl').value = (book?.cover && !book.cover.startsWith('data:')) ? book.cover : '';
+    $('#f_coverFile').value = '';
+    $('#f_summary').value = book?.summary || '';
+    $('#f_rating').value = book?.rating ?? '';
+    $('#f_goodreads').value = book?.goodreads_url || '';
+    setCoverPreview(book?.cover || '');
+    modal.classList.add('show');
+  };
+  const closeModal = () => modal.classList.remove('show');
+  $('#modalClose').addEventListener('click', closeModal);
+  $('#cancelBtn').addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target===modal) closeModal(); });
+
+  const setCoverPreview = (src) => {
+    const pv = $('#coverPreview');
+    if (src) { pv.style.backgroundImage = `url("${src}")`; pv.classList.remove('pv-empty'); pv.innerHTML=''; }
+    else { pv.style.backgroundImage=''; pv.classList.add('pv-empty'); pv.innerHTML='<span>no cover yet</span>'; }
+  };
+  $('#f_coverUrl').addEventListener('input', e => setCoverPreview(e.target.value.trim()));
+  $('#f_coverFile').addEventListener('change', async e => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const dataUrl = await BVPH.fileToDataUrl(file);
+      $('#f_coverUrl').value = ''; // file takes priority
+      setCoverPreview(dataUrl);
+      $('#f_coverFile').dataset.dataUrl = dataUrl;
+    } catch(err){ toast('couldn\'t read that image'); }
+  });
+
+  // in-form summary fetch
+  $('#f_fetchSummary').addEventListener('click', async () => {
+    const title = $('#f_title').value.trim();
+    const author = $('#f_author').value.trim();
+    if (!title || !author) { toast('add a title and author first'); return; }
+    const btn = $('#f_fetchSummary');
+    btn.disabled = true; btn.textContent = 'searching…';
+    try {
+      const q = `https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&author=${encodeURIComponent(author)}&limit=1`;
+      const data = await (await fetch(q)).json();
+      const doc = data?.docs?.[0];
+      let s = '';
+      if (doc?.key) {
+        try {
+          const wd = await (await fetch(`https://openlibrary.org${doc.key}.json`)).json();
+          const d = wd.description;
+          s = typeof d === 'string' ? d : (d?.value || '');
+        } catch(e) {}
+      }
+      if (!s && doc?.first_sentence) s = Array.isArray(doc.first_sentence) ? doc.first_sentence[0] : doc.first_sentence;
+      if (!s) { toast('no summary found · write your own'); }
+      else {
+        s = s.replace(/\(\[source\]\[\d+\]\)/gi,'').replace(/\[\d+\]:\s*https?:\/\/\S+/gi,'').trim();
+        if (s.length > 700) { const cut = s.slice(0, 700); s = (cut.slice(0, cut.lastIndexOf('.') + 1) || cut) + '…'; }
+        $('#f_summary').value = s;
+        toast('summary loaded ✦');
+      }
+    } catch(e) { toast('couldn\'t reach open library'); }
+    finally { btn.disabled = false; btn.innerHTML = '✦ fetch from open library'; }
+  });
+
+  // populate dropdowns
+  $('#f_genre').innerHTML = BVPH.GENRES.map(g=>`<option>${g}</option>`).join('');
+  $('#f_condition').innerHTML = BVPH.CONDITIONS.map(c=>`<option>${c}</option>`).join('');
+
+  // ===== SAVE BOOK =====
+  $('#bookForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const id = $('#bookId').value || BVPH.newId();
+    const dataUrl = $('#f_coverFile').dataset.dataUrl;
+    const cover = dataUrl || $('#f_coverUrl').value.trim();
+
+    let books = BVPH.getBooks();
+    if (books.some(b=>b.demo)) books = books.filter(b=>!b.demo);
+
+    const isFeatured = $('#f_featured').checked;
+    if (isFeatured) books.forEach(b=>{ if (b.id !== id) b.featured = false; });
+
+    const existing = books.find(b=>b.id===id);
+    const payload = {
+      id,
+      title: $('#f_title').value.trim(),
+      author: $('#f_author').value.trim(),
+      genre: $('#f_genre').value,
+      condition: $('#f_condition').value,
+      status: $('#f_status').value,
+      quantity: parseInt($('#f_quantity').value, 10) || 1,
+      costPrice: Number($('#f_cost').value) || 0,
+      sellPrice: Number($('#f_price').value) || 0,
+      cover,
+      summary: $('#f_summary').value.trim(),
+      rating: parseFloat($('#f_rating').value) || null,
+      goodreads_url: $('#f_goodreads').value.trim() || null,
+      featured: isFeatured,
+      createdAt: existing?.createdAt || Date.now(),
+      updatedAt: Date.now(),
+    };
+    if (existing) Object.assign(existing, payload);
+    else books.unshift(payload);
+
+    const saveBtn = $('#saveBtn');
+    saveBtn.disabled = true; saveBtn.textContent = 'saving…';
+    try {
+      await BVPH.saveBooks(books);
+      delete $('#f_coverFile').dataset.dataUrl;
+      closeModal();
+      render();
+      toast(existing ? 'book updated ✦' : 'book added ✦');
+    } catch(err) {
+      console.error(err);
+      toast('save failed — check console');
+    } finally {
+      saveBtn.disabled = false; saveBtn.textContent = 'save book';
+    }
+  });
+
+  $('#addBookBtn').addEventListener('click', () => openModal());
+
+  // ===== FEATURED =====
+  const refreshFeatured = () => {
+    const books = BVPH.getBooks().filter(b=>!b.demo);
+    const feat = BVPH.getFeatured();
+    const sel = $('#featBookSelect');
+    sel.innerHTML = `<option value="">— none selected —</option>` +
+      books.map(b=>`<option value="${b.id}" ${b.id===feat.bookId?'selected':''}>${b.title} · ${b.author}</option>`).join('');
+    $('#featBookDesc').value = feat.bookDescription || '';
+    $('#featAuthorName').value = feat.authorName || '';
+    $('#featAuthorBio').value = feat.authorBio || '';
+  };
+
+  $('#saveFeatBtn').addEventListener('click', async () => {
+    const bookId = $('#featBookSelect').value || null;
+    const btn = $('#saveFeatBtn');
+    btn.disabled = true; btn.textContent = 'saving…';
+    try {
+      await BVPH.saveFeatured({
+        bookId,
+        bookDescription: $('#featBookDesc').value.trim(),
+        authorName: $('#featAuthorName').value.trim(),
+        authorBio: $('#featAuthorBio').value.trim(),
+      });
+      render();
+      toast('featured saved ✦');
+    } catch(e) { console.error(e); toast('save failed'); }
+    finally { btn.disabled = false; btn.textContent = 'save featured'; }
+  });
+
+  $('#clearFeatBtn').addEventListener('click', async () => {
+    const btn = $('#clearFeatBtn');
+    btn.disabled = true;
+    try {
+      await BVPH.saveFeatured({ bookId:null, bookDescription:'', authorName:'', authorBio:'' });
+      render();
+      toast('featured cleared');
+    } catch(e) { console.error(e); toast('failed'); }
+    finally { btn.disabled = false; }
+  });
+
+  // ===== TABLE =====
+  const renderTable = () => {
+    const q = $('#searchInput').value.trim().toLowerCase();
+    const sortBy = $('#sortSelect')?.value || 'newest';
+    let books = BVPH.getBooks();
+    if (q) books = books.filter(b => (b.title+' '+b.author).toLowerCase().includes(q));
+    
+    // sorting logic
+    const conditionOrder = {'Brand New':1,'Like New':2,'Very Good':3,'Good':4,'Acceptable':5};
+    books.sort((a,b) => {
+      // featured always first
+      if (a.featured !== b.featured) return b.featured ? 1 : -1;
+      
+      switch(sortBy) {
+        case 'rating_high': return (b.rating||0) - (a.rating||0);
+        case 'rating_low': return (a.rating||0) - (b.rating||0);
+        case 'price_high': return (b.sellPrice||0) - (a.sellPrice||0);
+        case 'price_low': return (a.sellPrice||0) - (b.sellPrice||0);
+        case 'cost_high': return (b.costPrice||0) - (a.costPrice||0);
+        case 'cost_low': return (a.costPrice||0) - (b.costPrice||0);
+        case 'sold': return (b.sale_status==='sold'?1:0) - (a.sale_status==='sold'?1:0);
+        case 'credit': return (b.sale_status==='credit'?1:0) - (a.sale_status==='credit'?1:0);
+        case 'reserved': return (b.sale_status==='reserved'?1:0) - (a.sale_status==='reserved'?1:0);
+        case 'available': return ((a.sale_status||'available')==='available'?0:1) - ((b.sale_status||'available')==='available'?0:1);
+        case 'condition': return (conditionOrder[a.condition]||9) - (conditionOrder[b.condition]||9);
+        default: return (b.createdAt||0) - (a.createdAt||0);
+      }
+    });
+    const rows = books.map(b => {
+      const ratingCell = b.rating 
+        ? (b.goodreads_url 
+          ? `<a href="${escapeHtml(b.goodreads_url)}" target="_blank" style="color:var(--copper-bright);text-decoration:none;">${b.rating.toFixed(2)} ⭐</a>` 
+          : `${b.rating.toFixed(2)} ⭐`)
+        : '—';
+      const saleStatus = b.sale_status || 'available';
+      let statusBtns = '';
+      if (saleStatus === 'sold') {
+        statusBtns = `<span class="badge" style="background:rgba(125,201,125,.2);border-color:#7dc97d;color:#7dc97d;">sold</span> <button class="icon-btn" data-unsell="${b.id}" title="mark available" style="font-size:.55rem;">↩</button>`;
+      } else if (saleStatus === 'credit') {
+        statusBtns = `<span class="badge" style="background:rgba(255,193,7,.2);border-color:#ffc107;color:#ffc107;cursor:pointer;" data-viewcredit="${b.id}" title="click to view/edit credit info">credit</span> <button class="icon-btn" data-unsell="${b.id}" title="mark available" style="font-size:.55rem;">↩</button>`;
+      } else if (saleStatus === 'reserved') {
+        const paidIcon = b.reserver_paid ? ' ✓' : '';
+        statusBtns = `<span class="badge" style="background:rgba(147,112,219,.2);border-color:#9370db;color:#9370db;cursor:pointer;" data-viewreserve="${b.id}" title="click to view/edit reservation">reserved${paidIcon}</span> <button class="icon-btn" data-unsell="${b.id}" title="mark available" style="font-size:.55rem;">↩</button>`;
+      } else {
+        statusBtns = `<button class="icon-btn" data-sold="${b.id}" style="color:#7dc97d;">sold</button> <button class="icon-btn" data-credit="${b.id}" style="color:#ffc107;">credit</button> <button class="icon-btn" data-reserve="${b.id}" style="color:#9370db;">reserve</button>`;
+      }
+      return `
+      <tr class="${b.featured?'featured':''} ${saleStatus==='sold'||saleStatus==='credit'||saleStatus==='reserved'?'sold-row':''}">
+        <td class="cover-cell" onclick="openBookDetail('${b.id}')"><div class="mini" style="${b.cover?`background-image:url('${b.cover}')`:''}"></div></td>
+        <td class="title-cell" onclick="openBookDetail('${b.id}')">${escapeHtml(b.title)}${b.demo?' <span class="badge">demo</span>':''}${b.status==='coming_soon'?' <span class="badge" style="background:rgba(216,154,85,.3);border-color:var(--copper);">coming soon</span>':''}<span class="a">${escapeHtml(b.author)}</span></td>
+        <td><span class="badge">${b.genre}</span></td>
+        <td><span class="badge">${b.condition}</span></td>
+        <td>${b.costPrice?'₱'+b.costPrice:'—'}</td>
+        <td class="price-cell">₱${b.sellPrice||0}</td>
+        <td>${b.quantity || 1}</td>
+        <td>${ratingCell}</td>
+        <td><button class="icon-btn star ${b.featured?'on':''}" data-star="${b.id}" title="toggle featured">${b.featured?'★':'☆'}</button></td>
+        <td style="white-space:nowrap;">${statusBtns}</td>
+        <td class="actions-cell">
+          <button class="icon-btn edit" data-edit="${b.id}">edit</button>
+          <button class="icon-btn del" data-del="${b.id}">delete</button>
+        </td>
+      </tr>
+    `;}).join('');
+    $('#bookRows').innerHTML = rows;
+    $('#emptyState').style.display = books.length ? 'none' : 'block';
+    $('#bookCount').textContent = `${books.length} book${books.length===1?'':'s'}`;
+
+    $$('[data-edit]').forEach(btn => btn.addEventListener('click', () => {
+      const id = btn.dataset.edit;
+      const book = BVPH.getBooks().find(b=>b.id===id);
+      if (book) openModal(book);
+    }));
+    $$('[data-del]').forEach(btn => btn.addEventListener('click', async () => {
+      const id = btn.dataset.del;
+      const book = BVPH.getBook(id);
+      if (!book) return;
+      if (!confirm(`delete "${book.title}"? this can't be undone.`)) return;
+      try { await BVPH.deleteBook(id); render(); toast('book deleted'); }
+      catch(e) { console.error(e); toast('delete failed'); }
+    }));
+    $$('[data-star]').forEach(btn => btn.addEventListener('click', async () => {
+      const id = btn.dataset.star;
+      const target = BVPH.getBook(id);
+      if (!target) return;
+      const willFeature = !target.featured;
+      try {
+        await BVPH.setFeaturedBook(willFeature ? id : null);
+        render();
+        toast(willFeature ? 'marked as featured ✦' : 'featured removed');
+      } catch(e) { console.error(e); toast('failed'); }
+    }));
+    // sold button
+    $$('[data-sold]').forEach(btn => btn.addEventListener('click', async () => {
+      const id = btn.dataset.sold;
+      try {
+        await updateBookSaleStatus(id, 'sold');
+        toast('marked as sold ✦');
+      } catch(e) { console.error(e); toast('failed'); }
+    }));
+    // reserve button - opens modal
+    $$('[data-reserve]').forEach(btn => btn.addEventListener('click', () => {
+      const id = btn.dataset.reserve;
+      openReserveModal(id);
+    }));
+    // view/edit reserve info
+    $$('[data-viewreserve]').forEach(el => el.addEventListener('click', () => {
+      const id = el.dataset.viewreserve;
+      openReserveModal(id, true);
+    }));
+    // credit button - opens modal
+    $$('[data-credit]').forEach(btn => btn.addEventListener('click', () => {
+      const id = btn.dataset.credit;
+      openCreditModal(id);
+    }));
+    // view/edit credit info
+    $$('[data-viewcredit]').forEach(el => el.addEventListener('click', () => {
+      const id = el.dataset.viewcredit;
+      openCreditModal(id, true);
+    }));
+    // unsell - mark available again
+    $$('[data-unsell]').forEach(btn => btn.addEventListener('click', async () => {
+      const id = btn.dataset.unsell;
+      try {
+        await updateBookSaleStatus(id, 'available');
+        toast('marked as available');
+      } catch(e) { console.error(e); toast('failed'); }
+    }));
+  };
+
+  const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  $('#searchInput').addEventListener('input', renderTable);
+  $('#sortSelect').addEventListener('change', renderTable);
+
+  // ===== CREDIT MODAL =====
+  const creditModal = $('#creditModal');
+  const openCreditModal = (bookId, viewMode = false) => {
+    const book = BVPH.getBook(bookId);
+    if (!book) return;
+    $('#creditBookId').value = bookId;
+    $('#cr_name').value = book.creditor_name || '';
+    $('#cr_phone').value = book.creditor_phone || '';
+    $('#cr_address').value = book.creditor_address || '';
+    $('#cr_notes').value = book.creditor_notes || '';
+    creditModal.classList.add('show');
+  };
+  const closeCreditModal = () => creditModal.classList.remove('show');
+  $('#creditModalClose').addEventListener('click', closeCreditModal);
+  $('#cancelCreditBtn').addEventListener('click', closeCreditModal);
+  creditModal.addEventListener('click', e => { if (e.target === creditModal) closeCreditModal(); });
+
+  $('#creditForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const bookId = $('#creditBookId').value;
+    const btn = $('#saveCreditBtn');
+    btn.disabled = true; btn.textContent = 'saving…';
+    try {
+      await updateBookSaleStatus(bookId, 'credit', {
+        creditor_name: $('#cr_name').value.trim(),
+        creditor_phone: $('#cr_phone').value.trim(),
+        creditor_address: $('#cr_address').value.trim(),
+        creditor_notes: $('#cr_notes').value.trim(),
+      });
+      closeCreditModal();
+      toast('credit info saved ✦');
+    } catch(err) {
+      console.error(err);
+      toast('save failed');
+    } finally {
+      btn.disabled = false; btn.textContent = 'save credit';
+    }
+  });
+
+  // ===== RESERVE MODAL =====
+  const reserveModal = $('#reserveModal');
+  const openReserveModal = (bookId, viewMode = false) => {
+    const book = BVPH.getBook(bookId);
+    if (!book) return;
+    $('#reserveBookId').value = bookId;
+    $('#res_name').value = book.reserver_name || '';
+    $('#res_phone').value = book.reserver_phone || '';
+    $('#res_address').value = book.reserver_address || '';
+    $('#res_notes').value = book.reserver_notes || '';
+    $('#res_paid').checked = book.reserver_paid || false;
+    reserveModal.classList.add('show');
+  };
+  const closeReserveModal = () => reserveModal.classList.remove('show');
+  $('#reserveModalClose').addEventListener('click', closeReserveModal);
+  $('#cancelReserveBtn').addEventListener('click', closeReserveModal);
+  reserveModal.addEventListener('click', e => { if (e.target === reserveModal) closeReserveModal(); });
+
+  $('#reserveForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const bookId = $('#reserveBookId').value;
+    const btn = $('#saveReserveBtn');
+    btn.disabled = true; btn.textContent = 'saving…';
+    try {
+      await updateBookSaleStatus(bookId, 'reserved', {
+        reserver_name: $('#res_name').value.trim(),
+        reserver_phone: $('#res_phone').value.trim(),
+        reserver_address: $('#res_address').value.trim(),
+        reserver_notes: $('#res_notes').value.trim(),
+        reserver_paid: $('#res_paid').checked,
+      });
+      closeReserveModal();
+      toast('reservation saved ✦');
+    } catch(err) {
+      console.error(err);
+      toast('save failed');
+    } finally {
+      btn.disabled = false; btn.textContent = 'save reservation';
+    }
+  });
+
+  // helper to update sale status
+  const updateBookSaleStatus = async (bookId, status, extraFields = {}) => {
+    let books = BVPH.getBooks();
+    const book = books.find(b => b.id === bookId);
+    if (!book) return;
+    book.sale_status = status;
+    if (status === 'credit' || status === 'reserved') {
+      Object.assign(book, extraFields);
+    } else if (status === 'available') {
+      // clear creditor info when marking available
+      book.creditor_name = null;
+      book.creditor_phone = null;
+      book.creditor_address = null;
+      book.creditor_notes = null;
+      // clear reserver info when marking available
+      book.reserver_name = null;
+      book.reserver_phone = null;
+      book.reserver_address = null;
+      book.reserver_notes = null;
+      book.reserver_paid = null;
+    }
+    book.updatedAt = Date.now();
+    await BVPH.saveBooks(books);
+    render();
+  };
+
+
+
+  // ===== TRAFFIC DASHBOARD =====
+  const pageLabel = (p) => ({'homepage':'Homepage','index.html':'Homepage','browse':'Browse','browse.html':'Browse','coming soon':'Coming Soon','coming-soon.html':'Coming Soon','contact':'Contact','contact.html':'Contact','order':'Order','order.html':'Order','payment':'Payment','payment.html':'Payment'}[p] || p || 'Unknown');
+  const eventLabel = (e) => ({page_view:'viewed',book_click:'opened book',wishlist_add:'wishlisted',buy_now_click:'clicked buy',order_start:'started order',order_submit:'submitted details',payment_view:'reached payment',nav_click:'clicked nav',contact_click:'clicked contact'}[e] || e);
+  const pct = (a,b) => b ? Math.round((a/b)*100) : 0;
+  function countBy(arr, fn){ const m = new Map(); arr.forEach(x => { const k = fn(x); if (!k) return; m.set(k, (m.get(k)||0)+1); }); return [...m.entries()].sort((a,b)=>b[1]-a[1]); }
+  function uniqSessions(events){ return new Set(events.map(e=>e.session_id).filter(Boolean)).size; }
+  function renderRank(rows, max=1){
+    if (!rows.length) return '<div class="empty" style="padding:18px;">nothing here yet.</div>';
+    return rows.map(([name,n]) => `<div class="traffic-row"><div class="traffic-name">${escapeHtml(name)}</div><div class="traffic-num">${n}</div><div class="traffic-bar"><span style="width:${Math.max(6, pct(n,max))}%"></span></div></div>`).join('');
+  }
+  async function resetAnalytics(){
+    if (!confirm('Reset all traffic data? This cannot be undone.')) return;
+    const box = document.getElementById('trafficDashboard');
+    box.innerHTML = '<div class="empty">clearing...</div>';
+    try {
+      const { error } = await BVPH.supabase().from('analytics').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      if (error) throw error;
+      toast('analytics reset');
+      renderTraffic();
+    } catch(e) {
+      console.error(e);
+      box.innerHTML = '<div class="empty">reset failed: ' + (e.message || e) + '</div>';
+    }
+  }
+
+  function renderTraffic(){
+    const box = document.getElementById('trafficDashboard');
+    if (!box) return;
+    box.innerHTML = '<div class="empty">traffic function ran OK</div>';
+    BVPH.getAnalytics().then(result => {
+      box.innerHTML = '<div class="empty">events: ' + (result?.events?.length || 0) + '</div>';
+      if (!result) {
+        box.innerHTML = '<div class="empty">no analytics data returned. check Supabase connection.</div>';
+        return;
+      }
+      const events = result.events || [];
+      const books = result.books || [];
+      if (events.length === 0) {
+        box.innerHTML = '<div class="empty">no visits tracked yet. visit the live site, then refresh this page.</div>';
+        return;
+      }
+      const bookMap = new Map(books.map(b => [b.id, `${b.title} · ${b.author || 'Unknown'}`]));
+      const now = new Date();
+      const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+      const startWeek = now.getTime() - 7*24*60*60*1000;
+      const today = events.filter(e => new Date(e.created_at).getTime() >= startToday);
+      const week = events.filter(e => new Date(e.created_at).getTime() >= startWeek);
+      const pageViewsToday = today.filter(e => e.event_type === 'page_view');
+      const pageViewsWeek = week.filter(e => e.event_type === 'page_view');
+      const visitorsToday = uniqSessions(today);
+      const visitorsWeek = uniqSessions(week);
+      const homeToday = pageViewsToday.filter(e => pageLabel(e.page) === 'Homepage').length;
+      const pageRows = countBy(pageViewsWeek, e => pageLabel(e.page));
+      const maxPage = pageRows[0]?.[1] || 1;
+      const bookViews = countBy(week.filter(e => e.event_type === 'book_click' && e.book_id), e => bookMap.get(e.book_id) || e.book_id).slice(0,10);
+      const wishlisted = countBy(week.filter(e => e.event_type === 'wishlist_add' && e.book_id), e => bookMap.get(e.book_id) || e.book_id).slice(0,10);
+      const buyClicks = countBy(week.filter(e => e.event_type === 'buy_now_click' && e.book_id), e => bookMap.get(e.book_id) || e.book_id);
+      const maxBook = Math.max(bookViews[0]?.[1] || 0, wishlisted[0]?.[1] || 0, buyClicks[0]?.[1] || 0, 1);
+      const starts = week.filter(e => e.event_type === 'order_start').length;
+      const submits = week.filter(e => e.event_type === 'order_submit').length;
+      const payments = week.filter(e => e.event_type === 'payment_view' || pageLabel(e.page) === 'Payment').length;
+      const bookClicksTotal = week.filter(e => e.event_type === 'book_click').length;
+      const buyClicksTotal = week.filter(e => e.event_type === 'buy_now_click').length;
+      const ctr = pct(buyClicksTotal, bookClicksTotal);
+      const activity = events.slice(0,20).map(e => {
+        const when = new Date(e.created_at).toLocaleString('en-PH', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+        const book = e.book_id ? ` · ${bookMap.get(e.book_id) || 'book'}` : '';
+        const el = e.element ? ` · ${e.element}` : '';
+        return `<div class="activity-item"><div class="activity-time">${escapeHtml(when)}</div><div class="activity-text">${escapeHtml(eventLabel(e.event_type))} ${escapeHtml(pageLabel(e.page))}${escapeHtml(book)}${escapeHtml(el)}</div></div>`;
+      }).join('');
+      box.innerHTML = `
+        <div class="traffic-grid">
+          <div class="metric-card"><div class="metric-label">visitors today</div><div class="metric-value">${visitorsToday}</div><div class="metric-note">${homeToday} homepage visit${homeToday===1?'':'s'}</div></div>
+          <div class="metric-card"><div class="metric-label">visitors this week</div><div class="metric-value">${visitorsWeek}</div><div class="metric-note">unique anonymous sessions</div></div>
+          <div class="metric-card"><div class="metric-label">book click-through</div><div class="metric-value">${ctr}%</div><div class="metric-note">${buyClicksTotal} buy clicks from ${bookClicksTotal} book opens</div></div>
+          <div class="metric-card"><div class="metric-label">payment reach</div><div class="metric-value">${pct(payments, starts)}%</div><div class="metric-note">${payments} reached payment from ${starts} starts</div></div>
+        </div>
+        <div class="traffic-columns">
+          <div class="traffic-box"><h4>page breakdown · last 7 days</h4>${renderRank(pageRows, maxPage)}</div>
+          <div class="traffic-box"><h4>order funnel · last 7 days</h4><div class="funnel"><div class="funnel-step"><div class="n">${starts}</div><div class="t">order page</div></div><div class="funnel-step"><div class="n">${submits}</div><div class="t">details sent</div></div><div class="funnel-step"><div class="n">${payments}</div><div class="t">payment page</div></div></div><div class="metric-note" style="margin-top:12px;">drop-off: ${Math.max(0, starts-payments)} session${Math.max(0, starts-payments)===1?'':'s'} started but did not reach payment.</div></div>
+          <div class="traffic-box"><h4>top viewed books · last 7 days</h4>${renderRank(bookViews, maxBook)}</div>
+          <div class="traffic-box"><h4>most wishlisted books · last 7 days</h4>${renderRank(wishlisted, maxBook)}</div>
+          <div class="traffic-box"><h4>buy clicks by book · last 7 days</h4>${renderRank(buyClicks.slice(0,10), maxBook)}</div>
+          <div class="traffic-box"><h4>recent activity</h4><div class="activity-feed">${activity || '<div class="empty" style="padding:18px;">no activity logged yet.</div>'}</div></div>
+        </div>`;
+    }).catch(e => {
+      console.error('[Traffic] error:', e);
+      box.innerHTML = '<div class="empty">traffic error: ' + (e.message || e) + '</div>';
+    });
+  }
+
+  const renderStatusSections = () => {
+    const books = BVPH.getBooks();
+    const reserved = books.filter(b => b.sale_status === 'reserved');
+    const credit = books.filter(b => b.sale_status === 'credit');
+    const sold = books.filter(b => b.sale_status === 'sold');
+
+    // Update counts
+    $('#reservedCount').textContent = `(${reserved.length})`;
+    $('#creditCount').textContent = `(${credit.length})`;
+    $('#soldCount').textContent = `(${sold.length})`;
+    // Update tab badges
+    $('#reservedBadge').textContent = reserved.length;
+    $('#creditBadge').textContent = credit.length;
+    $('#soldBadge').textContent = sold.length;
+
+    // Helper to render a card
+    const card = (b, type) => {
+      const paidBadge = type === 'reserved' 
+        ? (b.reserver_paid ? '<span class="paid-badge">paid</span>' : '<span class="unpaid-badge">unpaid</span>')
+        : '';
+      const customerName = type === 'reserved' ? b.reserver_name : (type === 'credit' ? b.creditor_name : '');
+      const customerPhone = type === 'reserved' ? b.reserver_phone : (type === 'credit' ? b.creditor_phone : '');
+      
+      return `
+        <div class="status-card">
+          <img class="cover" src="${b.cover || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22/>'}" alt="">
+          <div class="info">
+            <div class="title">${escapeHtml(b.title)}</div>
+            <div class="author">${escapeHtml(b.author)}</div>
+            <div class="meta">
+              ${customerName ? `<span>👤 ${escapeHtml(customerName)}</span>` : ''}
+              ${customerPhone ? `<span>📱 ${escapeHtml(customerPhone)}</span>` : ''}
+              ${paidBadge}
+            </div>
+          </div>
+          <div class="price">₱${Number(b.sellPrice || 0).toLocaleString()}</div>
+          <div class="actions">
+            ${type === 'reserved' ? `<button class="btn-edit" data-viewreserve="${b.id}">edit</button>` : ''}
+            ${type === 'credit' ? `<button class="btn-edit" data-viewcredit="${b.id}">edit</button>` : ''}
+            ${type === 'reserved' ? `<button class="btn-mark" data-marksold="${b.id}">mark sold</button>` : ''}
+            ${type === 'credit' ? `<button class="btn-mark" data-marksold="${b.id}">mark sold</button>` : ''}
+            <button class="btn-undo" data-undostatus="${b.id}">↩ available</button>
+          </div>
+        </div>
+      `;
+    };
+
+    // Render lists
+    $('#reservedList').innerHTML = reserved.map(b => card(b, 'reserved')).join('');
+    $('#creditList').innerHTML = credit.map(b => card(b, 'credit')).join('');
+    $('#soldList').innerHTML = sold.map(b => card(b, 'sold')).join('');
+
+    // Show/hide empties
+    $('#reservedEmpty').style.display = reserved.length ? 'none' : 'block';
+    $('#creditEmpty').style.display = credit.length ? 'none' : 'block';
+    $('#soldEmpty').style.display = sold.length ? 'none' : 'block';
+
+    // Attach event listeners
+    $$('[data-marksold]').forEach(btn => btn.addEventListener('click', async () => {
+      const id = btn.dataset.marksold;
+      await updateBookSaleStatus(id, 'sold');
+      toast('marked as sold ✦');
+    }));
+    $$('[data-undostatus]').forEach(btn => btn.addEventListener('click', async () => {
+      const id = btn.dataset.undostatus;
+      await updateBookSaleStatus(id, 'available');
+      toast('marked as available');
+    }));
+  };
+
+  // ===== EXPENSES =====
+  const getExpenses = () => JSON.parse(localStorage.getItem('bvph_expenses') || '[]');
+  const saveExpenses = (expenses) => localStorage.setItem('bvph_expenses', JSON.stringify(expenses));
+  let editingExpenseId = null;
+
+  // Generate consistent color for batch names
+  const batchColors = [
+    { bg: 'rgba(138,180,248,.2)', text: '#8ab4f8' },   // blue
+    { bg: 'rgba(129,199,132,.2)', text: '#81c784' },   // green
+    { bg: 'rgba(240,98,146,.2)', text: '#f06292' },    // pink
+    { bg: 'rgba(255,183,77,.2)', text: '#ffb74d' },    // orange
+    { bg: 'rgba(149,117,205,.2)', text: '#9575cd' },   // purple
+    { bg: 'rgba(77,208,225,.2)', text: '#4dd0e1' },    // cyan
+    { bg: 'rgba(255,138,128,.2)', text: '#ff8a80' },   // red
+    { bg: 'rgba(197,225,165,.2)', text: '#c5e1a5' },   // lime
+  ];
+  const getBatchColor = (batch) => {
+    if (!batch) return batchColors[0];
+    let hash = 0;
+    for (let i = 0; i < batch.length; i++) hash = batch.charCodeAt(i) + ((hash << 5) - hash);
+    return batchColors[Math.abs(hash) % batchColors.length];
+  };
+
+  const renderExpenses = () => {
+    const expenses = getExpenses();
+    const total = expenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+    const byCategory = {
+      books: expenses.filter(e => e.category === 'books').reduce((sum, e) => sum + (Number(e.amount) || 0), 0),
+      freebies: expenses.filter(e => e.category === 'freebies').reduce((sum, e) => sum + (Number(e.amount) || 0), 0),
+      other: expenses.filter(e => !['books', 'freebies'].includes(e.category)).reduce((sum, e) => sum + (Number(e.amount) || 0), 0),
+    };
+
+    $('#expenseTotal').textContent = '₱' + total.toLocaleString();
+    $('#expenseBooks').textContent = '₱' + byCategory.books.toLocaleString();
+    $('#expenseFreebies').textContent = '₱' + byCategory.freebies.toLocaleString();
+    $('#expenseOther').textContent = '₱' + byCategory.other.toLocaleString();
+
+    const list = $('#expenseList');
+    const empty = $('#expenseEmpty');
+    
+    if (!expenses.length) {
+      list.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    
+    // Sort by date descending
+    const sorted = [...expenses].sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    list.innerHTML = sorted.map(e => {
+      const color = getBatchColor(e.batch);
+      return `
+      <div class="status-card">
+        <div class="expense-batch-col" style="background:${color.bg}; color:${color.text};">${e.batch ? escapeHtml(e.batch) : '—'}</div>
+        <div class="info" style="flex:1;">
+          <div class="title">${escapeHtml(e.description)}</div>
+          <div class="meta">
+            <span class="expense-cat" data-cat="${e.category}">${e.category}</span>
+            <span>${e.date}</span>
+          </div>
+        </div>
+        <div class="price" style="color:#e87a7a;">-₱${Number(e.amount).toLocaleString()}</div>
+        <div class="actions">
+          <button class="btn-edit" data-editexpense="${e.id}">edit</button>
+          <button class="btn-undo" data-delexpense="${e.id}">delete</button>
+        </div>
+      </div>
+    `}).join('');
+    
+    // Populate batch datalist for autocomplete
+    const batches = [...new Set(getExpenses().map(e => e.batch).filter(Boolean))];
+    $('#batchList').innerHTML = batches.map(b => `<option value="${escapeHtml(b)}">`).join('');
+
+    // Attach edit handlers
+    $$('[data-editexpense]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.editexpense;
+        const expense = getExpenses().find(e => e.id === id);
+        if (!expense) return;
+        
+        // Populate form
+        $('#expenseBatch').value = expense.batch || '';
+        $('#expenseDesc').value = expense.description;
+        $('#expenseAmount').value = expense.amount;
+        $('#expenseCategory').value = expense.category;
+        $('#expenseDate').value = expense.date;
+        
+        // Switch to edit mode
+        editingExpenseId = id;
+        $('#addExpenseBtn').textContent = 'save';
+        $('#cancelExpenseBtn').style.display = 'block';
+        
+        // Scroll to form
+        $('#expenseDesc').focus();
+      });
+    });
+
+    // Attach delete handlers
+    $$('[data-delexpense]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.delexpense;
+        const exps = getExpenses().filter(e => e.id !== id);
+        saveExpenses(exps);
+        renderExpenses();
+        renderOverviewStats();
+        toast('expense deleted');
+      });
+    });
+  };
+
+  // Add/Edit expense
+  $('#addExpenseBtn').addEventListener('click', () => {
+    const batch = $('#expenseBatch').value.trim();
+    const desc = $('#expenseDesc').value.trim();
+    const amount = parseFloat($('#expenseAmount').value) || 0;
+    const category = $('#expenseCategory').value;
+    const date = $('#expenseDate').value || new Date().toISOString().split('T')[0];
+
+    if (!desc || !amount) {
+      toast('enter description and amount');
+      return;
+    }
+
+    let expenses = getExpenses();
+    
+    if (editingExpenseId) {
+      // Update existing expense
+      expenses = expenses.map(e => e.id === editingExpenseId 
+        ? { ...e, batch, description: desc, amount, category, date }
+        : e
+      );
+      editingExpenseId = null;
+      $('#addExpenseBtn').textContent = '+ add';
+      $('#cancelExpenseBtn').style.display = 'none';
+      toast('expense updated ✦');
+    } else {
+      // Add new expense
+      expenses.push({
+        id: 'exp_' + Date.now(),
+        batch,
+        description: desc,
+        amount,
+        category,
+        date
+      });
+      toast('expense added ✦');
+    }
+    
+    saveExpenses(expenses);
+
+    // Clear form
+    $('#expenseBatch').value = '';
+    $('#expenseDesc').value = '';
+    $('#expenseAmount').value = '';
+    $('#expenseDate').value = new Date().toISOString().split('T')[0];
+
+    renderExpenses();
+    renderOverviewStats();
+  });
+
+  // Set default date to today
+  $('#expenseDate').value = new Date().toISOString().split('T')[0];
+
+  // Cancel editing
+  $('#cancelExpenseBtn').addEventListener('click', () => {
+    editingExpenseId = null;
+    $('#addExpenseBtn').textContent = '+ add';
+    $('#cancelExpenseBtn').style.display = 'none';
+    $('#expenseBatch').value = '';
+    $('#expenseDesc').value = '';
+    $('#expenseAmount').value = '';
+    $('#expenseDate').value = new Date().toISOString().split('T')[0];
+  });
+
+  const renderOverviewStats = () => {
+    const books = BVPH.getBooks();
+    const available = books.filter(b => !b.sale_status || b.sale_status === 'available');
+    const reserved = books.filter(b => b.sale_status === 'reserved');
+    const credit = books.filter(b => b.sale_status === 'credit');
+    const sold = books.filter(b => b.sale_status === 'sold');
+    
+    // Calculate revenue from sold + paid reservations
+    const soldRevenue = sold.reduce((sum, b) => sum + (Number(b.sellPrice) || 0), 0);
+    const paidReserveRevenue = reserved.filter(b => b.reserver_paid).reduce((sum, b) => sum + (Number(b.sellPrice) || 0), 0);
+    const totalRevenue = soldRevenue + paidReserveRevenue;
+
+    // Calculate expenses
+    const expenses = getExpenses();
+    const totalExpenses = expenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+    const netProfit = totalRevenue - totalExpenses;
+
+    $('#statTotal').textContent = books.length;
+    $('#statAvailable').textContent = available.length;
+    $('#statReserved').textContent = reserved.length;
+    $('#statCredit').textContent = credit.length;
+    $('#statSold').textContent = sold.length;
+    $('#statRevenue').textContent = '₱' + totalRevenue.toLocaleString();
+    if ($('#statExpenses')) $('#statExpenses').textContent = '₱' + totalExpenses.toLocaleString();
+    if ($('#statProfit')) $('#statProfit').textContent = '₱' + netProfit.toLocaleString();
+  };
+
+  // ===== MESSAGES =====
+  const renderMessages = async () => {
+    const list = $('#messagesList');
+    const empty = $('#messagesEmpty');
+    const badge = $('#msgBadge');
+    
+    try {
+      const { data: messages, error } = await BVPH.supabase()
+        .from('messages')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      
+      const unread = messages ? messages.filter(m => !m.read).length : 0;
+      if (unread > 0) {
+        badge.textContent = unread;
+        badge.style.display = 'inline';
+      } else {
+        badge.style.display = 'none';
+      }
+      
+      if (!messages || !messages.length) {
+        list.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+      
+      list.innerHTML = messages.map(m => `
+        <div class="message-card ${m.read ? 'read' : 'unread'}">
+          <div class="message-header">
+            <div class="message-from">
+              <strong>${escapeHtml(m.name)}</strong>
+              <span class="message-email">${escapeHtml(m.email)}</span>
+            </div>
+            <div class="message-date">${new Date(m.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</div>
+          </div>
+          ${m.subject ? `<div class="message-subject">${escapeHtml(m.subject)}</div>` : ''}
+          <div class="message-body">${escapeHtml(m.message)}</div>
+          <div class="message-actions">
+            ${!m.read ? `<button class="btn-mark" data-markread="${m.id}">mark read</button>` : ''}
+            <button class="btn-undo" data-delmsg="${m.id}">delete</button>
+          </div>
+        </div>
+      `).join('');
+      
+      // Attach handlers
+      $$('[data-markread]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          await BVPH.supabase().from('messages').update({ read: true }).eq('id', btn.dataset.markread);
+          renderMessages();
+          toast('marked as read');
+        });
+      });
+      $$('[data-delmsg]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          await BVPH.supabase().from('messages').delete().eq('id', btn.dataset.delmsg);
+          renderMessages();
+          toast('message deleted');
+        });
+      });
+    } catch (err) {
+      console.error('Messages error:', err);
+      list.innerHTML = '<p style="color:#e87a7a;">Could not load messages: ' + (err.message || err) + '</p>';
+    }
+  };
+
+  const render = () => { 
+    try { renderOverviewStats(); } catch(e) { console.error('renderOverviewStats', e); }
+    try { renderExpenses(); } catch(e) { console.error('renderExpenses', e); }
+    try { renderMessages(); } catch(e) { console.error('renderMessages', e); }
+    try { refreshFeatured(); } catch(e) { console.error('refreshFeatured', e); }
+    try { renderTable(); } catch(e) { console.error('renderTable', e); }
+    try { renderStatusSections(); } catch(e) { console.error('renderStatusSections', e); }
+    try { refreshStudio(); } catch(e) { console.error('refreshStudio', e); }
+    try { renderTraffic(); } catch(e) { console.error('renderTraffic', e); }
+  };
+
+  // ============ CONTENT STUDIO ============
+  let studioFormat = 'square';
+  let currentStudioBook = null;
+  let studioMode = 'coming_soon'; // 'coming_soon' | 'on_hand' | 'featured'
+  const onHandSelected = new Set();
+
+  const POPULAR_AUTHORS = [
+    'dan brown','john grisham','ken follett','stieg larsson','jodi picoult',
+    'harlan coben','danielle steel','nora roberts','sophie kinsella','clive cussler',
+    'david baldacci','kathy reichs','jane harper','kate morton',
+  ];
+
+  const filterBooksByMode = (books) => {
+    if (studioMode === 'coming_soon') return books.filter(b => b.status === 'coming_soon');
+    if (studioMode === 'featured') return books.filter(b => b.status === 'available');
+    return books.filter(b => b.status === 'available'); // on_hand
+  };
+
+  const refreshStudio = () => {
+    const books = filterBooksByMode(BVPH.getBooks());
+    const sel = $('#studioBookSelect');
+    const keep = sel.value;
+    const emptyLabel = studioMode === 'coming_soon' ? '— pick a coming-soon book —' : '— pick an available book —';
+    sel.innerHTML = `<option value="">${emptyLabel}</option>` +
+      books.map(b=>{
+        const rt = b.rating ? ` · ⭐ ${b.rating}` : '';
+        return `<option value="${b.id}">${escapeHtml(b.title)} · ${escapeHtml(b.author)}${rt}</option>`;
+      }).join('');
+    if (keep && books.find(b=>b.id===keep)) sel.value = keep;
+    renderOnHandGrid();
+    updateGraphicFromSelection();
+  };
+
+  // ----- mode toggle -----
+  const applyMode = (mode) => {
+    studioMode = mode;
+    $('#studioModes button').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+    const isOnHand = mode === 'on_hand';
+    $('#singleBookRow').style.display = isOnHand ? 'none' : '';
+    $('#onHandPickerWrap').style.display = isOnHand ? '' : 'none';
+    $('#featuredSuggestRow').style.display = mode === 'featured' ? 'flex' : 'none';
+    const labels = {
+      coming_soon: { sel: 'choose a book to promote (coming soon)', cap: 'coming soon caption' },
+      featured:    { sel: 'choose a featured pick (available)',     cap: 'featured of the day caption' },
+      on_hand:     { sel: '',                                       cap: 'on hand books caption' },
+    };
+    if (labels[mode].sel) $('#bookSelectLabel').textContent = labels[mode].sel;
+    $('#presetCaptionTitle').innerHTML = `${labels[mode].cap} <span class="glyph">✦</span>`;
+    // update stamp/label on graphic
+    refreshStudio();
+  };
+
+  $('#studioModes button').forEach(btn => btn.addEventListener('click', () => applyMode(btn.dataset.mode)));
+
+  // ----- on-hand grid -----
+  const renderOnHandGrid = () => {
+    const grid = $('#onHandGrid');
+    if (!grid) return;
+    const books = BVPH.getBooks().filter(b => b.status === 'available');
+    grid.innerHTML = books.map(b => {
+      const sel = onHandSelected.has(b.id) ? 'selected' : '';
+      const checked = onHandSelected.has(b.id) ? 'checked' : '';
+      const coverStyle = b.cover ? `background-image:url("${b.cover}");` : '';
+      return `
+        <label class="onhand-item ${sel}" data-id="${b.id}">
+          <input type="checkbox" ${checked} data-id="${b.id}">
+          <div class="oh-cover" style="${coverStyle}"></div>
+          <div class="oh-meta"><b>${escapeHtml(b.title)}</b><span>${escapeHtml(b.author)} · ₱${b.sellPrice||0}</span></div>
+        </label>`;
+    }).join('') || `<div style="padding:20px;color:#8B7A66;font-style:italic;font-family:'Cormorant Garamond',serif;">no available books yet</div>`;
+    grid.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        const id = cb.dataset.id;
+        if (cb.checked) onHandSelected.add(id); else onHandSelected.delete(id);
+        cb.closest('.onhand-item').classList.toggle('selected', cb.checked);
+        $('#onHandCount').textContent = onHandSelected.size;
+      });
+    });
+    $('#onHandCount').textContent = onHandSelected.size;
+  };
+
+  $('#onHandSelectAll')?.addEventListener('click', () => {
+    BVPH.getBooks().filter(b => b.status === 'available').forEach(b => onHandSelected.add(b.id));
+    renderOnHandGrid();
+  });
+  $('#onHandClear')?.addEventListener('click', () => { onHandSelected.clear(); renderOnHandGrid(); });
+
+  // ----- featured suggest -----
+  const isPopularAuthor = (author='') => {
+    const a = author.toLowerCase();
+    return POPULAR_AUTHORS.some(p => a.includes(p));
+  };
+  $('#suggestFeaturedBtn')?.addEventListener('click', () => {
+    const books = BVPH.getBooks().filter(b => b.status === 'available');
+    if (!books.length) { toast('no available books to feature'); return; }
+    // popular author first, then highest rated
+    const ranked = books.slice().sort((a,b) => {
+      const pa = isPopularAuthor(a.author) ? 1 : 0;
+      const pb = isPopularAuthor(b.author) ? 1 : 0;
+      if (pa !== pb) return pb - pa;
+      return (b.rating||0) - (a.rating||0);
+    });
+    const pick = ranked[0];
+    $('#studioBookSelect').value = pick.id;
+    $('#studioBookSelect').dispatchEvent(new Event('change'));
+    toast(`suggested: ${pick.title}`);
+  });
+
+  // ----- preset caption templates -----
+  const truncSummary = (s, n=240) => {
+    if (!s) return '';
+    s = s.replace(/\s+/g,' ').trim();
+    // try to keep to 2-3 sentences
+    const sents = s.match(/[^.!?]+[.!?]+/g) || [s];
+    let out = sents.slice(0,3).join(' ').trim();
+    if (out.length > n) {
+      const cut = out.slice(0,n);
+      out = (cut.slice(0, cut.lastIndexOf('.') + 1) || cut).trim() + (cut.endsWith('.') ? '' : '…');
+    }
+    return out;
+  };
+
+  const buildComingSoonCaption = (b) => {
+    const blurb = truncSummary(b.summary || $('#studioSummary').value) ||
+      `a ${(b.condition||'like new').toLowerCase()} copy of ${b.title} by ${b.author}, ready for its next reader.`;
+    return [
+      `DROPPING NEXT WEEK 📚`,
+      ``,
+      blurb,
+      ``,
+      `₱${b.sellPrice||0} · comment MINE to reserve`,
+      `or reserve here: https://bit.ly/4uJtROw`,
+      ``,
+      `📍 San Carlos City, Negros Occidental (free delivery)`,
+      `📦 Shipping nationwide`,
+    ].join('\n');
+  };
+
+  const buildFeaturedCaption = (b) => {
+    const blurb = truncSummary(b.summary || $('#studioSummary').value) ||
+      `a handpicked read for today's spotlight.`;
+    const rating = b.rating ? `⭐ ${b.rating} on Goodreads` : `a handpicked pom favorite`;
+    return [
+      `✨ FEATURED BOOK OF THE DAY`,
+      ``,
+      `${b.title} by ${b.author}`,
+      rating,
+      ``,
+      blurb,
+      ``,
+      `₱${b.sellPrice||0} · comment MINE to reserve`,
+      `or reserve here: https://bit.ly/4uJtROw`,
+      ``,
+      `📍 San Carlos City, Negros Occidental (free delivery)`,
+      `📦 Shipping nationwide`,
+    ].join('\n');
+  };
+
+  const buildOnHandCaption = () => {
+    const ids = [...onHandSelected];
+    const books = BVPH.getBooks().filter(b => ids.includes(b.id));
+    const list = books.map(b => `• ${b.title} — ₱${b.sellPrice||0}`).join('\n');
+    return [
+      `📚 Books on hand`,
+      ``,
+      `Choose your next read - scroll through and check each prices`,
+      `Book link checkouts provided in each photo`,
+      ``,
+      list,
+      ``,
+      `📍 San Carlos City, Negros Occidental (free delivery)`,
+      `📦 Shipping nationwide`,
+    ].join('\n');
+  };
+
+  $('#genPresetBtn').addEventListener('click', () => {
+    if (studioMode === 'on_hand') {
+      if (!onHandSelected.size) { toast('pick at least one book'); return; }
+      $('#presetCaption').value = buildOnHandCaption();
+    } else {
+      const b = getSelectedBook();
+      if (!b) { toast('pick a book first'); return; }
+      $('#presetCaption').value = studioMode === 'featured' ? buildFeaturedCaption(b) : buildComingSoonCaption(b);
+    }
+    toast('caption ready ✦');
+  });
+  $('#copyPresetBtn').addEventListener('click', () => copyText($('#presetCaption').value, 'caption'));
+
+  $('#studioBookSelect').addEventListener('change', () => {
+    $('#studioSummary').value = '';
+    $('#igCaption').value = '';
+    $('#fbCaption').value = '';
+    updateGraphicFromSelection();
+  });
+
+  const getSelectedBook = () => {
+    const id = $('#studioBookSelect').value;
+    if (!id) return null;
+    return BVPH.getBooks().find(b=>b.id===id) || null;
+  };
+
+  const requireBook = () => {
+    const b = getSelectedBook();
+    if (!b) { toast('pick a book first'); return null; }
+    return b;
+  };
+
+  // ----- summary fetch (Open Library) -----
+  $('#fetchSummaryBtn').addEventListener('click', async () => {
+    const b = requireBook(); if (!b) return;
+    const btn = $('#fetchSummaryBtn');
+    btn.disabled = true; btn.textContent = 'searching the stacks…';
+    try {
+      const q = `https://openlibrary.org/search.json?title=${encodeURIComponent(b.title)}&author=${encodeURIComponent(b.author)}&limit=1`;
+      const res = await fetch(q);
+      const data = await res.json();
+      const doc = data?.docs?.[0];
+      let summary = '';
+      if (doc?.key) {
+        try {
+          const w = await fetch(`https://openlibrary.org${doc.key}.json`);
+          const wd = await w.json();
+          const d = wd.description;
+          summary = typeof d === 'string' ? d : (d?.value || '');
+        } catch(e) {}
+      }
+      if (!summary && doc?.first_sentence) {
+        summary = Array.isArray(doc.first_sentence) ? doc.first_sentence[0] : doc.first_sentence;
+      }
+      if (!summary) {
+        summary = `a ${b.condition.toLowerCase()} copy of ${b.title} by ${b.author}. perfect for fans of ${b.genre.toLowerCase()}. wrapped with care and ready for its next reader.`;
+        toast('no open library result · used a template');
+      } else {
+        // clean up open library footnotes like ([source][1])
+        summary = summary.replace(/\(\[source\]\[\d+\]\)/gi,'').replace(/\[\d+\]:\s*https?:\/\/\S+/gi,'').trim();
+        // trim to ~3 paragraphs / 600 chars
+        if (summary.length > 600) {
+          const cut = summary.slice(0, 600);
+          summary = cut.slice(0, cut.lastIndexOf('.') + 1) || cut + '…';
+        }
+        toast('summary loaded ✦');
+      }
+      $('#studioSummary').value = summary;
+    } catch(err) {
+      toast('couldn\'t reach open library');
+    } finally {
+      btn.disabled = false; btn.innerHTML = '✦ fetch from open library';
+    }
+  });
+
+  // ----- caption templates -----
+  const genreTags = {
+    'Fiction':'#fictionbooks','Non-Fiction':'#nonfictionbooks','Thriller':'#thrillerbooks',
+    'Romance':'#romancebooks','Fantasy':'#fantasybooks','Horror':'#horrorbooks',
+    'Self-Help':'#selfhelpbooks','Mystery':'#mysterybooks','Sci-Fi':'#scifibooks',
+    'Biography':'#biographybooks','Other':'#bookrecommendations',
+  };
+  const shortBlurb = (s, max=180) => {
+    if (!s) return '';
+    s = s.replace(/\s+/g,' ').trim();
+    if (s.length <= max) return s;
+    const cut = s.slice(0, max);
+    return (cut.slice(0, cut.lastIndexOf('.') + 1) || cut).trim() + (cut.endsWith('.') ? '' : '…');
+  };
+
+  const buildIgCaption = (b, summary) => {
+    const blurb = shortBlurb(summary, 220) || `a ${b.condition.toLowerCase()} copy waiting for its next reader.`;
+    const tag = genreTags[b.genre] || '#bookrecommendations';
+    return [
+      `✦ now in the vault ✦`,
+      ``,
+      `${b.title}`,
+      `by ${b.author}`,
+      `${b.condition} · ₱${b.sellPrice||0}`,
+      ``,
+      blurb,
+      ``,
+      `dm to claim 📚🤎`,
+      `ships nationwide via J&T / LBC`,
+      ``,
+      `.`,`.`,`.`,
+      `#booktok #bookstagram #prelovedbooks #thebookvaultph #philippinebookstagram #booksph #usedbooks #bookcommunity #cozyreads ${tag}`,
+    ].join('\n');
+  };
+
+  const buildFbCaption = (b, summary) => {
+    const blurb = shortBlurb(summary, 480) || `we just unwrapped a ${b.condition.toLowerCase()} copy and it's ready for someone new to love it.`;
+    return [
+      `📖 just unlocked a new read for the vault 📖`,
+      ``,
+      `${b.title} — by ${b.author}`,
+      `condition: ${b.condition} · genre: ${b.genre} · ₱${b.sellPrice||0}`,
+      ``,
+      blurb,
+      ``,
+      `each order is wrapped in kraft paper, tied with twine, and sealed with wax. shipped nationwide via J&T or LBC, usually arriving in 2–5 days.`,
+      ``,
+      `💌 DM us to claim this one (or comment "mine" and we'll PM you). first to message gets it — we reply in book-time but we don't keep you waiting long. 🤎`,
+      ``,
+      `— The Book Vault PH`,
+    ].join('\n');
+  };
+
+  $('#genIgBtn').addEventListener('click', () => {
+    const b = requireBook(); if (!b) return;
+    $('#igCaption').value = buildIgCaption(b, $('#studioSummary').value);
+    toast('IG caption ready ✦');
+  });
+  $('#genFbBtn').addEventListener('click', () => {
+    const b = requireBook(); if (!b) return;
+    $('#fbCaption').value = buildFbCaption(b, $('#studioSummary').value);
+    toast('FB caption ready ✦');
+  });
+
+  // copy helpers
+  const copyText = async (val, label) => {
+    if (!val) { toast('nothing to copy'); return; }
+    try { await navigator.clipboard.writeText(val); toast(label + ' copied ✦'); }
+    catch(e) { toast('copy blocked by browser'); }
+  };
+  $('#copySummaryBtn').addEventListener('click', () => copyText($('#studioSummary').value, 'summary'));
+  $('#copyIgBtn').addEventListener('click', () => copyText($('#igCaption').value, 'IG caption'));
+  $('#copyFbBtn').addEventListener('click', () => copyText($('#fbCaption').value, 'FB caption'));
+
+  // ----- graphic preview -----
+  const padNo = (n) => 'No. ' + String(n).padStart(3,'0');
+  const hashIdx = (s) => { let h=0; for (const ch of (s||'')) h=(h*31+ch.charCodeAt(0))>>>0; return h; };
+
+  const updateGraphicFromSelection = () => {
+    const b = getSelectedBook();
+    const stage = $('#graphicStage');
+    const viewport = $('#graphicViewport');
+    stage.className = 'graphic-stage ' + studioFormat;
+    viewport.className = 'graphic-viewport ' + studioFormat;
+
+    if (!b) {
+      $('#gsTitle').textContent = 'select a book';
+      $('#gsAuthor').textContent = 'to preview the graphic';
+      $('#gsPrice').textContent = '₱—';
+      $('#gsTag').textContent = '— · —';
+      $('#gsCovTtl').textContent = '—';
+      $('#gsCovAuth').textContent = '—';
+      $('#gsCover').style.backgroundImage = '';
+      $('#gsCover').querySelector('.pub-no').textContent = padNo(1);
+      return;
+    }
+    $('#gsTitle').textContent = b.title;
+    $('#gsAuthor').textContent = 'by ' + b.author;
+    $('#gsPrice').textContent = '₱' + (b.sellPrice||0);
+    $('#gsTag').textContent = `${b.condition} · ${b.genre}`;
+    $('#gsCovTtl').textContent = b.title;
+    $('#gsCovAuth').textContent = b.author;
+    $('#gsCover').querySelector('.pub-no').textContent = padNo((hashIdx(b.title)%99)+1);
+    if (b.cover) {
+      $('#gsCover').style.backgroundImage = `url("${b.cover}")`;
+      $('#gsCover').classList.add('has-img');
+      // hide spine text on image covers
+      $('#gsCovTtl').style.opacity = 0;
+      $('#gsCovAuth').style.opacity = 0;
+      $('#gsCover').querySelector('.pub-no').style.opacity = 0;
+    } else {
+      $('#gsCover').style.backgroundImage = '';
+      $('#gsCover').classList.remove('has-img');
+      $('#gsCovTtl').style.opacity = 1;
+      $('#gsCovAuth').style.opacity = 1;
+      $('#gsCover').querySelector('.pub-no').style.opacity = 1;
+    }
+    // adjust stamp text based on mode + featured flag
+    const stampByMode = {
+      coming_soon: '✦ dropping next week',
+      featured: '★ featured of the day',
+      on_hand: '✦ on hand now',
+    };
+    $('#gsStamp').textContent = stampByMode[studioMode] || (b.featured ? '★ pick of the month' : '✦ just in');
+    // label under the cover
+    const labelByMode = { coming_soon: 'coming soon', featured: 'featured pick', on_hand: 'available now' };
+    const lbl = $('.gs-label');
+    if (lbl) lbl.textContent = labelByMode[studioMode] || 'now available';
+  };
+
+  // format toggle
+  $$('#formatToggle button').forEach(btn => btn.addEventListener('click', () => {
+    $$('#formatToggle button').forEach(x => x.classList.remove('active'));
+    btn.classList.add('active');
+    studioFormat = btn.dataset.format;
+    updateGraphicFromSelection();
+  }));
+
+  // ----- download as PNG -----
+  const loadHtml2Canvas = () => new Promise((resolve, reject) => {
+    if (window.html2canvas) return resolve(window.html2canvas);
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+    s.onload = () => resolve(window.html2canvas);
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+
+  $('#downloadGraphicBtn').addEventListener('click', async () => {
+    const b = requireBook(); if (!b) return;
+    const btn = $('#downloadGraphicBtn');
+    btn.disabled = true; btn.textContent = 'rendering…';
+    try {
+      const h2c = await loadHtml2Canvas();
+      const stage = $('#graphicStage');
+      // temporarily unscale for accurate capture
+      const prevTransform = stage.style.transform;
+      stage.style.transform = 'none';
+      // move stage offscreen at full size during capture so it doesn't blow out layout
+      const wrap = stage.parentElement;
+      const prevWrapStyles = { position: wrap.style.position, overflow: wrap.style.overflow };
+      wrap.style.overflow = 'visible';
+      const canvas = await h2c(stage, {
+        backgroundColor: null,
+        scale: 1,
+        useCORS: true,
+        logging: false,
+        width: stage.offsetWidth,
+        height: stage.offsetHeight,
+      });
+      // restore
+      stage.style.transform = prevTransform;
+      wrap.style.overflow = prevWrapStyles.overflow;
+
+      const link = document.createElement('a');
+      const safeName = b.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);
+      link.download = `bookvault-${safeName}-${studioFormat}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      toast('graphic downloaded ✦');
+    } catch(e) {
+      console.error(e);
+      toast('download failed · try again');
+    } finally {
+      btn.disabled = false; btn.innerHTML = '⬇ download as PNG';
+    }
+  });
+</script>
+
+<!-- Book Detail Modal -->
+<div class="bd-bg" id="bdBg" onclick="if(event.target===this)closeBookDetail()">
+  <div class="bd-modal" role="dialog" aria-modal="true">
+    <button class="bd-close" aria-label="Close" onclick="closeBookDetail()">×</button>
+    <div class="bd-cover-pane"><div class="bd-cover" id="bdCover"></div></div>
+    <div class="bd-info" id="bdInfo"></div>
+  </div>
+</div>
+
+<script>
+function openBookDetail(id) {
+  const books = BVPH.getBooks();
+  const b = books.find(x => x.id === id);
+  if (!b) return;
+  
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const peso = n => '₱' + Math.round(Number(n)||0).toLocaleString('en-PH');
+  const padNo = title => 'No. ' + String(Math.abs((title||'').length*7) % 99 + 1).padStart(3,'0');
+  
+  const cover = document.getElementById('bdCover');
+  const hasImg = !!b.cover;
+  cover.className = 'bd-cover' + (hasImg ? ' has-img' : '');
+  cover.style.backgroundImage = hasImg ? `url('${b.cover}')` : '';
+  cover.innerHTML = `
+    <div class="pub">${esc(padNo(b.title))}</div>
+    <div>
+      <div class="ttl">${esc(b.title)}</div>
+      <div class="auth">${esc(b.author||'')}</div>
+    </div>
+    <div class="auth">BVPH</div>`;
+
+  const rating = b.rating ? Number(b.rating) : null;
+  const stars = rating ? '★'.repeat(Math.round(rating)) + '☆'.repeat(5-Math.round(rating)) : '';
+
+  const summary = b.summary
+    ? `<p class="summary">${esc(b.summary)}</p>`
+    : `<p class="summary empty">No summary added yet.</p>`;
+
+  const grRow = (rating || b.goodreads_url) ? `<div class="gr-row">
+    ${rating ? `<span class="gr-rating"><span class="stars">${stars}</span> ${rating.toFixed(1)}/5</span>` : ''}
+    ${b.goodreads_url ? `<a class="gr-link" href="${esc(b.goodreads_url)}" target="_blank" rel="noopener">Goodreads ↗</a>` : ''}
+  </div>` : '';
+
+  document.getElementById('bdInfo').innerHTML = `
+    <div class="meta-row">
+      <span>${esc(b.genre||'Other')}</span>
+      <span>·</span>
+      <span>${esc(b.condition||'Good')}</span>
+      ${b.status === 'coming_soon' ? '<span>·</span><span>Coming Soon</span>' : ''}
+    </div>
+    <h3>${esc(b.title)}</h3>
+    <p class="by">by ${esc(b.author||'Unknown')}</p>
+    ${grRow}
+    ${summary}
+    <div class="pricerow">
+      <span class="price">${peso(b.sellPrice)}</span>
+      <span class="cond-badge">${esc(b.condition||'Good')}</span>
+      ${(b.quantity && b.quantity > 1) ? `<span class="cond-badge">${b.quantity} in stock</span>` : ''}
+    </div>`;
+  
+  document.getElementById('bdBg').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeBookDetail() {
+  document.getElementById('bdBg').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBookDetail(); });
+</script>
+</body>
+</html>
