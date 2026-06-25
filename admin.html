@@ -301,7 +301,9 @@
   .toggle-group button{
     font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
     padding:8px 16px;border-radius:999px;color:#C9B89A;transition:all .2s;
+    background:transparent;border:none;cursor:pointer;
   }
+  .toggle-group button:hover{background:rgba(216,154,85,.15);}
   .toggle-group button.active{background:var(--copper-bright);color:var(--burgundy-ink);}
   /* mode tabs */
   .studio-modes{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
@@ -394,47 +396,50 @@
   .graphic-stage.square .gs-content{top:260px;align-items:stretch;}
   .graphic-stage.square .gs-cover{width:380px;height:570px;}
 
-  /* FEATURED OF THE DAY GRAPHIC */
+  /* FEATURED OF THE DAY GRAPHIC - CENTERED SPOTLIGHT DESIGN */
   .graphic-stage-featured{
     position:relative;width:1080px;height:1080px;transform:scale(0.352);transform-origin:top left;
-    background:linear-gradient(145deg,#1a0a0f 0%,#2d1520 40%,#1a0a0f 100%);
-    display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:80px;
+    background:radial-gradient(ellipse at center,#2d1520 0%,#1a0a0f 50%,#0d0508 100%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
     font-family:'Cormorant Garamond',serif;color:#FDF8F3;overflow:hidden;
   }
   .graphic-stage-featured::before{
-    content:'';position:absolute;top:50%;left:50%;width:800px;height:800px;
-    background:radial-gradient(circle,rgba(216,154,85,.15) 0%,transparent 60%);
+    content:'';position:absolute;top:30%;left:50%;width:600px;height:600px;
+    background:radial-gradient(circle,rgba(216,154,85,.25) 0%,transparent 50%);
     transform:translate(-50%,-50%);pointer-events:none;
   }
   .graphic-stage-featured::after{
-    content:'';position:absolute;inset:40px;border:2px solid rgba(216,154,85,.3);border-radius:8px;pointer-events:none;
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(0,0,0,.3) 0%,transparent 20%,transparent 80%,rgba(0,0,0,.5) 100%);
+    pointer-events:none;
   }
-  .gf-header{text-align:center;z-index:2;}
+  .gf-header{text-align:center;z-index:2;position:absolute;top:60px;}
   .gf-badge{
-    display:inline-block;background:linear-gradient(135deg,#D89A55,#C4863D);color:#1a0a0f;
-    padding:16px 40px;border-radius:4px;font-family:'DM Mono',monospace;font-size:28px;
-    letter-spacing:.25em;text-transform:uppercase;font-weight:600;
+    display:inline-block;background:linear-gradient(135deg,#D89A55 0%,#E8B878 50%,#D89A55 100%);color:#1a0a0f;
+    padding:18px 50px;border-radius:0;font-family:'DM Mono',monospace;font-size:26px;
+    letter-spacing:.3em;text-transform:uppercase;font-weight:700;
+    box-shadow:0 8px 30px rgba(216,154,85,.4);
   }
-  .gf-subtitle{margin-top:20px;font-family:'DM Mono',monospace;font-size:20px;letter-spacing:.35em;text-transform:uppercase;color:#D89A55;}
-  .gf-main{display:flex;align-items:center;gap:80px;z-index:2;}
+  .gf-subtitle{margin-top:24px;font-family:'DM Mono',monospace;font-size:18px;letter-spacing:.4em;text-transform:uppercase;color:#C9B89A;}
+  .gf-main{display:flex;flex-direction:column;align-items:center;z-index:2;margin-top:40px;}
   .gf-cover{
-    width:400px;height:600px;background:linear-gradient(145deg,#3d2a30,#2d1a20);
-    border-radius:6px;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 120px rgba(216,154,85,.1);
+    width:320px;height:480px;background:linear-gradient(145deg,#3d2a30,#2d1a20);
+    border-radius:4px;box-shadow:0 40px 100px rgba(0,0,0,.8),0 0 150px rgba(216,154,85,.15),0 0 0 1px rgba(216,154,85,.2);
     background-size:cover;background-position:center;position:relative;
   }
   .gf-cover::after{
-    content:'';position:absolute;inset:0;border-radius:6px;
-    background:linear-gradient(125deg,rgba(255,255,255,.08),transparent 40%,transparent 60%,rgba(0,0,0,.3));
+    content:'';position:absolute;inset:0;border-radius:4px;
+    background:linear-gradient(125deg,rgba(255,255,255,.1) 0%,transparent 30%,transparent 70%,rgba(0,0,0,.4) 100%);
   }
-  .gf-info{flex:1;text-align:left;}
-  .gf-title{font-family:'Playfair Display',serif;font-style:italic;font-size:72px;line-height:1;color:#FDF8F3;margin-bottom:16px;}
-  .gf-author{font-size:32px;color:#C9B89A;font-style:italic;margin-bottom:40px;}
-  .gf-price{font-family:'Playfair Display',serif;font-size:80px;color:#D89A55;margin-bottom:12px;}
-  .gf-condition{font-family:'DM Mono',monospace;font-size:18px;letter-spacing:.25em;text-transform:uppercase;color:#8B7A66;}
-  .gf-footer{display:flex;justify-content:space-between;align-items:center;width:100%;z-index:2;}
-  .gf-brand{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:32px;color:#C9B89A;}
+  .gf-info{text-align:center;margin-top:40px;}
+  .gf-title{font-family:'Playfair Display',serif;font-style:italic;font-size:56px;line-height:1.1;color:#FDF8F3;margin-bottom:12px;}
+  .gf-author{font-size:28px;color:#C9B89A;font-style:italic;margin-bottom:30px;}
+  .gf-price{font-family:'Playfair Display',serif;font-size:64px;color:#D89A55;margin-bottom:8px;}
+  .gf-condition{font-family:'DM Mono',monospace;font-size:16px;letter-spacing:.3em;text-transform:uppercase;color:#8B7A66;}
+  .gf-footer{position:absolute;bottom:50px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:center;z-index:2;}
+  .gf-brand{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:28px;color:#C9B89A;}
   .gf-brand span{color:#D89A55;font-weight:600;}
-  .gf-cta{font-family:'DM Mono',monospace;font-size:18px;letter-spacing:.2em;text-transform:uppercase;color:#D89A55;}
+  .gf-cta{font-family:'DM Mono',monospace;font-size:16px;letter-spacing:.25em;text-transform:uppercase;color:#D89A55;}
 
   .toast{
     position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
@@ -978,6 +983,7 @@
         <textarea class="studio-textarea" id="studioSummary" placeholder="a short description of the book. fetch one from Open Library or write your own."></textarea>
         <div class="studio-btnrow">
           <button class="btn-sm fill" id="fetchSummaryBtn">✦ fetch from open library</button>
+          <button class="btn-sm" id="shortenSummaryBtn">✂ shorten</button>
           <button class="btn-sm" id="copySummaryBtn">copy</button>
         </div>
       </div>
@@ -2625,6 +2631,31 @@
     catch(e) { toast('copy blocked by browser'); }
   };
   $('#copySummaryBtn').addEventListener('click', () => copyText($('#studioSummary').value, 'summary'));
+
+  // Shorten summary - condense to 1-2 punchy sentences for social media
+  $('#shortenSummaryBtn').addEventListener('click', () => {
+    const textarea = $('#studioSummary');
+    const original = textarea.value.trim();
+    if (!original) { toast('no summary to shorten'); return; }
+    
+    // Simple shortening: take first 2 sentences or ~120 chars
+    const sentences = original.split(/(?<=[.!?])\s+/);
+    let short = '';
+    if (sentences.length >= 2) {
+      short = sentences.slice(0, 2).join(' ');
+    } else {
+      short = sentences[0];
+    }
+    
+    // If still too long, cut at ~120 chars
+    if (short.length > 150) {
+      const cut = short.slice(0, 140);
+      short = cut.slice(0, cut.lastIndexOf(' ')) + '…';
+    }
+    
+    textarea.value = short;
+    toast('shortened ✂');
+  });
   $('#copyIgBtn').addEventListener('click', () => copyText($('#igCaption').value, 'IG caption'));
   $('#copyFbBtn').addEventListener('click', () => copyText($('#fbCaption').value, 'FB caption'));
 
@@ -2632,78 +2663,98 @@
   const padNo = (n) => 'No. ' + String(n).padStart(3,'0');
   const hashIdx = (s) => { let h=0; for (const ch of (s||'')) h=(h*31+ch.charCodeAt(0))>>>0; return h; };
 
-  const updateGraphicFromSelection = () => {
-    const b = getSelectedBook();
-    const stage = $('#graphicStage');
-    const viewport = $('#graphicViewport');
-    stage.className = 'graphic-stage ' + studioFormat;
-    viewport.className = 'graphic-viewport ' + studioFormat;
+  const updateGraphicFromSelection = async () => {
+    try {
+      const b = getSelectedBook();
+      const stage = $('#graphicStage');
+      const viewport = $('#graphicViewport');
+      if (stage) stage.className = 'graphic-stage ' + studioFormat;
+      if (viewport) viewport.className = 'graphic-viewport ' + studioFormat;
 
-    if (!b) {
-      $('#gsTitle').textContent = 'select a book';
-      $('#gsAuthor').textContent = 'to preview the graphic';
-      $('#gsPrice').textContent = '₱—';
-      $('#gsTag').textContent = '— · —';
-      $('#gsCovTtl').textContent = '—';
-      $('#gsCovAuth').textContent = '—';
-      $('#gsCover').style.backgroundImage = '';
-      $('#gsCover').querySelector('.pub-no').textContent = padNo(1);
-      return;
+      if (!b) {
+        if ($('#gsTitle')) $('#gsTitle').textContent = 'select a book';
+        if ($('#gsAuthor')) $('#gsAuthor').textContent = 'to preview the graphic';
+        if ($('#gsPrice')) $('#gsPrice').textContent = '₱—';
+        if ($('#gsTag')) $('#gsTag').textContent = '— · —';
+        if ($('#gsCovTtl')) $('#gsCovTtl').textContent = '—';
+        if ($('#gsCovAuth')) $('#gsCovAuth').textContent = '—';
+        if ($('#gsCover')) $('#gsCover').style.backgroundImage = '';
+        const pubNo = $('#gsCover')?.querySelector('.pub-no');
+        if (pubNo) pubNo.textContent = padNo(1);
+        updateFeaturedGraphic(null, null);
+        return;
+      }
+      
+      // Update text immediately
+      if ($('#gsTitle')) $('#gsTitle').textContent = b.title;
+      if ($('#gsAuthor')) $('#gsAuthor').textContent = 'by ' + b.author;
+      if ($('#gsPrice')) $('#gsPrice').textContent = '₱' + (b.sellPrice||0);
+      if ($('#gsTag')) $('#gsTag').textContent = `${b.condition} · ${b.genre}`;
+      if ($('#gsCovTtl')) $('#gsCovTtl').textContent = b.title;
+      if ($('#gsCovAuth')) $('#gsCovAuth').textContent = b.author;
+      const pubNo = $('#gsCover')?.querySelector('.pub-no');
+      if (pubNo) pubNo.textContent = padNo((hashIdx(b.title)%99)+1);
+      
+      // Fetch cover if not already loaded
+      let coverUrl = b.cover;
+      if (!coverUrl && b.id) {
+        try {
+          coverUrl = await BVPH.getCover(b.id);
+        } catch (e) {
+          console.warn('Failed to fetch cover:', e);
+        }
+      }
+      
+      const gsCover = $('#gsCover');
+      if (coverUrl && gsCover) {
+        gsCover.style.backgroundImage = `url("${coverUrl}")`;
+        gsCover.classList.add('has-img');
+        if ($('#gsCovTtl')) $('#gsCovTtl').style.opacity = 0;
+        if ($('#gsCovAuth')) $('#gsCovAuth').style.opacity = 0;
+        if (pubNo) pubNo.style.opacity = 0;
+      } else if (gsCover) {
+        gsCover.style.backgroundImage = '';
+        gsCover.classList.remove('has-img');
+        if ($('#gsCovTtl')) $('#gsCovTtl').style.opacity = 1;
+        if ($('#gsCovAuth')) $('#gsCovAuth').style.opacity = 1;
+        if (pubNo) pubNo.style.opacity = 1;
+      }
+      
+      // adjust stamp text based on mode + featured flag
+      const stampByMode = {
+        coming_soon: '✦ dropping next week',
+        featured: '★ featured of the day',
+        on_hand: '✦ on hand now',
+      };
+      if ($('#gsStamp')) $('#gsStamp').textContent = stampByMode[studioMode] || (b.featured ? '★ pick of the month' : '✦ just in');
+      // label under the cover
+      const labelByMode = { coming_soon: 'coming soon', featured: 'featured pick', on_hand: 'available now' };
+      const lbl = $('.gs-label');
+      if (lbl) lbl.textContent = labelByMode[studioMode] || 'now available';
+      
+      // Also update featured graphic
+      updateFeaturedGraphic(b, coverUrl);
+    } catch (err) {
+      console.error('updateGraphicFromSelection error:', err);
     }
-    $('#gsTitle').textContent = b.title;
-    $('#gsAuthor').textContent = 'by ' + b.author;
-    $('#gsPrice').textContent = '₱' + (b.sellPrice||0);
-    $('#gsTag').textContent = `${b.condition} · ${b.genre}`;
-    $('#gsCovTtl').textContent = b.title;
-    $('#gsCovAuth').textContent = b.author;
-    $('#gsCover').querySelector('.pub-no').textContent = padNo((hashIdx(b.title)%99)+1);
-    if (b.cover) {
-      $('#gsCover').style.backgroundImage = `url("${b.cover}")`;
-      $('#gsCover').classList.add('has-img');
-      // hide spine text on image covers
-      $('#gsCovTtl').style.opacity = 0;
-      $('#gsCovAuth').style.opacity = 0;
-      $('#gsCover').querySelector('.pub-no').style.opacity = 0;
-    } else {
-      $('#gsCover').style.backgroundImage = '';
-      $('#gsCover').classList.remove('has-img');
-      $('#gsCovTtl').style.opacity = 1;
-      $('#gsCovAuth').style.opacity = 1;
-      $('#gsCover').querySelector('.pub-no').style.opacity = 1;
-    }
-    // adjust stamp text based on mode + featured flag
-    const stampByMode = {
-      coming_soon: '✦ dropping next week',
-      featured: '★ featured of the day',
-      on_hand: '✦ on hand now',
-    };
-    $('#gsStamp').textContent = stampByMode[studioMode] || (b.featured ? '★ pick of the month' : '✦ just in');
-    // label under the cover
-    const labelByMode = { coming_soon: 'coming soon', featured: 'featured pick', on_hand: 'available now' };
-    const lbl = $('.gs-label');
-    if (lbl) lbl.textContent = labelByMode[studioMode] || 'now available';
-    
-    // Also update featured graphic
-    updateFeaturedGraphic(b);
   };
   
-  const updateFeaturedGraphic = (b) => {
+  const updateFeaturedGraphic = (b, coverUrl) => {
     if (!b) {
-      $('#gfTitle').textContent = 'select a book';
-      $('#gfAuthor').textContent = 'to preview';
-      $('#gfPrice').textContent = '₱—';
-      $('#gfCondition').textContent = 'like new';
-      $('#gfCover').style.backgroundImage = '';
+      if ($('#gfTitle')) $('#gfTitle').textContent = 'select a book';
+      if ($('#gfAuthor')) $('#gfAuthor').textContent = 'to preview';
+      if ($('#gfPrice')) $('#gfPrice').textContent = '₱—';
+      if ($('#gfCondition')) $('#gfCondition').textContent = 'like new';
+      if ($('#gfCover')) $('#gfCover').style.backgroundImage = '';
       return;
     }
-    $('#gfTitle').textContent = b.title;
-    $('#gfAuthor').textContent = 'by ' + b.author;
-    $('#gfPrice').textContent = '₱' + (b.sellPrice||0);
-    $('#gfCondition').textContent = (b.condition || 'Like New') + ' · ' + (b.genre || 'Fiction');
-    if (b.cover) {
-      $('#gfCover').style.backgroundImage = `url("${b.cover}")`;
-    } else {
-      $('#gfCover').style.backgroundImage = '';
+    if ($('#gfTitle')) $('#gfTitle').textContent = b.title;
+    if ($('#gfAuthor')) $('#gfAuthor').textContent = 'by ' + b.author;
+    if ($('#gfPrice')) $('#gfPrice').textContent = '₱' + (b.sellPrice||0);
+    if ($('#gfCondition')) $('#gfCondition').textContent = (b.condition || 'Like New') + ' · ' + (b.genre || 'Fiction');
+    const cover = coverUrl || b.cover;
+    if ($('#gfCover')) {
+      $('#gfCover').style.backgroundImage = cover ? `url("${cover}")` : '';
     }
   };
 
