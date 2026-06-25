@@ -2735,42 +2735,67 @@ const featuredPrompts = {
 };
 
 // Generate Coming Soon prompt
+const templateLabels = {
+  rainy_cozy: 'rainy window cozy',
+  dark_moody: 'dark & moody',
+  vintage_library: 'vintage library',
+  minimal_clean: 'minimal clean',
+  spotlight: 'spotlight',
+  book_of_day: 'book of the day',
+  staff_pick: 'staff pick',
+  must_read: 'must read'
+};
+
 $('#genComingSoonImgBtn')?.addEventListener('click', () => {
   const bookId = $('#studioBookSelect').value;
   const book = BVPH.getBook(bookId);
   if (!book) { toast('select a book first'); return; }
-  const template = getSelectedTemplate('comingSoonTemplates');
-  const promptFn = comingSoonPrompts[template] || comingSoonPrompts.rainy_cozy;
-  const prompt = promptFn(book);
+  const template = getSelectedTemplate('comingSoonTemplates') || 'rainy_cozy';
   
-  // Show prompt in a modal or textarea
+  const request = `generate coming soon image for Book Vault PH:
+📚 ${book.title} by ${book.author}
+💰 ₱${book.sellPrice}
+🎨 template: ${templateLabels[template] || template}`;
+
+  navigator.clipboard.writeText(request).then(() => {
+    toast('copied! paste to Kat');
+  });
+  
   const preview = $('#genImagePreview');
   preview.style.display = 'block';
   preview.innerHTML = `
-    <label style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-bright);display:block;margin-bottom:10px;">copy this prompt to chatgpt/dall-e</label>
-    <textarea class="studio-textarea mono" style="min-height:150px;" id="genPromptText">${prompt}</textarea>
-    <div class="studio-btnrow" style="margin-top:10px;">
-      <button class="btn-sm fill" onclick="copyText(document.getElementById('genPromptText').value, 'prompt')">copy prompt</button>
+    <div style="background:rgba(125,201,125,.15);border:1px solid rgba(125,201,125,.3);border-radius:8px;padding:16px;text-align:center;">
+      <div style="font-size:1.5rem;margin-bottom:8px;">✓</div>
+      <div style="color:#7dc97d;font-weight:600;">copied to clipboard!</div>
+      <div style="color:var(--ink-soft);font-size:.85rem;margin-top:6px;">paste to Kat and she'll generate your image</div>
+      <pre style="text-align:left;background:var(--burgundy-deep);padding:12px;border-radius:6px;margin-top:12px;font-size:.75rem;white-space:pre-wrap;">${request}</pre>
     </div>
   `;
 });
 
-// Generate Featured prompt
 $('#genFeaturedImgBtn')?.addEventListener('click', () => {
   const bookId = $('#studioBookSelect').value;
   const book = BVPH.getBook(bookId);
   if (!book) { toast('select a book first'); return; }
-  const template = getSelectedTemplate('featuredTemplates');
-  const promptFn = featuredPrompts[template] || featuredPrompts.spotlight;
-  const prompt = promptFn(book);
+  const template = getSelectedTemplate('featuredTemplates') || 'spotlight';
+  
+  const request = `generate featured book image for Book Vault PH:
+⭐ ${book.title} by ${book.author}
+💰 ₱${book.sellPrice}
+🎨 template: ${templateLabels[template] || template}`;
+
+  navigator.clipboard.writeText(request).then(() => {
+    toast('copied! paste to Kat');
+  });
   
   const preview = $('#genImagePreview');
   preview.style.display = 'block';
   preview.innerHTML = `
-    <label style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-bright);display:block;margin-bottom:10px;">copy this prompt to chatgpt/dall-e</label>
-    <textarea class="studio-textarea mono" style="min-height:150px;" id="genPromptText">${prompt}</textarea>
-    <div class="studio-btnrow" style="margin-top:10px;">
-      <button class="btn-sm fill" onclick="copyText(document.getElementById('genPromptText').value, 'prompt')">copy prompt</button>
+    <div style="background:rgba(125,201,125,.15);border:1px solid rgba(125,201,125,.3);border-radius:8px;padding:16px;text-align:center;">
+      <div style="font-size:1.5rem;margin-bottom:8px;">✓</div>
+      <div style="color:#7dc97d;font-weight:600;">copied to clipboard!</div>
+      <div style="color:var(--ink-soft);font-size:.85rem;margin-top:6px;">paste to Kat and she'll generate your image</div>
+      <pre style="text-align:left;background:var(--burgundy-deep);padding:12px;border-radius:6px;margin-top:12px;font-size:.75rem;white-space:pre-wrap;">${request}</pre>
     </div>
   `;
 });
