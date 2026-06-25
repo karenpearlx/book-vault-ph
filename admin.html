@@ -394,6 +394,48 @@
   .graphic-stage.square .gs-content{top:260px;align-items:stretch;}
   .graphic-stage.square .gs-cover{width:380px;height:570px;}
 
+  /* FEATURED OF THE DAY GRAPHIC */
+  .graphic-stage-featured{
+    position:relative;width:1080px;height:1080px;transform:scale(0.352);transform-origin:top left;
+    background:linear-gradient(145deg,#1a0a0f 0%,#2d1520 40%,#1a0a0f 100%);
+    display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:80px;
+    font-family:'Cormorant Garamond',serif;color:#FDF8F3;overflow:hidden;
+  }
+  .graphic-stage-featured::before{
+    content:'';position:absolute;top:50%;left:50%;width:800px;height:800px;
+    background:radial-gradient(circle,rgba(216,154,85,.15) 0%,transparent 60%);
+    transform:translate(-50%,-50%);pointer-events:none;
+  }
+  .graphic-stage-featured::after{
+    content:'';position:absolute;inset:40px;border:2px solid rgba(216,154,85,.3);border-radius:8px;pointer-events:none;
+  }
+  .gf-header{text-align:center;z-index:2;}
+  .gf-badge{
+    display:inline-block;background:linear-gradient(135deg,#D89A55,#C4863D);color:#1a0a0f;
+    padding:16px 40px;border-radius:4px;font-family:'DM Mono',monospace;font-size:28px;
+    letter-spacing:.25em;text-transform:uppercase;font-weight:600;
+  }
+  .gf-subtitle{margin-top:20px;font-family:'DM Mono',monospace;font-size:20px;letter-spacing:.35em;text-transform:uppercase;color:#D89A55;}
+  .gf-main{display:flex;align-items:center;gap:80px;z-index:2;}
+  .gf-cover{
+    width:400px;height:600px;background:linear-gradient(145deg,#3d2a30,#2d1a20);
+    border-radius:6px;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 120px rgba(216,154,85,.1);
+    background-size:cover;background-position:center;position:relative;
+  }
+  .gf-cover::after{
+    content:'';position:absolute;inset:0;border-radius:6px;
+    background:linear-gradient(125deg,rgba(255,255,255,.08),transparent 40%,transparent 60%,rgba(0,0,0,.3));
+  }
+  .gf-info{flex:1;text-align:left;}
+  .gf-title{font-family:'Playfair Display',serif;font-style:italic;font-size:72px;line-height:1;color:#FDF8F3;margin-bottom:16px;}
+  .gf-author{font-size:32px;color:#C9B89A;font-style:italic;margin-bottom:40px;}
+  .gf-price{font-family:'Playfair Display',serif;font-size:80px;color:#D89A55;margin-bottom:12px;}
+  .gf-condition{font-family:'DM Mono',monospace;font-size:18px;letter-spacing:.25em;text-transform:uppercase;color:#8B7A66;}
+  .gf-footer{display:flex;justify-content:space-between;align-items:center;width:100%;z-index:2;}
+  .gf-brand{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:32px;color:#C9B89A;}
+  .gf-brand span{color:#D89A55;font-weight:600;}
+  .gf-cta{font-family:'DM Mono',monospace;font-size:18px;letter-spacing:.2em;text-transform:uppercase;color:#D89A55;}
+
   .toast{
     position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
     background:var(--copper-bright);color:var(--burgundy-ink);
@@ -940,8 +982,8 @@
         </div>
       </div>
 
-      <!-- PROMOTIONAL GRAPHIC -->
-      <div class="studio-card" style="margin-top:18px;">
+      <!-- PROMOTIONAL GRAPHIC - COMING SOON -->
+      <div class="studio-card" style="margin-top:18px;" id="graphicComingSoon">
         <h4>promotional graphic <span class="glyph">✦</span></h4>
         <div class="graphic-stage-wrap">
           <div class="graphic-viewport square" id="graphicViewport">
@@ -973,6 +1015,38 @@
         </div>
         <div class="studio-btnrow" style="margin-top:16px;">
           <button class="btn-sm fill" id="downloadGraphicBtn">⬇ download as PNG</button>
+          <span class="hint" style="font-family:'Cormorant Garamond',serif;font-size:.9rem;color:#8B7A66;font-style:italic;align-self:center;">renders at full 1080px on download</span>
+        </div>
+      </div>
+
+      <!-- PROMOTIONAL GRAPHIC - FEATURED OF THE DAY -->
+      <div class="studio-card" style="margin-top:18px;display:none;" id="graphicFeatured">
+        <h4>featured of the day graphic <span class="glyph">⭐</span></h4>
+        <div class="graphic-stage-wrap">
+          <div class="graphic-viewport square" id="featuredViewport">
+            <div class="graphic-stage-featured square" id="featuredStage">
+              <div class="gf-header">
+                <div class="gf-badge">⭐ FEATURED PICK</div>
+                <div class="gf-subtitle">book of the day</div>
+              </div>
+              <div class="gf-main">
+                <div class="gf-cover" id="gfCover"></div>
+                <div class="gf-info">
+                  <div class="gf-title" id="gfTitle">select a book</div>
+                  <div class="gf-author" id="gfAuthor">to preview</div>
+                  <div class="gf-price" id="gfPrice">₱—</div>
+                  <div class="gf-condition" id="gfCondition">like new</div>
+                </div>
+              </div>
+              <div class="gf-footer">
+                <div class="gf-brand">the book vault <span>ph</span></div>
+                <div class="gf-cta">dm to claim →</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="studio-btnrow" style="margin-top:16px;">
+          <button class="btn-sm fill" id="downloadFeaturedBtn">⬇ download as PNG</button>
           <span class="hint" style="font-family:'Cormorant Garamond',serif;font-size:.9rem;color:#8B7A66;font-style:italic;align-self:center;">renders at full 1080px on download</span>
         </div>
       </div>
@@ -2275,6 +2349,9 @@
     $('#featuredTemplates').style.display = mode === 'featured' ? '' : 'none';
     $('#watermarkSection').style.display = mode === 'on_hand' ? '' : 'none';
     $('#genImagePreview').style.display = 'none'; // hide preview when switching modes
+    // Show/hide promotional graphics based on mode
+    $('#graphicComingSoon').style.display = (mode === 'coming_soon' || mode === 'on_hand') ? '' : 'none';
+    $('#graphicFeatured').style.display = mode === 'featured' ? '' : 'none';
     // update stamp/label on graphic
     refreshStudio();
   };
@@ -2605,6 +2682,29 @@
     const labelByMode = { coming_soon: 'coming soon', featured: 'featured pick', on_hand: 'available now' };
     const lbl = $('.gs-label');
     if (lbl) lbl.textContent = labelByMode[studioMode] || 'now available';
+    
+    // Also update featured graphic
+    updateFeaturedGraphic(b);
+  };
+  
+  const updateFeaturedGraphic = (b) => {
+    if (!b) {
+      $('#gfTitle').textContent = 'select a book';
+      $('#gfAuthor').textContent = 'to preview';
+      $('#gfPrice').textContent = '₱—';
+      $('#gfCondition').textContent = 'like new';
+      $('#gfCover').style.backgroundImage = '';
+      return;
+    }
+    $('#gfTitle').textContent = b.title;
+    $('#gfAuthor').textContent = 'by ' + b.author;
+    $('#gfPrice').textContent = '₱' + (b.sellPrice||0);
+    $('#gfCondition').textContent = (b.condition || 'Like New') + ' · ' + (b.genre || 'Fiction');
+    if (b.cover) {
+      $('#gfCover').style.backgroundImage = `url("${b.cover}")`;
+    } else {
+      $('#gfCover').style.backgroundImage = '';
+    }
   };
 
   // format toggle
@@ -2657,6 +2757,44 @@
       link.href = canvas.toDataURL('image/png');
       link.click();
       toast('graphic downloaded ✦');
+    } catch(e) {
+      console.error(e);
+      toast('download failed · try again');
+    } finally {
+      btn.disabled = false; btn.innerHTML = '⬇ download as PNG';
+    }
+  });
+
+  // Download featured graphic
+  $('#downloadFeaturedBtn')?.addEventListener('click', async () => {
+    const b = requireBook(); if (!b) return;
+    const btn = $('#downloadFeaturedBtn');
+    btn.disabled = true; btn.textContent = 'rendering…';
+    try {
+      const h2c = await loadHtml2Canvas();
+      const stage = $('#featuredStage');
+      const prevTransform = stage.style.transform;
+      stage.style.transform = 'none';
+      const wrap = stage.parentElement;
+      const prevWrapStyles = { overflow: wrap.style.overflow };
+      wrap.style.overflow = 'visible';
+      const canvas = await h2c(stage, {
+        backgroundColor: null,
+        scale: 1,
+        useCORS: true,
+        logging: false,
+        width: stage.offsetWidth,
+        height: stage.offsetHeight,
+      });
+      stage.style.transform = prevTransform;
+      wrap.style.overflow = prevWrapStyles.overflow;
+
+      const link = document.createElement('a');
+      const safeName = b.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);
+      link.download = `bookvault-featured-${safeName}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      toast('featured graphic downloaded ✦');
     } catch(e) {
       console.error(e);
       toast('download failed · try again');
