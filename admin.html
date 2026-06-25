@@ -2221,7 +2221,7 @@
   // ----- mode toggle -----
   const applyMode = (mode) => {
     studioMode = mode;
-    $('#studioModes button').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+    $$('#studioModes button').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
     const isOnHand = mode === 'on_hand';
     $('#singleBookRow').style.display = isOnHand ? 'none' : '';
     $('#onHandPickerWrap').style.display = isOnHand ? '' : 'none';
@@ -2703,7 +2703,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBookDet
 // ===== CONTENT STUDIO: AI IMAGE GEN =====
 
 // Template button selection
-$('.template-grid').forEach(grid => {
+$$('.template-grid').forEach(grid => {
   grid.addEventListener('click', e => {
     const btn = e.target.closest('.template-btn');
     if (!btn) return;
