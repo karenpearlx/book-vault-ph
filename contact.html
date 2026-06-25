@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contact — The Book Vault PH</title>
+<meta name="description" content="Get in touch with The Book Vault PH. Find us on Instagram, Facebook, or send us an email.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;}
+:root{
+  --burgundy:#4A1C2A;--burgundy-deep:#1A0810;--copper:#B87333;--copper-soft:#D8A355;
+  --cream:#FDF8F3;--cream-warm:#F5EDE4;--cream-shadow:rgba(74,28,42,.08);
+  --ink:#3D2B24;--ink-soft:#8B7A66;--rule:rgba(74,28,42,.12);
+}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:"Cormorant Garamond",Georgia,serif;background:var(--cream);color:var(--ink);line-height:1.6;}
+
+/* NAV */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(26,8,16,.92);backdrop-filter:saturate(1.4) blur(12px);
+  border-bottom:1px solid rgba(184,115,51,.18);
+}
+.nav-inner{
+  max-width:1280px;margin:0 auto;padding:14px 28px;
+  display:flex;align-items:center;justify-content:center;gap:32px;
+}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--cream);flex-shrink:0;}
+.brand-mark{width:36px;height:36px;border-radius:50%;background:var(--copper);
+  display:grid;place-items:center;color:var(--burgundy-deep);font-family:"Playfair Display",serif;
+  font-style:italic;font-weight:600;font-size:1.15rem;line-height:1;
+  box-shadow:0 4px 14px -4px rgba(216,154,85,.5);}
+.brand-word{font-family:"Playfair Display",serif;font-weight:500;font-size:1.15rem;letter-spacing:.01em;color:var(--cream);white-space:nowrap;}
+.brand-word em{font-style:italic;color:var(--copper-soft);font-weight:500;}
+.nav-links{display:flex;align-items:center;gap:24px;}
+.nav-links a{
+  font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(253,248,243,.7);text-decoration:none;padding:6px 2px;border-bottom:1px solid transparent;
+  transition:color .2s, border-color .2s;white-space:nowrap;
+}
+.nav-links a:hover{color:var(--copper-soft);border-bottom-color:var(--copper-soft);}
+.nav-burger{display:none;background:none;border:none;color:var(--cream);font-size:1.5rem;cursor:pointer;padding:4px 8px;}
+@media (max-width:680px){
+  .nav-burger{display:block;}
+  .nav-links{
+    display:none;position:absolute;top:100%;left:0;right:0;
+    background:var(--burgundy-deep);flex-direction:column;padding:20px 28px;gap:16px;
+    border-top:1px solid rgba(253,248,243,.1);
+  }
+  .nav-links.open{display:flex;}
+  .brand-word{display:none;}
+}
+
+/* HERO */
+.hero{
+  background:var(--burgundy-deep);color:var(--cream);padding:80px 28px;text-align:center;
+}
+.hero h1{font-family:"Playfair Display",serif;font-weight:400;font-size:clamp(2rem,5vw,3rem);margin:0 0 12px;line-height:1.1;}
+.hero h1 em{font-style:italic;color:var(--copper-soft);}
+.hero p{max-width:500px;margin:0 auto;color:rgba(253,248,243,.8);font-size:1.1rem;}
+
+/* CONTENT */
+.content{max-width:800px;margin:0 auto;padding:60px 28px;}
+.contact-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:32px;}
+.contact-card{
+  background:var(--cream-warm);border:1px solid var(--cream-shadow);border-radius:12px;
+  padding:32px;text-align:center;transition:transform .2s, box-shadow .2s;
+  flex:0 1 280px;max-width:320px;
+}
+.contact-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px -8px rgba(74,28,42,.12);}
+.contact-card .icon{width:48px;height:48px;margin:0 auto 16px;color:var(--copper);}
+.contact-card h3{font-family:"Playfair Display",serif;font-weight:500;font-size:1.3rem;color:var(--burgundy);margin:0 0 8px;}
+.contact-card p{color:var(--ink-soft);margin:0 0 16px;font-size:.95rem;}
+.contact-card a{
+  display:inline-block;font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--cream);background:var(--burgundy);text-decoration:none;
+  padding:12px 24px;border-radius:6px;transition:background .2s;
+}
+.contact-card a:hover{background:var(--copper);}
+
+.contact-form-section{margin-top:48px;padding-top:48px;border-top:1px solid var(--rule);}
+.contact-form-section h2{font-family:"Playfair Display",serif;font-weight:400;font-size:1.6rem;color:var(--burgundy);margin:0 0 24px;text-align:center;}
+.contact-form-section h2 em{font-style:italic;color:var(--copper);}
+.contact-form{max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:16px;}
+.contact-form .form-row{display:flex;gap:16px;}
+.contact-form .form-row input{flex:1;}
+.contact-form input,.contact-form textarea{
+  width:100%;padding:14px 16px;border:1px solid var(--cream-shadow);border-radius:8px;
+  background:var(--cream-warm);font-family:inherit;font-size:1rem;color:var(--ink);
+  transition:border-color .2s;
+}
+.contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--copper);}
+.contact-form input::placeholder,.contact-form textarea::placeholder{color:var(--ink-soft);}
+.contact-form textarea{resize:vertical;min-height:120px;}
+.contact-form button{
+  align-self:center;padding:14px 32px;border:none;border-radius:6px;
+  background:var(--burgundy);color:var(--cream);font-family:"DM Mono",monospace;
+  font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;
+  transition:background .2s;
+}
+.contact-form button:hover{background:var(--copper);}
+@media(max-width:500px){.contact-form .form-row{flex-direction:column;}}
+
+.about-section{margin-top:48px;padding-top:48px;border-top:1px solid var(--rule);text-align:center;}
+.about-section h2{font-family:"Playfair Display",serif;font-weight:400;font-size:1.6rem;color:var(--burgundy);margin:0 0 16px;}
+.about-section h2 em{font-style:italic;color:var(--copper);}
+.about-section p{max-width:600px;margin:0 auto 12px;color:var(--ink);font-size:1.05rem;}
+
+/* FOOTER */
+.footer{background:var(--cream-warm);padding:40px 28px;border-top:1px solid var(--cream-shadow);text-align:center;}
+.footer p{margin:0;color:var(--ink-soft);font-size:.9rem;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark">V</span>
+      <span class="brand-word">The Book <em>Vault</em> PH</span>
+    </a>
+    <button class="nav-burger" aria-label="Menu" aria-expanded="false" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="/">Home</a>
+      <a href="/browse.html">Browse</a>
+      <a href="/coming-soon.html">Coming Soon</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Get in <em>touch</em></h1>
+  <p>Have questions about a book or your order? We're here to help.</p>
+</div>
+
+<main class="content">
+  <div class="contact-grid">
+    <div class="contact-card">
+      <svg class="icon icon-ig" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><defs><linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#FFDC80"/><stop offset="25%" style="stop-color:#F77737"/><stop offset="50%" style="stop-color:#E1306C"/><stop offset="75%" style="stop-color:#C13584"/><stop offset="100%" style="stop-color:#833AB4"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#ig-grad)"/><circle cx="12" cy="12" r="4" stroke="url(#ig-grad)"/><circle cx="18" cy="6" r="1.5" fill="url(#ig-grad)"/></svg>
+      <h3>Instagram</h3>
+      <p>DM us for quick questions, order updates, or book requests.</p>
+      <a href="https://instagram.com/thebookvaultph" target="_blank" rel="noopener">@thebookvaultph</a>
+    </div>
+    
+    <div class="contact-card">
+      <svg class="icon icon-gmail" viewBox="0 0 24 24"><path fill="#4285F4" d="M22 6v12c0 1.1-.9 2-2 2h-1V9.17l-7 5.25-7-5.25V20H4c-1.1 0-2-.9-2-2V6c0-.55.23-1.05.59-1.41C2.95 4.23 3.45 4 4 4h.5l7.5 5.63L19.5 4H20c.55 0 1.05.23 1.41.59.36.36.59.86.59 1.41z"/><path fill="#EA4335" d="M23 6c0-.55-.23-1.05-.59-1.41-.36-.36-.86-.59-1.41-.59h-.5l-8.5 6.37L3.5 4H3c-.55 0-1.05.23-1.41.59C1.23 4.95 1 5.45 1 6l11 8.25L23 6z"/><path fill="#FBBC05" d="M5 20V9.17l-3-2.25V18c0 1.1.9 2 2 2h1z"/><path fill="#34A853" d="M19 20h1c1.1 0 2-.9 2-2V6.92l-3 2.25V20z"/></svg>
+      <h3>Email</h3>
+      <p>For detailed inquiries or bulk orders.</p>
+      <a href="/cdn-cgi/l/email-protection#4c3c243824292e2323273a2d3920380c2b212d2520622f2321">Send an email</a>
+    </div>
+    
+    <div class="contact-card">
+      <svg class="icon icon-fb" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      <h3>Facebook</h3>
+      <p>Follow us for updates and new book drops.</p>
+      <a href="https://facebook.com/phthebookvault" target="_blank" rel="noopener">The Book Vault PH</a>
+    </div>
+  </div>
+  
+  <div class="contact-form-section">
+    <h2>Send us a <em>message</em></h2>
+    <form class="contact-form" id="contactForm">
+      <div class="form-row">
+        <input type="text" name="name" id="cfName" placeholder="Your name" required>
+        <input type="email" name="email" id="cfEmail" placeholder="Your email" required>
+      </div>
+      <input type="text" name="subject" id="cfSubject" placeholder="Subject">
+      <textarea name="message" id="cfMessage" placeholder="Your message..." rows="5" required></textarea>
+      <button type="submit" id="cfSubmit">Send message</button>
+    </form>
+    
+  </div>
+  
+  <div class="about-section">
+    <h2>About <em>The Book Vault PH</em></h2>
+    <p>A small online bookshop based in San Carlos City, Negros Occidental. Handpicked books at good prices — thrillers, romance, fantasy, gothic horror, and dark fiction.</p>
+    <p>Free delivery within San Carlos City. Ships nationwide via J&T or LBC.</p>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>© 2026 The Book Vault PH</p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script src="/shared.js"></script>
+<script>
+BVPH.init().then(() => {
+  BVPH.trackPageView('contact');
+  
+  // Contact form handler
+  document.getElementById('contactForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('cfSubmit');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    
+    const data = {
+      name: document.getElementById('cfName').value.trim(),
+      email: document.getElementById('cfEmail').value.trim(),
+      subject: document.getElementById('cfSubject').value.trim() || null,
+      message: document.getElementById('cfMessage').value.trim()
+    };
+    
+    try {
+      console.log('Submitting data:', data);
+      console.log('BVPH:', BVPH);
+      console.log('BVPH.supabase:', BVPH.supabase);
+      console.log('BVPH.supabase():', BVPH.supabase());
+      
+      // Save to Supabase
+      const sb = BVPH.supabase();
+      console.log('Supabase client:', sb);
+      const { error } = await sb.from('messages').insert([data]);
+      console.log('Insert result, error:', error);
+      if (error) throw error;
+      
+      // Also send via Formsubmit
+      fetch('https://formsubmit.co/ajax/phthebookvault@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      
+      // Success
+      document.getElementById('contactForm').innerHTML = '<p style="text-align:center;color:var(--burgundy);font-size:1.1rem;">Message sent! We\'ll get back to you soon. 📚</p>';
+    } catch (err) {
+      console.error('Form error:', err);
+      btn.disabled = false;
+      btn.textContent = 'Send message';
+      alert('Error: ' + (err.message || 'Something went wrong'));
+    }
+  });
+});
+
+document.addEventListener('click',e=>{const a=e.target.closest('a[href]');if(a)BVPH.track(a.href.includes('instagram.com')||a.href.includes('mailto:')||a.href.includes('facebook.com')?'contact_click':'nav_click',{element:(a.textContent||'link').trim(),target:a.getAttribute('href')||''});},true);
+</script>
+</body>
+</html>

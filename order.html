@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Place an Order · The Book Vault PH</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="theme-color" content="#1A0810">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --burgundy:#4A1C2A;
+    --burgundy-deep:#2E0F1A;
+    --burgundy-ink:#1A0810;
+    --copper:#FF9B00;
+    --copper-bright:#FFAD33;
+    --cream:#FDF8F3;
+    --cream-warm:#F4E9D8;
+    --ink:#2A1410;
+    --danger:#a14040;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:"Cormorant Garamond",Georgia,serif;font-size:17px;color:var(--cream);
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(216,154,85,.1), transparent 55%),
+      linear-gradient(160deg,#1A0810,#2E0F1A 60%,#3A1422);
+    min-height:100vh;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;mix-blend-mode:overlay;z-index:1;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  a{color:var(--copper-bright)}
+  button,input,select,textarea{font-family:inherit;color:inherit}
+
+  /* topbar */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 36px;border-bottom:1px solid rgba(216,154,85,.18);
+    background:rgba(26,8,16,.6);backdrop-filter:blur(6px);position:sticky;top:0;z-index:10;
+  }
+  .brand{display:flex;align-items:center;gap:12px;font-family:"Playfair Display",serif;font-style:italic;font-size:1.15rem;color:var(--cream);text-decoration:none}
+  .brand svg{width:36px;height:36px}
+  .brand .b{font-style:normal;font-weight:900;color:var(--copper-bright);letter-spacing:.04em}
+  .topbar .back{
+    font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;
+    color:#C9B89A;text-decoration:none;padding:8px 14px;border-radius:999px;border:1px solid transparent;transition:all .2s;
+  }
+  .topbar .back:hover{border-color:rgba(216,154,85,.4);color:var(--cream)}
+
+  /* page */
+  .page{max-width:1080px;margin:0 auto;padding:60px 36px 100px;position:relative;z-index:2}
+  .page-head{text-align:center;margin-bottom:48px}
+  .page-head .eyebrow{font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.32em;text-transform:uppercase;color:var(--copper-bright);margin-bottom:14px}
+  .page-head h1{font-family:"Playfair Display",serif;font-style:italic;font-weight:500;font-size:3rem;color:var(--cream);line-height:1.05}
+  .page-head h1 .accent{font-style:normal;font-weight:900;color:var(--copper-bright)}
+  .page-head p{margin-top:14px;color:#C9B89A;font-size:1.05rem;font-style:italic;max-width:520px;margin-left:auto;margin-right:auto}
+
+  /* layout */
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:36px;align-items:start}
+  @media (max-width:820px){ .grid{grid-template-columns:1fr;} .page{padding:40px 22px 80px} .page-head h1{font-size:2.2rem}}
+
+  /* book card */
+  .book-card{
+    background:rgba(26,8,16,.55);border:1px solid rgba(216,154,85,.2);border-radius:8px;
+    padding:24px;text-align:center;position:sticky;top:120px;
+  }
+  @media (max-width:820px){ .book-card{position:static} }
+  .bc-cover{
+    width:180px;height:260px;margin:0 auto 20px;
+    background:linear-gradient(160deg,#4A1C2A,#2E0F1A);background-size:cover;background-position:center;
+    border-radius:4px;box-shadow:0 20px 40px -10px rgba(0,0,0,.6), inset 0 0 0 1px rgba(216,154,85,.2);
+    display:flex;flex-direction:column;justify-content:space-between;padding:18px 14px;
+    position:relative;overflow:hidden;
+  }
+  .bc-cover::before{content:"";position:absolute;left:6px;top:10px;bottom:10px;width:2px;background:rgba(255,255,255,.18)}
+  .bc-cover.has-img{padding:0}
+  .bc-cover.has-img .pub,.bc-cover.has-img .ttl,.bc-cover.has-img .auth{display:none}
+  .bc-cover .pub{font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;opacity:.7;color:var(--cream)}
+  .bc-cover .ttl{font-family:"Playfair Display",serif;font-style:italic;font-size:1.4rem;color:var(--cream);line-height:1.05}
+  .bc-cover .auth{font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cream);opacity:.9;margin-top:6px}
+  .bc-title{font-family:"Playfair Display",serif;font-style:italic;font-size:1.4rem;color:var(--cream);line-height:1.15}
+  .bc-author{font-style:italic;color:#C9B89A;font-size:1rem;margin-top:4px}
+  .bc-meta{margin-top:14px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+  .bc-badge{display:inline-block;padding:4px 10px;background:rgba(216,154,85,.12);border:1px solid rgba(216,154,85,.3);border-radius:3px;font-family:"DM Mono",monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--copper-bright)}
+  .bc-price{margin-top:18px;font-family:"Playfair Display",serif;font-weight:700;font-size:2rem;color:var(--copper-bright)}
+
+  /* cart summary */
+  .cart-summary{
+    background:rgba(26,8,16,.55);border:1px solid rgba(216,154,85,.2);border-radius:8px;
+    padding:24px;position:sticky;top:120px;
+  }
+  @media (max-width:820px){ .cart-summary{position:static} }
+  .cart-summary h3{font-family:"Playfair Display",serif;font-style:italic;font-size:1.4rem;color:var(--cream);margin:0 0 16px;display:flex;align-items:center;gap:10px;}
+  .cart-count-badge{font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.1em;background:var(--copper-bright);color:var(--burgundy);padding:4px 10px;border-radius:999px;}
+  .cart-books-list{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
+  .cart-book-row{display:grid;grid-template-columns:50px 1fr auto;gap:12px;align-items:center;padding:10px;background:rgba(0,0,0,.2);border-radius:6px;}
+  .cart-book-cover{width:50px;height:70px;background:linear-gradient(160deg,#4A1C2A,#2E0F1A);border-radius:3px;background-size:cover;background-position:center;}
+  .cart-book-info{min-width:0;}
+  .cart-book-title{font-family:"Playfair Display",serif;font-size:1rem;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .cart-book-author{font-style:italic;color:#C9B89A;font-size:.85rem;}
+  .cart-book-price{font-family:"DM Mono",monospace;font-size:.75rem;color:var(--copper-bright);letter-spacing:.1em;}
+  .cart-total-row{display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px dashed rgba(216,154,85,.3);}
+  .cart-total-row span{font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--cream);}
+  .cart-total-price{font-family:"Playfair Display",serif;font-weight:700;font-size:1.6rem;color:var(--copper-bright);}
+
+  /* form panel */
+  .form-panel{
+    background:rgba(26,8,16,.55);border:1px solid rgba(216,154,85,.2);border-radius:8px;padding:36px;
+  }
+  .form-panel h2{font-family:"Playfair Display",serif;font-style:italic;font-weight:500;font-size:1.6rem;color:var(--cream);margin-bottom:6px}
+  .form-panel h2 .accent{color:var(--copper-bright);font-style:normal;font-weight:900}
+  .form-panel .sub{font-family:"DM Mono",monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);margin-bottom:24px}
+
+  .field{margin-bottom:18px}
+  .field label{display:block;font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);margin-bottom:6px}
+  .field input,.field textarea{
+    width:100%;padding:13px 15px;background:rgba(0,0,0,.3);border:1px solid rgba(216,154,85,.25);
+    border-radius:4px;color:var(--cream);font-size:1.02rem;transition:border-color .15s;
+  }
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--copper-bright)}
+  .field textarea{min-height:90px;resize:vertical;font-family:"Cormorant Garamond",serif;line-height:1.5}
+  .field .hint{font-size:.85rem;color:#8B7A66;margin-top:6px;font-style:italic}
+  .req{color:var(--copper-bright);margin-left:3px}
+
+  .check-wrap{
+    background:rgba(216,154,85,.06);border:1px dashed rgba(216,154,85,.3);border-radius:6px;
+    padding:18px 20px;margin-bottom:18px;
+  }
+  .check-row{display:flex;align-items:center;gap:12px;cursor:pointer}
+  .check-row input{width:20px;height:20px;accent-color:var(--copper-bright);cursor:pointer;flex-shrink:0}
+  .check-row .label{font-size:1.05rem;color:var(--cream)}
+  .free-banner{
+    margin-top:14px;padding:14px 16px;background:rgba(125,201,125,.1);border:1px solid rgba(125,201,125,.35);border-radius:5px;
+    font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:#9bd99b;text-align:center;
+    display:none;
+  }
+  .check-wrap.on .free-banner{display:block}
+  .check-wrap.on{background:rgba(125,201,125,.06);border-color:rgba(125,201,125,.3)}
+  .check-wrap.on .cod-banner{display:none}
+
+  .cod-banner{
+    margin-top:14px;padding:14px 16px;background:rgba(216,154,85,.1);border:1px solid rgba(216,154,85,.35);border-radius:5px;
+    color:var(--cream-warm);font-size:.98rem;line-height:1.5;
+  }
+  .cod-banner .tag{
+    display:inline-block;font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;
+    color:#1A0810;background:var(--copper-bright);padding:3px 10px;border-radius:999px;margin-right:8px;vertical-align:middle;font-weight:600;
+  }
+  .cod-banner b{color:var(--copper-bright);}
+  .cod-banner .row{display:flex;align-items:flex-start;gap:10px;margin-top:6px;}
+  .cod-banner .row:first-of-type{margin-top:10px;}
+  .cod-banner .row .ic{flex:0 0 18px;color:var(--copper-bright);font-weight:700;}
+
+  .addr-field{display:block}
+  .addr-field.hidden{display:none}
+
+  .freebie-note{
+    margin:24px 0 8px;padding:14px 18px;background:rgba(216,154,85,.08);border-left:3px solid var(--copper-bright);
+    border-radius:3px;font-style:italic;color:var(--cream-warm);font-size:1rem;
+  }
+
+  .submit-row{margin-top:28px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+  .submit-row a{font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:#C9B89A;text-decoration:none}
+  .submit-row a:hover{color:var(--copper-bright)}
+  .btn-primary{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:"DM Mono",monospace;font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;
+    padding:16px 28px;border-radius:999px;border:none;cursor:pointer;
+    background:var(--copper-bright);color:var(--burgundy-ink);transition:all .25s;
+  }
+  .btn-primary:hover{background:var(--cream);transform:translateY(-1px);box-shadow:0 12px 24px -10px rgba(216,154,85,.5)}
+  .btn-primary:disabled{opacity:.6;cursor:wait;transform:none}
+
+  .missing{
+    text-align:center;padding:80px 30px;
+    background:rgba(26,8,16,.55);border:1px solid rgba(216,154,85,.2);border-radius:8px;
+  }
+  .missing h2{font-family:"Playfair Display",serif;font-style:italic;font-size:2rem;color:var(--cream);margin-bottom:12px}
+  .missing p{color:#C9B89A;margin-bottom:24px}
+
+  footer{
+    text-align:center;padding:40px 20px;border-top:1px solid rgba(216,154,85,.12);
+    font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:#8B7A66;
+    position:relative;z-index:2;
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="pom-mark" viewBox="0 0 80 80">
+      <circle cx="40" cy="42" r="32" fill="url(#mk1)"/>
+      <circle cx="14" cy="42" r="8" fill="#9a5524"/>
+      <circle cx="22" cy="20" r="8" fill="#b8682f"/>
+      <circle cx="40" cy="12" r="9" fill="#b8682f"/>
+      <circle cx="58" cy="20" r="8" fill="#b8682f"/>
+      <circle cx="66" cy="42" r="8" fill="#9a5524"/>
+      <path d="M22,22 L28,32 L32,22 Z" fill="#3a1c08"/>
+      <path d="M48,22 L52,32 L58,22 Z" fill="#3a1c08"/>
+      <ellipse cx="40" cy="48" rx="20" ry="17" fill="#e8b075"/>
+      <ellipse cx="32" cy="44" rx="3" ry="4" fill="#1a0a05"/>
+      <ellipse cx="48" cy="44" rx="3" ry="4" fill="#1a0a05"/>
+      <path d="M37,54 Q40,52 43,54 Q43,57 40,58 Q37,57 37,54 Z" fill="#1a0a05"/>
+      <defs>
+        <radialGradient id="mk1" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#c47538"/>
+          <stop offset="100%" stop-color="#7a4019"/>
+        </radialGradient>
+      </defs>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="topbar">
+  <a class="brand" href="/">
+    <svg><use href="#pom-mark"/></svg>
+    The Book Vault <span class="b">PH</span>
+  </a>
+  <a class="back" href="/">← back to shop</a>
+</div>
+
+<div class="page">
+  <div class="page-head">
+    <div class="eyebrow">step one of two</div>
+    <h1>place your <span class="accent">order</span></h1>
+    <p>fill in your details below. payment instructions come next.</p>
+  </div>
+
+  <div id="content"><!-- filled by JS --></div>
+</div>
+
+<footer>The Book Vault PH · wrapped with care · ships nationwide</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script src="/shared.js"></script>
+<script>
+  const $ = (s,r=document)=>r.querySelector(s);
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const params = new URLSearchParams(location.search);
+  const bookId = params.get('book');
+  const isCartMode = params.get('cart') === '1';
+
+  const renderMissing = (msg) => {
+    $('#content').innerHTML = `
+      <div class="missing">
+        <h2>book not found</h2>
+        <p>${esc(msg || "we couldn't find that book in the vault. it may have been claimed or removed.")}</p>
+        <a class="btn-primary" href="/">← browse the shop</a>
+      </div>`;
+  };
+
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href]');
+    if (a) BVPH.track('nav_click', { element: (a.textContent || 'link').trim(), target: a.getAttribute('href') || '' });
+  }, true);
+
+  const renderForm = (book) => {
+    const coverStyle = book.cover
+      ? `background-image:url('${esc(book.cover)}');`
+      : '';
+    const coverClass = book.cover ? 'has-img' : '';
+    const padNo = 'No. ' + String(Math.abs(book.title.length*7) % 99 + 1).padStart(3,'0');
+
+    $('#content').innerHTML = `
+      <div class="grid">
+        <aside class="book-card">
+          <div class="bc-cover ${coverClass}" style="${coverStyle}">
+            <div class="pub">${padNo}</div>
+            <div>
+              <div class="ttl">${esc(book.title)}</div>
+              <div class="auth">${esc(book.author)}</div>
+            </div>
+          </div>
+          <div class="bc-title">${esc(book.title)}</div>
+          <div class="bc-author">by ${esc(book.author)}</div>
+          <div class="bc-meta">
+            ${book.condition?`<span class="bc-badge">${esc(book.condition)}</span>`:''}
+            ${book.genre?`<span class="bc-badge">${esc(book.genre)}</span>`:''}
+          </div>
+          <div class="bc-price">₱${book.sellPrice||0}</div>
+        </aside>
+
+        <section class="form-panel">
+          <h2>your <span class="accent">details</span></h2>
+          <div class="sub">— takes about a minute</div>
+
+          <form id="orderForm" autocomplete="on">
+            <div class="field">
+              <label>your name <span class="req">*</span></label>
+              <input type="text" id="f_name" required placeholder="Your full name" autofocus>
+            </div>
+
+            <div class="check-wrap" id="scWrap">
+              <label class="check-row">
+                <input type="checkbox" id="f_withinSC">
+                <span class="label">i'm within <strong>San Carlos City</strong> (Negros Occidental)</span>
+              </label>
+              <div class="free-banner">★ free delivery — meet-up or hand-deliver · pay via BPI/InstaPay ★</div>
+              <div class="cod-banner" id="codBanner">
+                <span class="tag">Ships nationwide</span>
+                <span>not in san carlos? no worries, we ship anywhere in PH.</span>
+                <div class="row"><span class="ic">→</span><span><b>shipping fee depends on your location</b> — we'll quote it once we see your address (usually ₱80–250 via J&amp;T or LBC).</span></div>
+                <div class="row"><span class="ic">→</span><span>payment is <b>cash on delivery (COD)</b>. pay the book + shipping fee directly to the courier when it arrives.</span></div>
+              </div>
+            </div>
+
+            <div class="field addr-field" id="addrField">
+              <label>shipping address <span class="req">*</span></label>
+              <textarea id="f_address" placeholder="full address including barangay, city/municipality, province, and zip code"></textarea>
+              <div class="hint">we'll DM you the shipping quote and confirm before we ship. couriered within 1–2 days of confirmation.</div>
+            </div>
+
+            <div class="field">
+              <label>additional instructions <span style="color:#8B7A66;text-transform:none;letter-spacing:0;font-family:'Cormorant Garamond',serif;font-style:italic">(optional)</span></label>
+              <textarea id="f_notes" placeholder="anything we should know? wrap as a gift? leave at the gate? a song you'd like included with the bookmark?"></textarea>
+            </div>
+
+            <div class="field">
+              <label>where did you hear about us? <span style="color:#8B7A66;text-transform:none;letter-spacing:0;font-family:'Cormorant Garamond',serif;font-style:italic">(optional)</span></label>
+              <select id="f_source" style="width:100%;padding:14px 16px;background:rgba(0,0,0,.2);border:1px solid rgba(216,154,85,.25);border-radius:6px;color:var(--cream);font-size:1rem;">
+                <option value="">— select —</option>
+                <option value="instagram">Instagram</option>
+                <option value="facebook">Facebook</option>
+                <option value="tiktok">TikTok</option>
+                <option value="friend">Friend / Word of mouth</option>
+                <option value="google">Google search</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="freebie-note">
+              ✨ every order comes with little freebies — a hand-stamped bookmark, a wax-sealed note, and sometimes a surprise. wrapped in kraft paper and tied with jute twine.
+            </div>
+
+            <div class="submit-row">
+              <a href="/">← keep browsing</a>
+              <button type="submit" class="btn-primary" id="submitBtn">proceed to payment →</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    `;
+
+    // wire SC checkbox to toggle address field
+    const wrap = $('#scWrap');
+    const chk = $('#f_withinSC');
+    const addr = $('#addrField');
+    const addrInput = $('#f_address');
+    const updateAddr = () => {
+      if (chk.checked) {
+        wrap.classList.add('on');
+        addr.classList.add('hidden');
+        addrInput.required = false;
+      } else {
+        wrap.classList.remove('on');
+        addr.classList.remove('hidden');
+        addrInput.required = true;
+      }
+    };
+    chk.addEventListener('change', updateAddr);
+    updateAddr();
+
+    // submit
+    $('#orderForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const name = $('#f_name').value.trim();
+      const withinSC = chk.checked;
+      const address = withinSC ? '' : addrInput.value.trim();
+      const notes = $('#f_notes').value.trim();
+
+      if (!name) { $('#f_name').focus(); return; }
+      if (!withinSC && !address) { addrInput.focus(); return; }
+
+      const btn = $('#submitBtn');
+      btn.disabled = true; btn.textContent = 'placing order…';
+
+      try {
+        BVPH.track('order_submit', { bookId: book.id });
+        const order = BVPH.addOrder({
+          bookId: book.id,
+          bookTitle: book.title,
+          bookAuthor: book.author,
+          bookPrice: book.sellPrice || 0,
+          bookCover: book.cover || '',
+          customerName: name,
+          withinSC,
+          address,
+          notes,
+          paymentMethod: withinSC ? 'qr' : 'cod',
+        });
+        location.href = '/payment.html?order=' + encodeURIComponent(order.id);
+      } catch(err) {
+        console.error(err);
+        btn.disabled = false;
+        btn.textContent = 'proceed to payment →';
+        alert("hmm, that didn't go through. please try again.");
+      }
+    });
+  };
+
+  const renderCartForm = (books) => {
+    const total = books.reduce((sum, b) => sum + (Number(b.sellPrice) || 0), 0);
+    const booksHtml = books.map(b => {
+      const coverStyle = b.cover ? `background-image:url('${esc(b.cover)}');background-size:cover;background-position:center;` : '';
+      return `<div class="cart-book-row">
+        <div class="cart-book-cover" style="${coverStyle}"></div>
+        <div class="cart-book-info">
+          <div class="cart-book-title">${esc(b.title)}</div>
+          <div class="cart-book-author">by ${esc(b.author||'Unknown')}</div>
+        </div>
+        <div class="cart-book-price">₱${b.sellPrice||0}</div>
+      </div>`;
+    }).join('');
+
+    $('#content').innerHTML = `
+      <div class="grid">
+        <aside class="cart-summary">
+          <h3>Your cart <span class="cart-count-badge">${books.length} book${books.length>1?'s':''}</span></h3>
+          <div class="cart-books-list">${booksHtml}</div>
+          <div class="cart-total-row">
+            <span>Total</span>
+            <span class="cart-total-price">₱${total}</span>
+          </div>
+        </aside>
+
+        <section class="form-panel">
+          <h2>your <span class="accent">details</span></h2>
+          <div class="sub">— takes about a minute</div>
+
+          <form id="orderForm" autocomplete="on">
+            <div class="field">
+              <label>your name <span class="req">*</span></label>
+              <input type="text" id="f_name" required placeholder="Your full name" autofocus>
+            </div>
+
+            <div class="check-wrap" id="scWrap">
+              <label class="check-row">
+                <input type="checkbox" id="f_withinSC">
+                <span class="label">i'm within <strong>San Carlos City</strong> (Negros Occidental)</span>
+              </label>
+              <div class="free-banner">★ free delivery — meet-up or hand-deliver · pay via BPI/InstaPay ★</div>
+              <div class="cod-banner" id="codBanner">
+                <span class="tag">Ships nationwide</span>
+                <span>not in san carlos? no worries, we ship anywhere in PH.</span>
+                <div class="row"><span class="ic">→</span><span><b>shipping fee depends on your location</b> — we'll quote it once we see your address (usually ₱80–250 via J&amp;T or LBC).</span></div>
+                <div class="row"><span class="ic">→</span><span>payment is <b>cash on delivery (COD)</b>. pay the book + shipping fee directly to the courier when it arrives.</span></div>
+              </div>
+            </div>
+
+            <div class="field addr-field" id="addrField">
+              <label>shipping address <span class="req">*</span></label>
+              <textarea id="f_address" placeholder="full address including barangay, city/municipality, province, and zip code"></textarea>
+              <div class="hint">we'll DM you the shipping quote and confirm before we ship. couriered within 1–2 days of confirmation.</div>
+            </div>
+
+            <div class="field">
+              <label>additional instructions <span style="color:#8B7A66;text-transform:none;letter-spacing:0;font-family:'Cormorant Garamond',serif;font-style:italic">(optional)</span></label>
+              <textarea id="f_notes" placeholder="anything we should know? wrap as a gift? leave at the gate? a song you'd like included with the bookmark?"></textarea>
+            </div>
+
+            <div class="field">
+              <label>where did you hear about us? <span style="color:#8B7A66;text-transform:none;letter-spacing:0;font-family:'Cormorant Garamond',serif;font-style:italic">(optional)</span></label>
+              <select id="f_source" style="width:100%;padding:14px 16px;background:rgba(0,0,0,.2);border:1px solid rgba(216,154,85,.25);border-radius:6px;color:var(--cream);font-size:1rem;">
+                <option value="">— select —</option>
+                <option value="instagram">Instagram</option>
+                <option value="facebook">Facebook</option>
+                <option value="tiktok">TikTok</option>
+                <option value="friend">Friend / Word of mouth</option>
+                <option value="google">Google search</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="freebie-note">
+              ✨ every order comes with little freebies — a hand-stamped bookmark, a wax-sealed note, and sometimes a surprise. wrapped in kraft paper and tied with jute twine.
+            </div>
+
+            <div class="submit-row">
+              <a href="/">← keep browsing</a>
+              <button type="submit" class="btn-primary" id="submitBtn">proceed to payment →</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    `;
+
+    // wire SC checkbox
+    const wrap = $('#scWrap');
+    const chk = $('#f_withinSC');
+    const addr = $('#addrField');
+    const addrInput = $('#f_address');
+    const updateAddr = () => {
+      if (chk.checked) { wrap.classList.add('on'); addr.classList.add('hidden'); addrInput.required = false; }
+      else { wrap.classList.remove('on'); addr.classList.remove('hidden'); addrInput.required = true; }
+    };
+    chk.addEventListener('change', updateAddr);
+    updateAddr();
+
+    // submit
+    $('#orderForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const name = $('#f_name').value.trim();
+      const withinSC = chk.checked;
+      const address = withinSC ? '' : addrInput.value.trim();
+      const notes = $('#f_notes').value.trim();
+
+      if (!name) { $('#f_name').focus(); return; }
+      if (!withinSC && !address) { addrInput.focus(); return; }
+
+      const btn = $('#submitBtn');
+      btn.disabled = true; btn.textContent = 'placing order…';
+
+      try {
+        BVPH.track('order_submit', { bookIds: books.map(b=>b.id), mode: 'cart' });
+        const order = BVPH.addOrder({
+          isCart: true,
+          books: books.map(b => ({
+            id: b.id,
+            title: b.title,
+            author: b.author,
+            price: b.sellPrice || 0,
+            cover: b.cover || '',
+          })),
+          totalPrice: total,
+          customerName: name,
+          withinSC,
+          address,
+          notes,
+          paymentMethod: withinSC ? 'qr' : 'cod',
+        });
+        BVPH.clearCart();
+        location.href = '/payment.html?order=' + encodeURIComponent(order.id);
+      } catch(err) {
+        console.error(err);
+        btn.disabled = false;
+        btn.textContent = 'proceed to payment →';
+        alert("hmm, that didn't go through. please try again.");
+      }
+    });
+  };
+
+  (async () => {
+    try { await BVPH.init(); } catch(e) { console.warn(e); }
+    BVPH.trackPageView('order');
+    
+    if (isCartMode) {
+      const cartBooks = BVPH.getCartBooks();
+      if (!cartBooks.length) { renderMissing("your cart is empty. head back to the shop and add some books first."); return; }
+      BVPH.track('order_start', { bookIds: cartBooks.map(b=>b.id), page: 'order', mode: 'cart' });
+      renderCartForm(cartBooks);
+    } else {
+      if (!bookId) { renderMissing("no book selected. head back to the shop and click a book first."); return; }
+      BVPH.track('order_start', { bookId, page: 'order' });
+      const book = BVPH.getBook(bookId);
+      if (!book) { renderMissing(); return; }
+      renderForm(book);
+    }
+  })();
+</script>
+</body>
+</html>
