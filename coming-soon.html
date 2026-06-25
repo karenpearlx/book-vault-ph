@@ -547,9 +547,7 @@ body::before{
   const padNo = title => 'No. ' + String(Math.abs((title||'').length*7) % 99 + 1).padStart(3,'0');
 
   function coverHTML(book){
-    const hasImg = !!book.cover;
-    const style = hasImg ? `background-image:url('${esc(book.cover)}');` : '';
-    return `<div class="cover-img ${hasImg?'has-img':''}" style="${style}">
+    return `<div class="cover-img" data-book-id="${esc(book.id)}">
       <div class="pub">${esc(padNo(book.title))}</div>
       <div>
         <div class="ttl">${esc(book.title)}</div>
@@ -557,6 +555,22 @@ body::before{
       </div>
       <div class="auth">BVPH</div>
     </div>`;
+  }
+  
+  async function loadVisibleCovers() {
+    const cards = document.querySelectorAll('.cover-img[data-book-id]:not(.cover-loaded)');
+    const ids = [...cards].map(c => c.dataset.bookId).filter(Boolean);
+    if (!ids.length) return;
+    const covers = await BVPH.getCovers(ids);
+    cards.forEach(card => {
+      const id = card.dataset.bookId;
+      if (covers[id]) {
+        card.style.backgroundImage = `url('${covers[id]}')`;
+        card.classList.add('has-img', 'cover-loaded');
+      } else {
+        card.classList.add('cover-loaded');
+      }
+    });
   }
 
   const HEART_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
@@ -600,15 +614,14 @@ body::before{
     if (idx < allComing.length - 1) openDetail(allComing[idx + 1].id);
   }
 
-  function openDetail(id){
+  async function openDetail(id){
     currentBookId = id;
     BVPH.track('book_click', { bookId: id });
     const b = BVPH.getBook(id);
     if (!b) return;
     const cover = document.getElementById('bdCover');
-    const hasImg = !!b.cover;
-    cover.className = 'bd-cover' + (hasImg ? ' has-img' : '');
-    cover.style.backgroundImage = hasImg ? `url('${b.cover}')` : '';
+    cover.className = 'bd-cover';
+    cover.style.backgroundImage = '';
     cover.innerHTML = `
       <div class="pub">${esc(padNo(b.title))}</div>
       <div>
@@ -616,6 +629,13 @@ body::before{
         <div class="auth">${esc(b.author||'')}</div>
       </div>
       <div class="auth">BVPH</div>`;
+    // Load cover asynchronously
+    BVPH.getCover(id).then(coverUrl => {
+      if (coverUrl && currentBookId === id) {
+        cover.style.backgroundImage = `url('${coverUrl}')`;
+        cover.classList.add('has-img');
+      }
+    });
 
     const rating = b.rating ? Number(b.rating) : null;
     const stars = rating ? '★'.repeat(Math.round(rating)) + '☆'.repeat(5-Math.round(rating)) : '';
@@ -693,11 +713,9 @@ body::before{
       return;
     }
     list.innerHTML = books.map(b => {
-      const hasImg = !!b.cover;
-      const style = hasImg ? `background-image:url('${esc(b.cover)}');` : '';
       const isComing = b.status === 'coming_soon';
       return `<div class="wl-row">
-        <div class="wl-cover" style="${style}"></div>
+        <div class="wl-cover" data-wl-cover="${b.id}"></div>
         <div class="wl-meta">
           <p class="wl-ttl">${esc(b.title)}</p>
           <p class="wl-by">by ${esc(b.author||'Unknown')}</p>
@@ -710,6 +728,16 @@ body::before{
         </div>
       </div>`;
     }).join('');
+    // Load wishlist covers
+    const wlIds = books.map(b => b.id);
+    if (wlIds.length) {
+      BVPH.getCovers(wlIds).then(covers => {
+        document.querySelectorAll('[data-wl-cover]').forEach(el => {
+          const id = el.dataset.wlCover;
+          if (covers[id]) el.style.backgroundImage = `url('${covers[id]}')`;
+        });
+      });
+    }
   }
   function openWishlist(){ renderWishlist(); document.getElementById('wlBg').classList.add('show'); document.body.style.overflow='hidden'; }
   function closeWishlist(){ document.getElementById('wlBg').classList.remove('show'); document.body.style.overflow=''; }
@@ -741,7 +769,7 @@ body::before{
     }
     list.innerHTML = books.map(b => `
       <div class="cart-row">
-        <div class="cart-cover" style="${b.cover ? `background-image:url('${b.cover}')` : ''}"></div>
+        <div class="cart-cover" data-cart-cover="${b.id}"></div>
         <div class="cart-meta">
           <div class="cart-ttl">${esc(b.title)}</div>
           <div class="cart-by">by ${esc(b.author||'Unknown')}</div>
@@ -752,6 +780,16 @@ body::before{
     `).join('');
     document.getElementById('cartTotal').textContent = peso(BVPH.getCartTotal());
     footer.style.display = 'flex';
+    // Load cart covers
+    const cartIds = books.map(b => b.id);
+    if (cartIds.length) {
+      BVPH.getCovers(cartIds).then(covers => {
+        document.querySelectorAll('[data-cart-cover]').forEach(el => {
+          const id = el.dataset.cartCover;
+          if (covers[id]) el.style.backgroundImage = `url('${covers[id]}')`;
+        });
+      });
+    }
   }
   function openCart(){ renderCart(); document.getElementById('cartBg').classList.add('show'); document.body.style.overflow='hidden'; }
   function closeCart(){ document.getElementById('cartBg').classList.remove('show'); document.body.style.overflow=''; }
@@ -864,9 +902,9 @@ body::before{
     if (href.includes('/order.html')) BVPH.track('buy_now_click', { bookId, element: (a.textContent || 'order button').trim(), target: href });
     else if (a.closest('.nav') || a.closest('nav') || a.classList.contains('nav-wl')) BVPH.track('nav_click', { element: (a.textContent || 'nav link').trim(), target: href });
   }, true);
-  BVPH.init().then(() => {
-    BVPH.trackPageView('coming soon'); render(); renderWlCount(); renderCartCount(); });
-  BVPH.onChange(render);
+  BVPH.init().then(async () => {
+    BVPH.trackPageView('coming soon'); render(); renderWlCount(); renderCartCount(); await loadVisibleCovers(); });
+  BVPH.onChange(() => { render(); loadVisibleCovers(); });
   BVPH.onWishlistChange(renderWlCount);
   BVPH.onCartChange(renderCartCount);
   window.addEventListener('storage', e => { 

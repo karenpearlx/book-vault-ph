@@ -144,7 +144,7 @@ const BVPH = (() => {
       _books = _readBooksLocal();
       return _books;
     }
-    const { data, error } = await sb.from('books').select('*').order('created_at', { ascending: false });
+    const { data, error } = await sb.from('books').select('id,title,author,genre,condition,price_bought,price_sell,summary,is_featured,status,rating,goodreads_url,created_at').order('created_at', { ascending: false });
     if (error) {
       console.error('[BVPH] load books error:', error);
       if (_books === null) _books = _readBooksLocal();
@@ -202,6 +202,30 @@ const BVPH = (() => {
   const getBooks = () => (_books !== null ? _books : _readBooksLocal());
   const getBook = (id) => getBooks().find(b => b.id === id);
   const getFeatured = () => (_featured !== null ? _featured : _readFeaturedLocal());
+
+  // ---------- COVER LOADING ----------
+  const _coverCache = {};
+  const _coverLoading = {};
+  async function getCover(id) {
+    if (_coverCache[id]) return _coverCache[id];
+    if (_coverLoading[id]) return _coverLoading[id];
+    if (!USE_SUPABASE) return null;
+    _coverLoading[id] = (async () => {
+      const { data } = await sb.from('books').select('cover_url').eq('id', id).single();
+      _coverCache[id] = data?.cover_url || null;
+      delete _coverLoading[id];
+      return _coverCache[id];
+    })();
+    return _coverLoading[id];
+  }
+  async function getCovers(ids) {
+    const missing = ids.filter(id => !_coverCache[id] && !_coverLoading[id]);
+    if (missing.length && USE_SUPABASE) {
+      const { data } = await sb.from('books').select('id,cover_url').in('id', missing);
+      (data || []).forEach(r => { _coverCache[r.id] = r.cover_url; });
+    }
+    return ids.reduce((o, id) => { o[id] = _coverCache[id] || null; return o; }, {});
+  }
 
   // ---------- WRITES ----------
   // Save the entire books collection. Diffs against the cache to
@@ -521,7 +545,7 @@ const BVPH = (() => {
   return {
     GENRES, CONDITIONS, USE_SUPABASE,
     init, loadBooks, loadFeatured, onChange, status,
-    getBooks, getBook, getFeatured,
+    getBooks, getBook, getFeatured, getCover, getCovers,
     saveBooks, addBook, updateBook, deleteBook, setFeaturedBook, saveFeatured,
     getOrders, saveOrders, addOrder, getOrder,
     newId, fileToDataUrl,
