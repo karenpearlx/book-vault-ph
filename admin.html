@@ -2499,9 +2499,7 @@
   $('#copyPresetBtn').addEventListener('click', () => copyText($('#presetCaption').value, 'caption'));
 
   $('#studioBookSelect').addEventListener('change', () => {
-    $('#studioSummary').value = '';
-    $('#igCaption').value = '';
-    $('#fbCaption').value = '';
+    if ($('#studioSummary')) $('#studioSummary').value = '';
     updateGraphicFromSelection();
   });
 
@@ -2613,27 +2611,16 @@
     ].join('\n');
   };
 
-  $('#genIgBtn').addEventListener('click', () => {
-    const b = requireBook(); if (!b) return;
-    $('#igCaption').value = buildIgCaption(b, $('#studioSummary').value);
-    toast('IG caption ready ✦');
-  });
-  $('#genFbBtn').addEventListener('click', () => {
-    const b = requireBook(); if (!b) return;
-    $('#fbCaption').value = buildFbCaption(b, $('#studioSummary').value);
-    toast('FB caption ready ✦');
-  });
-
   // copy helpers
   const copyText = async (val, label) => {
     if (!val) { toast('nothing to copy'); return; }
     try { await navigator.clipboard.writeText(val); toast(label + ' copied ✦'); }
     catch(e) { toast('copy blocked by browser'); }
   };
-  $('#copySummaryBtn').addEventListener('click', () => copyText($('#studioSummary').value, 'summary'));
+  $('#copySummaryBtn')?.addEventListener('click', () => copyText($('#studioSummary').value, 'summary'));
 
   // Shorten summary - condense to 1-2 punchy sentences for social media
-  $('#shortenSummaryBtn').addEventListener('click', () => {
+  $('#shortenSummaryBtn')?.addEventListener('click', () => {
     const textarea = $('#studioSummary');
     const original = textarea.value.trim();
     if (!original) { toast('no summary to shorten'); return; }
@@ -2656,8 +2643,6 @@
     textarea.value = short;
     toast('shortened ✂');
   });
-  $('#copyIgBtn').addEventListener('click', () => copyText($('#igCaption').value, 'IG caption'));
-  $('#copyFbBtn').addEventListener('click', () => copyText($('#fbCaption').value, 'FB caption'));
 
   // ----- graphic preview -----
   const padNo = (n) => 'No. ' + String(n).padStart(3,'0');
