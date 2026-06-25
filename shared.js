@@ -221,8 +221,13 @@ const BVPH = (() => {
   async function getCovers(ids) {
     const missing = ids.filter(id => !_coverCache[id] && !_coverLoading[id]);
     if (missing.length && USE_SUPABASE) {
-      const { data } = await sb.from('books').select('id,cover_url').in('id', missing);
-      (data || []).forEach(r => { _coverCache[r.id] = r.cover_url; });
+      // Load in batches of 3 to avoid timeout
+      const BATCH = 3;
+      for (let i = 0; i < missing.length; i += BATCH) {
+        const batch = missing.slice(i, i + BATCH);
+        const { data } = await sb.from('books').select('id,cover_url').in('id', batch);
+        (data || []).forEach(r => { _coverCache[r.id] = r.cover_url; });
+      }
     }
     return ids.reduce((o, id) => { o[id] = _coverCache[id] || null; return o; }, {});
   }
