@@ -2756,6 +2756,194 @@ function closeBookDetail() {
 }
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBookDetail(); });
+
+// ===== CONTENT STUDIO: AI IMAGE GEN =====
+
+// Template button selection
+$('.template-grid').forEach(grid => {
+  grid.addEventListener('click', e => {
+    const btn = e.target.closest('.template-btn');
+    if (!btn) return;
+    grid.querySelectorAll('.template-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// Get selected template
+const getSelectedTemplate = (section) => {
+  const active = document.querySelector(`#${section} .template-btn.active`);
+  return active?.dataset.template || '';
+};
+
+// Coming Soon prompts
+const comingSoonPrompts = {
+  rainy_cozy: (book) => `Instagram promotional image for "The Book Vault PH" bookshop. "COMING NEXT WEEK" text at top. Cozy rainy window scene - raindrops on glass, warm amber lighting inside, dark moody atmosphere outside. Display the book "${book.title}" by ${book.author} - show the book cover prominently. Price tag showing "₱${book.sellPrice}". Dark burgundy and cream color palette. The Book Vault PH logo at bottom. Cozy bookish aesthetic, hygge vibes, inviting and warm.`,
+  dark_moody: (book) => `Instagram promotional image for "The Book Vault PH" bookshop. "COMING SOON" text at top in elegant gold serif. Dark dramatic noir aesthetic - deep shadows, single moody light source. Display the book "${book.title}" by ${book.author} prominently. Price "₱${book.sellPrice}". Rich burgundy, black, and gold color scheme. The Book Vault PH logo at bottom. Mysterious literary atmosphere.`,
+  vintage_library: (book) => `Instagram promotional image for "The Book Vault PH" bookshop. "ARRIVING SOON" in vintage typography. Old library aesthetic - wooden shelves, leather books, antique lamp glow. Display "${book.title}" by ${book.author} as the centerpiece. Price "₱${book.sellPrice}". Warm sepia and burgundy tones. The Book Vault PH logo at bottom. Classic vintage bookshop atmosphere.`,
+  minimal_clean: (book) => `Instagram promotional image for "The Book Vault PH" bookshop. "COMING SOON" in clean modern serif font. Minimal aesthetic - cream/off-white background, simple elegant layout. Display "${book.title}" by ${book.author} book cover centered. Price "₱${book.sellPrice}" in subtle text. Burgundy accent color. The Book Vault PH logo small at bottom. Clean sophisticated design.`
+};
+
+// Featured prompts
+const featuredPrompts = {
+  spotlight: (book) => `Instagram promotional image for "The Book Vault PH" bookshop. "FEATURED PICK - BOOK OF THE DAY" at top in gold serif. Dark moody library background with burgundy velvet curtains, warm golden spotlight illuminating "${book.title}" by ${book.author} displayed on elegant pedestal. Gold decorative frame border. Price "₱${book.sellPrice}". The Book Vault PH logo at bottom. Cinematic dramatic lighting, luxurious vintage atmosphere.`,
+  book_of_day: (book) => `Instagram promotional image for "The Book Vault PH" bookshop. "📖 BOOK OF THE DAY" banner at top. Warm reading scene - "${book.title}" by ${book.author} displayed prominently with soft golden lighting. Cozy library background. Price "₱${book.sellPrice}". Burgundy and gold color scheme. The Book Vault PH logo at bottom. Inviting bookish aesthetic.`,
+  staff_pick: (book) => `Instagram promotional image for "The Book Vault PH" bookshop. "💜 STAFF PICK" badge at top. Personal recommendation style - "${book.title}" by ${book.author} with handwritten-style notes around it. Warm intimate lighting. Price "₱${book.sellPrice}". Burgundy and cream palette. The Book Vault PH logo at bottom. Friendly curated feel.`,
+  must_read: (book) => `Instagram promotional image for "The Book Vault PH" bookshop. "🔥 MUST READ" bold text at top. Dramatic presentation - "${book.title}" by ${book.author} as hero element with dynamic lighting. Price "₱${book.sellPrice}". Dark background with gold and burgundy accents. The Book Vault PH logo at bottom. Exciting urgent energy.`
+};
+
+// Generate Coming Soon prompt
+$('#genComingSoonImgBtn')?.addEventListener('click', () => {
+  const bookId = $('#studioBookSelect').value;
+  const book = BVPH.getBook(bookId);
+  if (!book) { toast('select a book first'); return; }
+  const template = getSelectedTemplate('comingSoonTemplates');
+  const promptFn = comingSoonPrompts[template] || comingSoonPrompts.rainy_cozy;
+  const prompt = promptFn(book);
+  
+  // Show prompt in a modal or textarea
+  const preview = $('#genImagePreview');
+  preview.style.display = 'block';
+  preview.innerHTML = `
+    <label style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-bright);display:block;margin-bottom:10px;">copy this prompt to chatgpt/dall-e</label>
+    <textarea class="studio-textarea mono" style="min-height:150px;" id="genPromptText">${prompt}</textarea>
+    <div class="studio-btnrow" style="margin-top:10px;">
+      <button class="btn-sm fill" onclick="copyText(document.getElementById('genPromptText').value, 'prompt')">copy prompt</button>
+    </div>
+  `;
+});
+
+// Generate Featured prompt
+$('#genFeaturedImgBtn')?.addEventListener('click', () => {
+  const bookId = $('#studioBookSelect').value;
+  const book = BVPH.getBook(bookId);
+  if (!book) { toast('select a book first'); return; }
+  const template = getSelectedTemplate('featuredTemplates');
+  const promptFn = featuredPrompts[template] || featuredPrompts.spotlight;
+  const prompt = promptFn(book);
+  
+  const preview = $('#genImagePreview');
+  preview.style.display = 'block';
+  preview.innerHTML = `
+    <label style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-bright);display:block;margin-bottom:10px;">copy this prompt to chatgpt/dall-e</label>
+    <textarea class="studio-textarea mono" style="min-height:150px;" id="genPromptText">${prompt}</textarea>
+    <div class="studio-btnrow" style="margin-top:10px;">
+      <button class="btn-sm fill" onclick="copyText(document.getElementById('genPromptText').value, 'prompt')">copy prompt</button>
+    </div>
+  `;
+});
+
+// ===== WATERMARK FUNCTIONALITY =====
+let watermarkFiles = [];
+const logoImg = new Image();
+logoImg.src = '/logo-watermark-transparent.png';
+
+const dropZone = $('#watermarkDropZone');
+const fileInput = $('#watermarkFiles');
+
+dropZone?.addEventListener('click', () => fileInput?.click());
+dropZone?.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone?.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone?.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  handleWatermarkFiles(e.dataTransfer.files);
+});
+fileInput?.addEventListener('change', e => handleWatermarkFiles(e.target.files));
+
+function handleWatermarkFiles(files) {
+  watermarkFiles = [...watermarkFiles, ...Array.from(files).filter(f => f.type.startsWith('image/'))];
+  renderWatermarkPreviews();
+  $('#addWatermarkBtn').disabled = watermarkFiles.length === 0;
+}
+
+function renderWatermarkPreviews() {
+  const grid = $('#watermarkPreviewGrid');
+  if (!grid) return;
+  grid.innerHTML = watermarkFiles.map((f, i) => `
+    <div class="preview-item" data-index="${i}">
+      <img src="${URL.createObjectURL(f)}" alt="${f.name}">
+      <button class="remove-btn" onclick="removeWatermarkFile(${i})">×</button>
+    </div>
+  `).join('');
+}
+
+window.removeWatermarkFile = (index) => {
+  watermarkFiles.splice(index, 1);
+  renderWatermarkPreviews();
+  $('#addWatermarkBtn').disabled = watermarkFiles.length === 0;
+};
+
+// Add watermark to images
+$('#addWatermarkBtn')?.addEventListener('click', async () => {
+  if (watermarkFiles.length === 0) return;
+  const btn = $('#addWatermarkBtn');
+  btn.disabled = true;
+  btn.textContent = 'processing...';
+  
+  const results = [];
+  for (const file of watermarkFiles) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    await new Promise((resolve) => {
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        
+        // Add logo watermark at bottom right
+        const logoHeight = Math.min(img.height * 0.12, 120); // 12% of image height, max 120px
+        const logoWidth = (logoImg.width / logoImg.height) * logoHeight;
+        const padding = img.width * 0.03; // 3% padding
+        const x = img.width - logoWidth - padding;
+        const y = img.height - logoHeight - padding;
+        
+        ctx.globalAlpha = 0.85;
+        ctx.drawImage(logoImg, x, y, logoWidth, logoHeight);
+        ctx.globalAlpha = 1;
+        
+        canvas.toBlob(blob => {
+          results.push({ name: file.name.replace(/\.[^.]+$/, '_watermarked.png'), blob });
+          resolve();
+        }, 'image/png');
+      };
+      img.src = URL.createObjectURL(file);
+    });
+  }
+  
+  // Show results and download buttons
+  const grid = $('#watermarkPreviewGrid');
+  grid.innerHTML = results.map((r, i) => `
+    <div class="preview-item" data-index="${i}">
+      <img src="${URL.createObjectURL(r.blob)}" alt="${r.name}">
+      <button class="remove-btn" style="background:var(--copper);font-size:.6rem;width:auto;padding:2px 6px;border-radius:3px;" onclick="downloadWatermarked(${i})">⬇</button>
+    </div>
+  `).join('');
+  
+  window.watermarkedResults = results;
+  btn.textContent = '✓ done';
+  $('#downloadAllWatermarked').style.display = '';
+  
+  setTimeout(() => {
+    btn.textContent = '✦ add logo watermark';
+    btn.disabled = false;
+  }, 2000);
+});
+
+window.downloadWatermarked = (index) => {
+  const r = window.watermarkedResults[index];
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(r.blob);
+  a.download = r.name;
+  a.click();
+};
+
+$('#downloadAllWatermarked')?.addEventListener('click', () => {
+  (window.watermarkedResults || []).forEach((r, i) => {
+    setTimeout(() => downloadWatermarked(i), i * 300);
+  });
+});
 </script>
 </body>
 </html>
