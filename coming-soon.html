@@ -341,6 +341,25 @@ body::before{
 .bd-info .btn-reserve{display:inline-block;font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;background:var(--copper);color:var(--burgundy-deep);padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:600;transition:transform .2s,box-shadow .2s;}
 .bd-info .btn-reserve:hover{transform:translateY(-2px);box-shadow:0 8px 20px -8px rgba(255,155,0,.5);}
 
+/* Modal nav buttons */
+.bd-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:44px;height:44px;border-radius:50%;border:0;
+  background:rgba(253,248,243,.9);color:var(--burgundy);
+  font-size:1.4rem;cursor:pointer;z-index:10;
+  display:grid;place-items:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.2);
+  transition:all .2s;
+}
+.bd-nav:hover{background:var(--copper);color:var(--burgundy-deep);}
+.bd-nav:disabled{opacity:.3;cursor:not-allowed;background:rgba(253,248,243,.5);}
+.bd-nav.prev{left:-22px;}
+.bd-nav.next{right:-22px;}
+@media (max-width:900px){
+  .bd-nav.prev{left:8px;}
+  .bd-nav.next{right:8px;}
+}
+
 /* NOTIFY BANNER */
 .notify-banner{
   background:var(--cream-warm);border:1px solid var(--cream-shadow);border-radius:8px;
@@ -505,11 +524,13 @@ body::before{
 
 <!-- DETAIL MODAL -->
 <div class="bd-bg" id="bdBg" onclick="if(event.target===this)closeDetail()">
+  <button class="bd-nav prev" id="bdPrev" onclick="prevBook()" aria-label="Previous book">←</button>
   <div class="bd-modal" role="dialog" aria-modal="true">
     <button class="bd-close" aria-label="Close" onclick="closeDetail()">×</button>
     <div class="bd-cover-pane"><div class="bd-cover" id="bdCover"></div></div>
     <div class="bd-info" id="bdInfo"></div>
   </div>
+  <button class="bd-nav next" id="bdNext" onclick="nextBook()" aria-label="Next book">→</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -557,7 +578,26 @@ body::before{
     </article>`;
   }
 
+  let currentBookId = null;
+
+  function updateNavButtons() {
+    const idx = allComing.findIndex(b => b.id === currentBookId);
+    document.getElementById('bdPrev').disabled = idx <= 0;
+    document.getElementById('bdNext').disabled = idx >= allComing.length - 1;
+  }
+
+  function prevBook() {
+    const idx = allComing.findIndex(b => b.id === currentBookId);
+    if (idx > 0) openDetail(allComing[idx - 1].id);
+  }
+
+  function nextBook() {
+    const idx = allComing.findIndex(b => b.id === currentBookId);
+    if (idx < allComing.length - 1) openDetail(allComing[idx + 1].id);
+  }
+
   function openDetail(id){
+    currentBookId = id;
     BVPH.track('book_click', { bookId: id });
     const b = BVPH.getBook(id);
     if (!b) return;
@@ -603,14 +643,22 @@ body::before{
       <button class="remind-btn" onclick="openReminder('${b.id}','${esc(b.title).replace(/'/g, "\\'")}')">notify me when available →</button>`;
     document.getElementById('bdBg').classList.add('show');
     document.body.style.overflow = 'hidden';
+    updateNavButtons();
   }
 
   function closeDetail(){
+    currentBookId = null;
     document.getElementById('bdBg').classList.remove('show');
     document.body.style.overflow = '';
   }
 
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDetail(); closeWishlist(); closeCart(); } });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeDetail(); closeWishlist(); closeCart(); }
+    if (currentBookId && document.getElementById('bdBg').classList.contains('show')) {
+      if (e.key === 'ArrowLeft') prevBook();
+      if (e.key === 'ArrowRight') nextBook();
+    }
+  });
 
   // ----- Wishlist -----
   function renderWlCount(){
@@ -718,6 +766,8 @@ body::before{
   // expose to window for onclick handlers
   window.openDetail = openDetail;
   window.closeDetail = closeDetail;
+  window.prevBook = prevBook;
+  window.nextBook = nextBook;
   window.openWishlist = openWishlist;
   window.closeWishlist = closeWishlist;
   window.toggleWl = toggleWl;
