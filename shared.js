@@ -425,7 +425,7 @@ const BVPH = (() => {
     const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
     const [{ data: events, error: e1 }, { data: books, error: e2 }] = await Promise.all([
       sb.from('analytics').select('*').gte('created_at', since).order('created_at', { ascending: false }).limit(1000),
-      sb.from('books').select('id,title,author,cover_url'),
+      sb.from('books').select('id,title,author'),
     ]);
     if (e1) console.warn('[BVPH] analytics load error:', e1.message || e1);
     if (e2) console.warn('[BVPH] analytics books load error:', e2.message || e2);
