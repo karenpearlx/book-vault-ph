@@ -70,10 +70,16 @@ const BVPH = (() => {
   const _readFeaturedLocal = () => {
     try {
       const raw = localStorage.getItem(K_FEAT_LOCAL);
-      if (!raw) return { bookDescription:'', authorName:'', authorBio:'' };
+      if (!raw) return { bookId: null, bookDescription:'', authorName:'', authorPhoto:'', authorBio:'' };
       const p = JSON.parse(raw);
-      return { bookDescription: p.bookDescription || '', authorName: p.authorName || '', authorBio: p.authorBio || '' };
-    } catch(e) { return { bookDescription:'', authorName:'', authorBio:'' }; }
+      return { 
+        bookId: p.bookId || null,
+        bookDescription: p.bookDescription || '', 
+        authorName: p.authorName || '', 
+        authorPhoto: p.authorPhoto || '',
+        authorBio: p.authorBio || '' 
+      };
+    } catch(e) { return { bookId: null, bookDescription:'', authorName:'', authorPhoto:'', authorBio:'' }; }
   };
   const _writeFeaturedLocal = (f) => {
     try { localStorage.setItem(K_FEAT_LOCAL, JSON.stringify(f)); } catch(e) {}
@@ -170,8 +176,10 @@ const BVPH = (() => {
     const map = {};
     (data || []).forEach(r => { map[r.key] = r.value || {}; });
     _featured = {
+      bookId: map['featured_book']?.id || null,
       bookDescription: map['featured_book']?.description || '',
       authorName: map['featured_author']?.name || '',
+      authorPhoto: map['featured_author']?.photo || '',
       authorBio: map['featured_author']?.bio || '',
     };
     _writeFeaturedLocal(_featured);
@@ -363,8 +371,10 @@ const BVPH = (() => {
   // Save featured panel text fields (and optionally bookId).
   async function saveFeatured(f) {
     const merged = {
+      bookId: f.bookId || null,
       bookDescription: f.bookDescription || '',
       authorName: f.authorName || '',
+      authorPhoto: f.authorPhoto || '',
       authorBio: f.authorBio || '',
     };
     if (!USE_SUPABASE) {
@@ -375,8 +385,8 @@ const BVPH = (() => {
       return _featured;
     }
     // Upsert two settings rows in parallel
-    const author = { name: merged.authorName, bio: merged.authorBio };
-    const book = { description: merged.bookDescription };
+    const author = { name: merged.authorName, bio: merged.authorBio, photo: merged.authorPhoto };
+    const book = { id: merged.bookId, description: merged.bookDescription };
     const [r1, r2] = await Promise.all([
       sb.from('settings').upsert({ key: 'featured_author', value: author }, { onConflict: 'key' }),
       sb.from('settings').upsert({ key: 'featured_book',   value: book   }, { onConflict: 'key' }),
