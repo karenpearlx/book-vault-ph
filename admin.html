@@ -524,6 +524,13 @@
 .ai-suggest-btn:hover { background:rgba(216,154,85,.3); border-color:var(--copper-bright); }
 .ai-suggest-btn:disabled { opacity:.5; cursor:wait; }
 
+.tb-btn {
+  background:transparent;border:1px solid transparent;border-radius:4px;padding:4px 8px;cursor:pointer;
+  font-size:.85rem;color:var(--ink);min-width:28px;transition:all .15s;
+}
+.tb-btn:hover { background:rgba(216,154,85,.15);border-color:var(--copper); }
+.tb-btn:active { background:rgba(216,154,85,.25); }
+
 .ai-modal-backdrop {
   position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;
   display:none;align-items:flex-start;justify-content:center;padding:60px 20px;overflow-y:auto;
@@ -1491,7 +1498,26 @@
 
             <div class="field">
               <label>content (markdown supported) * <button type="button" class="ai-suggest-btn" data-suggest="content">✨ generate full post</button></label>
-              <textarea id="bf_content" rows="14" required placeholder="Write your post here. **bold**, *italic*, [links](url), # headings, > quotes, - lists. Reading time auto-calculated."></textarea>
+              <div id="bf_toolbar" style="display:flex;gap:2px;flex-wrap:wrap;padding:8px 10px;background:var(--surface);border:1px solid var(--border);border-bottom:none;border-radius:8px 8px 0 0;margin-top:6px;">
+                <button type="button" class="tb-btn" data-md="bold" title="Bold">𝐁</button>
+                <button type="button" class="tb-btn" data-md="italic" title="Italic">𝐼</button>
+                <button type="button" class="tb-btn" data-md="strike" title="Strikethrough">S̶</button>
+                <span style="width:1px;background:var(--border);margin:0 6px;"></span>
+                <button type="button" class="tb-btn" data-md="h1" title="Heading 1">H1</button>
+                <button type="button" class="tb-btn" data-md="h2" title="Heading 2">H2</button>
+                <button type="button" class="tb-btn" data-md="h3" title="Heading 3">H3</button>
+                <span style="width:1px;background:var(--border);margin:0 6px;"></span>
+                <button type="button" class="tb-btn" data-md="ul" title="Bullet List">•</button>
+                <button type="button" class="tb-btn" data-md="ol" title="Numbered List">1.</button>
+                <button type="button" class="tb-btn" data-md="link" title="Link">🔗</button>
+                <button type="button" class="tb-btn" data-md="img" title="Upload Image">🖼</button>
+                <span style="width:1px;background:var(--border);margin:0 6px;"></span>
+                <button type="button" class="tb-btn" data-md="code" title="Inline Code">&lt;/&gt;</button>
+                <button type="button" class="tb-btn" data-md="quote" title="Blockquote">❝</button>
+                <button type="button" class="tb-btn" data-md="table" title="Table">▦</button>
+                <button type="button" class="tb-btn" data-md="hr" title="Horizontal Rule">―</button>
+              </div>
+              <textarea id="bf_content" rows="14" required placeholder="Write your post here..." style="border-radius:0 0 8px 8px;border-top:none;"></textarea>
               <small style="color:var(--ink-soft);font-size:.7rem;display:flex;gap:14px;flex-wrap:wrap;">
                 <span><span id="bf_wordCount">0</span> words</span>
                 <span>~<span id="bf_readingTime">0</span> min read</span>
@@ -5013,6 +5039,70 @@ Rules: no em dashes, mention "The Book Vault PH, an online preloved bookshop in 
       if (window._bvphBlogState) window._bvphBlogState.insertContent(wrapped);
     }
   });
+
+  // Toolbar buttons
+  const toolbar = document.getElementById('bf_toolbar');
+  if (toolbar) {
+    toolbar.querySelectorAll('.tb-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const md = btn.dataset.md;
+        const ta = contentField;
+        const start = ta.selectionStart;
+        const end = ta.selectionEnd;
+        const sel = ta.value.substring(start, end);
+        let insert = '';
+        
+        switch(md) {
+          case 'bold': insert = `**${sel || 'text'}**`; break;
+          case 'italic': insert = `*${sel || 'text'}*`; break;
+          case 'strike': insert = `~~${sel || 'text'}~~`; break;
+          case 'h1': insert = `\n# ${sel || 'Heading'}\n`; break;
+          case 'h2': insert = `\n## ${sel || 'Heading'}\n`; break;
+          case 'h3': insert = `\n### ${sel || 'Heading'}\n`; break;
+          case 'ul': insert = `\n- ${sel || 'List item'}\n- Item 2\n- Item 3\n`; break;
+          case 'ol': insert = `\n1. ${sel || 'First item'}\n2. Second item\n3. Third item\n`; break;
+          case 'link': 
+            const url = prompt('Enter URL:');
+            if (url) insert = `[${sel || 'link text'}](${url})`;
+            break;
+          case 'img':
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = async () => {
+              const file = input.files[0];
+              if (!file) return;
+              const sb = BVPH.supabase && BVPH.supabase();
+              if (!sb) { alert('Supabase not ready'); return; }
+              const ext = file.name.split('.').pop() || 'png';
+              const filename = `blog-${Date.now()}.${ext}`;
+              const { data, error } = await sb.storage.from('blog-images').upload(filename, file, { upsert: true });
+              if (error) { alert('Upload failed: ' + error.message); return; }
+              const { data: urlData } = sb.storage.from('blog-images').getPublicUrl(filename);
+              if (urlData?.publicUrl) {
+                const imgMd = `![image](${urlData.publicUrl})`;
+                ta.setRangeText(imgMd, start, end, 'end');
+                ta.dispatchEvent(new Event('input'));
+              }
+            };
+            input.click();
+            return;
+          case 'code': insert = `\`${sel || 'code'}\``; break;
+          case 'quote': insert = `\n> ${sel || 'Quote'}\n`; break;
+          case 'table': 
+            insert = `\n| Column 1 | Column 2 | Column 3 |\n|----------|----------|----------|\n| Data | Data | Data |\n`;
+            break;
+          case 'hr': insert = `\n---\n`; break;
+        }
+        
+        if (insert) {
+          ta.setRangeText(insert, start, end, 'end');
+          ta.focus();
+          ta.dispatchEvent(new Event('input'));
+        }
+      });
+    });
+  }
 
   // Paste handler for images and tables
   contentField.addEventListener('paste', async (e) => {
