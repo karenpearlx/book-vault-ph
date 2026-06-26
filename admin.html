@@ -4977,10 +4977,9 @@ Rules: no em dashes, mention "The Book Vault PH, an online preloved bookshop in 
   btn.style.marginLeft = '6px';
   label.appendChild(btn);
 
-  const sb = BVPH.supabase && BVPH.supabase();
-
   // reuse the ai modal
   btn.addEventListener('click', async () => {
+    const sb = BVPH.supabase && BVPH.supabase();
     const modal = document.getElementById('aiModal');
     const body = document.getElementById('aiModalBody');
     const titleEl = document.getElementById('aiModalTitle');
