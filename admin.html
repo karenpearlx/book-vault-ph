@@ -873,12 +873,6 @@
     <!-- SUB-TAB: SOLD -->
     <div class="sub-tab-content" id="subtab-sold">
     <div class="panel">
-      <h2><span class="accent">sold</span> books <span id="soldCount" style="opacity:.6;font-weight:normal;font-size:1rem;">(0)</span></h2>
-      <div class="sub">— books marked as sold</div>
-      <div id="soldList" class="status-list" style="margin-top:20px;"></div>
-      <div id="soldEmpty" class="empty" style="padding:24px;font-size:.9rem;">no sold books yet</div>
-    </div>
-    <div class="panel" style="margin-top:20px;">
       <h2><span class="accent">sold</span> orders <span id="soldOrdersCount" style="opacity:.6;font-weight:normal;font-size:1rem;">(0)</span></h2>
       <div class="sub">— completed customer orders</div>
       <div id="soldOrdersList" class="status-list" style="margin-top:20px;"></div>
@@ -2018,7 +2012,7 @@
     // Update counts
     $('#reservedCount').textContent = `(${reserved.length})`;
     $('#creditCount').textContent = `(${credit.length})`;
-    $('#soldCount').textContent = `(${sold.length})`;
+    if ($('#soldCount')) $('#soldCount').textContent = `(${sold.length})`;
     // Update tab badges
     $('#reservedBadge').textContent = reserved.length;
     $('#creditBadge').textContent = credit.length;
@@ -2059,12 +2053,12 @@
     // Render lists
     $('#reservedList').innerHTML = reserved.map(b => card(b, 'reserved')).join('');
     $('#creditList').innerHTML = credit.map(b => card(b, 'credit')).join('');
-    $('#soldList').innerHTML = sold.map(b => card(b, 'sold')).join('');
+    if ($('#soldList')) $('#soldList').innerHTML = sold.map(b => card(b, 'sold')).join('');
 
     // Show/hide empties
     $('#reservedEmpty').style.display = reserved.length ? 'none' : 'block';
     $('#creditEmpty').style.display = credit.length ? 'none' : 'block';
-    $('#soldEmpty').style.display = sold.length ? 'none' : 'block';
+    if ($('#soldEmpty')) $('#soldEmpty').style.display = sold.length ? 'none' : 'block';
     
     // Render orders
     renderOrders();
