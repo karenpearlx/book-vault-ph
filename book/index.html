@@ -123,11 +123,13 @@ a:hover{text-decoration:underline;}
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const peso = n => '₱' + (Number(n)||0).toLocaleString('en-PH');
 
-  // slug from path: /book/<slug>/ or /book/<slug>
+  // slug from path: /book/<slug>/ or /book/<slug>, or from ?slug= query param
   const path = location.pathname.replace(/\/+$/,'');
-  const slug = path.split('/').filter(Boolean).pop();
-  // If we are exactly at /book or /book/ (no slug), bail to browse
-  if (!slug || slug === 'book') {
+  const pathSlug = path.split('/').filter(Boolean).pop();
+  const params = new URLSearchParams(location.search);
+  const slug = (pathSlug && pathSlug !== 'book') ? pathSlug : params.get('slug');
+  // If no slug, bail to browse
+  if (!slug) {
     document.getElementById('content').innerHTML = '<div class="empty-state">No book specified. <a href="/browse">Browse all books →</a></div>';
     return;
   }
