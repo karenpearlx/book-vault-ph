@@ -2025,6 +2025,9 @@
     $('#reservedEmpty').style.display = reserved.length ? 'none' : 'block';
     $('#creditEmpty').style.display = credit.length ? 'none' : 'block';
     $('#soldEmpty').style.display = sold.length ? 'none' : 'block';
+    
+    // Render orders
+    renderOrders();
 
     // Attach event listeners
     $$('[data-marksold]').forEach(btn => btn.addEventListener('click', async () => {

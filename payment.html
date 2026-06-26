@@ -89,8 +89,17 @@ a:hover{text-decoration:underline;}
 /* BUTTONS */
 .btn{display:inline-block;padding:.9rem 2rem;border-radius:8px;font-weight:600;font-size:.95rem;
   text-decoration:none;cursor:pointer;border:none;transition:all .2s;}
-.btn-primary{background:linear-gradient(135deg,var(--copper) 0%,#B8864A 100%);color:var(--burgundy-darker);
-  box-shadow:0 4px 16px rgba(216,154,85,.3);}
+.btn-primary{background:linear-gradient(135deg,#C9A94D 0%,#B8942A 100%);color:var(--burgundy-darker);
+  box-shadow:0 4px 16px rgba(201,169,77,.4);}
+
+/* Copyable order ID */
+.order-copy{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:8px 14px;
+  background:rgba(201,169,77,.15);border:1px dashed rgba(201,169,77,.5);border-radius:6px;
+  cursor:pointer;transition:all .2s;font-family:'DM Mono',monospace;font-size:.85rem;color:var(--gold);}
+.order-copy:hover{background:rgba(201,169,77,.25);border-color:var(--gold);}
+.order-copy .copy-icon{font-size:1rem;opacity:.7;}
+.order-copy.copied{background:rgba(100,200,100,.15);border-color:rgba(100,200,100,.5);}
+.order-copy.copied .copy-icon::after{content:' ✓';}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(216,154,85,.4);text-decoration:none;}
 .btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none;}
 .btn-secondary{background:rgba(216,154,85,.1);border:1px solid rgba(216,154,85,.3);color:var(--copper-soft);}
@@ -155,6 +164,20 @@ footer{text-align:center;padding:2rem;font-size:.8rem;color:rgba(255,255,255,.4)
 const $ = s => document.querySelector(s);
 const esc = s => String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+function copyOrderId(){
+  const id = document.getElementById('orderIdText')?.textContent;
+  if(id){
+    navigator.clipboard.writeText(id);
+    const el = document.querySelector('.order-copy');
+    el.classList.add('copied');
+    el.querySelector('.copy-icon').textContent = '✓ Copied!';
+    setTimeout(() => {
+      el.classList.remove('copied');
+      el.querySelector('.copy-icon').textContent = '📋';
+    }, 2000);
+  }
+}
+
 document.getElementById('yr').textContent = new Date().getFullYear();
 
 const params = new URLSearchParams(location.search);
@@ -213,7 +236,11 @@ BVPH.init().then(() => {
       
       <div class="note-box">
         <strong>📱 After payment:</strong>
-        <p>Take a screenshot of your payment confirmation and send it to our Facebook or Instagram along with your order ID.</p>
+        <p>Take a screenshot of your payment confirmation and send it to our Facebook or Instagram along with your order ID:</p>
+        <div class="order-copy" onclick="copyOrderId()" title="Click to copy">
+          <span id="orderIdText">${esc(order.id)}</span>
+          <span class="copy-icon">📋</span>
+        </div>
       </div>
       
       ${isPaid ? `
