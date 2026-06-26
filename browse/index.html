@@ -923,6 +923,14 @@ body::before{
     else if (a.closest('.nav') || a.closest('nav') || a.classList.contains('nav-wl')) BVPH.track('nav_click', { element: (a.textContent || 'nav link').trim(), target: href });
   }, true);
   BVPH.init().then(() => {
+    // Read genre from URL query param
+    const params = new URLSearchParams(location.search);
+    const urlGenre = params.get('genre');
+    if (urlGenre) {
+      // Match case-insensitively
+      const match = BVPH.GENRES.find(g => g.toLowerCase() === urlGenre.toLowerCase());
+      if (match) activeGenre = match;
+    }
     BVPH.trackPageView('browse'); render(); renderWlCount(); renderCartCount(); });
   BVPH.onChange(render);
   BVPH.onWishlistChange(renderWlCount);
