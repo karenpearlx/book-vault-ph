@@ -323,7 +323,7 @@ BVPH.init().then(() => {
   const paidBtn = $('#paidBtn');
   if (paidBtn) {
     paidBtn.onclick = () => {
-      BVPH.markOrderPaid(orderId);
+      BVPH.markOrderPaymentSent(orderId);
       paidBtn.disabled = true;
       paidBtn.textContent = 'Payment marked ✓';
       paidBtn.parentElement.innerHTML = `
