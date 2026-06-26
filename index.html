@@ -1366,10 +1366,14 @@ body::before{
   function renderShelf(){
     const all = BVPH.getBooks().filter(b => b.status !== 'coming_soon');
     const filtered = filterBooks(all);
+    // Prioritize books with adaptations
+    const withAdaptation = filtered.filter(b => b.has_adaptation);
+    const withoutAdaptation = filtered.filter(b => !b.has_adaptation);
+    const sorted = [...withAdaptation, ...withoutAdaptation];
     const grid = $('#shelfGrid');
     const LIMIT = 8;
-    const hasMore = filtered.length > LIMIT;
-    const toShow = filtered.slice(0, LIMIT);
+    const hasMore = sorted.length > LIMIT;
+    const toShow = sorted.slice(0, LIMIT);
 
     if (state.q) {
       $('#shelfLede').innerHTML = `Showing results for <em>"${esc(state.q)}"</em> · ${filtered.length} found`;
