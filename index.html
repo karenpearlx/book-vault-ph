@@ -833,7 +833,7 @@ body::before{
 
 /* ============== HOW TO ORDER ============== */
 .howto{
-  background:var(--burgundy-deep);color:var(--cream);padding:80px 28px 40px;position:relative;overflow:hidden;
+  background:var(--burgundy-deep);color:var(--cream);padding:80px 28px 0;position:relative;overflow:hidden;
 }
 .howto::before{
   content:"";position:absolute;inset:0;
@@ -878,7 +878,7 @@ body::before{
 
 /* ============== FOOTER ============== */
 /* FAQ Section - matches howto */
-.faq-section{background:var(--burgundy-deep);padding:60px 28px;position:relative;}
+.faq-section{background:var(--burgundy-deep);padding:80px 28px;position:relative;}
 .faq-inner{max-width:800px;margin:0 auto;}
 .faq-section h2{font-family:"Playfair Display",serif;font-weight:400;font-size:clamp(1.6rem,3vw,2rem);color:var(--cream);text-align:center;margin:0 0 40px;}
 .faq-section h2 em{font-style:italic;color:var(--copper-soft);}
@@ -1079,19 +1079,6 @@ body::before{
 <main id="main">
 
 <!-- ============== COMING SOON BANNER ============== -->
-<section class="coming-soon-banner" id="comingSoonBanner" style="display:none;">
-  <div class="coming-inner">
-    <div class="coming-text">
-      <span class="coming-badge">New stock incoming</span>
-      <h2>Books <em>arriving soon</em></h2>
-      <p>We just picked up fresh finds. Preview what's coming before they hit the shelf.</p>
-    </div>
-    <a class="coming-link" href="/coming-soon.html">
-      See all books →
-    </a>
-  </div>
-</section>
-
 <!-- ============== POPULAR CATEGORIES ============== -->
 <section class="section categories-section">
   <div class="section-head" style="text-align:center;margin-bottom:32px;">
@@ -1210,14 +1197,9 @@ body::before{
         <p>Shipped via your preferred courier. 2-5 days nationwide.</p>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ============== SEO ABOUT BLOCK ============== -->
-<!-- ============== FAQ ============== -->
-<section class="faq-section" id="faq">
-  <div class="faq-inner">
-    <h2>Frequently Asked <em>Questions</em></h2>
+    
+    <div class="faq-inner" id="faq" style="margin-top:80px;">
+      <h2 style="font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(1.6rem,3vw,2rem);color:var(--cream);text-align:center;margin:0 0 40px;">Frequently Asked <em style="font-style:italic;color:var(--copper-soft);">Questions</em></h2>
     
     <div class="faq-item" onclick="this.classList.toggle('open')">
       <div class="faq-q">How do I order a book?</div>
@@ -1242,6 +1224,7 @@ body::before{
     <div class="faq-item" onclick="this.classList.toggle('open')">
       <div class="faq-q">Can I return or exchange a book?</div>
       <div class="faq-a">Since all our books are handpicked and inspected before shipping, we don't accept returns for change of mind. However, if the book arrives damaged, send us a photo within 24 hours and we'll work something out.</div>
+    </div>
     </div>
   </div>
 </section>
@@ -1450,18 +1433,6 @@ body::before{
         el.style.backgroundImage = `url('${coverUrl}')`;
         el.classList.add('has-img');
       });
-    }
-  }
-
-  function renderComingSoon(){
-    const all = BVPH.getBooks();
-    const coming = all.filter(b => b.status === 'coming_soon');
-    const banner = $('#comingSoonBanner');
-    if (coming.length > 0) {
-      banner.style.display = '';
-      // count removed from UI
-    } else {
-      banner.style.display = 'none';
     }
   }
 
@@ -1765,7 +1736,6 @@ body::before{
   }, true);
   BVPH.init().then(() => {
     BVPH.trackPageView('homepage');
-    renderComingSoon();
     renderFilters(BVPH.getBooks().filter(b => b.status !== 'coming_soon'));
     renderFeatured();
     renderShelf();
@@ -1774,7 +1744,6 @@ body::before{
     if (urlQ) document.getElementById('browse').scrollIntoView({behavior:'smooth'});
   });
   BVPH.onChange(() => {
-    renderComingSoon();
     renderFilters(BVPH.getBooks().filter(b => b.status !== 'coming_soon'));
     renderFeatured();
     renderShelf();
