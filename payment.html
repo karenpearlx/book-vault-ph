@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Payment — The Book Vault PH</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FAF7F2;--burgundy:#6B2D3C;--burgundy-deep:#4A1E2A;--gold:#C9A94D;--text:#2E0F1A;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Sans 3',system-ui,sans-serif;background:var(--cream);color:var(--text);line-height:1.6;min-height:100vh;}
+a{color:var(--burgundy);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+.nav{background:var(--burgundy-deep);padding:1rem 2rem;display:flex;align-items:center;gap:1.5rem;}
+.nav-logo{font-family:'Playfair Display',serif;color:#fff;font-size:1.1rem;}
+.nav-logo em{color:var(--gold);font-style:italic;}
+.nav a{color:rgba(255,255,255,.8);font-size:.9rem;}
+.nav a:hover{color:#fff;text-decoration:none;}
+
+.container{max-width:600px;margin:3rem auto;padding:0 1.5rem;}
+.card{background:#fff;border-radius:12px;padding:2.5rem;box-shadow:0 4px 24px rgba(46,15,26,.08);}
+
+h1{font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:.5rem;}
+h1 em{color:var(--burgundy);font-style:italic;}
+.sub{color:#666;margin-bottom:2rem;}
+
+.order-id{font-family:'DM Mono',monospace;font-size:.85rem;color:#888;margin-bottom:1.5rem;}
+
+.book-row{display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid #eee;}
+.book-cover{width:60px;height:85px;border-radius:4px;background:linear-gradient(135deg,var(--burgundy),var(--burgundy-deep));background-size:cover;background-position:center;flex-shrink:0;}
+.book-info{flex:1;}
+.book-title{font-weight:600;margin-bottom:.25rem;}
+.book-author{font-size:.9rem;color:#666;}
+.book-price{font-family:'DM Mono',monospace;font-weight:600;color:var(--burgundy);}
+
+.total-row{display:flex;justify-content:space-between;padding:1rem 0;font-weight:600;font-size:1.1rem;border-top:2px solid var(--burgundy-deep);margin-top:.5rem;}
+
+.payment-section{margin-top:2rem;padding-top:2rem;border-top:1px solid #eee;}
+.payment-section h2{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:1rem;}
+
+.payment-method{background:var(--cream);padding:1.5rem;border-radius:8px;margin-bottom:1rem;}
+.payment-method h3{font-size:1rem;margin-bottom:.5rem;color:var(--burgundy);}
+.payment-method p{font-size:.95rem;color:#555;}
+
+.qr-wrap{text-align:center;margin:1.5rem 0;}
+.qr-wrap img{max-width:200px;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.1);}
+.qr-note{font-size:.85rem;color:#666;margin-top:.5rem;}
+
+.bank-details{background:#f5f5f5;padding:1rem;border-radius:6px;font-family:'DM Mono',monospace;font-size:.9rem;margin:1rem 0;}
+
+.customer-info{margin-top:2rem;padding:1rem;background:#f9f9f9;border-radius:8px;}
+.customer-info h3{font-size:.9rem;color:#888;margin-bottom:.5rem;}
+.customer-info p{font-size:.95rem;}
+
+.cta{margin-top:2rem;text-align:center;}
+.btn{display:inline-block;background:var(--burgundy);color:#fff;padding:.8rem 2rem;border-radius:6px;font-weight:500;transition:background .2s;}
+.btn:hover{background:var(--burgundy-deep);text-decoration:none;}
+
+.note{margin-top:2rem;padding:1rem;background:#fff8e6;border-radius:8px;font-size:.9rem;color:#856404;}
+
+.error-state{text-align:center;padding:3rem;}
+.error-state h2{color:var(--burgundy);margin-bottom:1rem;}
+
+footer{text-align:center;padding:2rem;font-size:.85rem;color:#888;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">The Book <em>Vault</em> PH</a>
+  <a href="/">Home</a>
+  <a href="/browse.html">Browse</a>
+  <a href="/contact.html">Contact</a>
+</nav>
+
+<div class="container">
+  <div class="card" id="content">
+    <div style="text-align:center;padding:2rem;">Loading order...</div>
+  </div>
+</div>
+
+<footer>© <span id="yr">2026</span> The Book Vault PH · Detective Mochi approves 🐾</footer>
+
+<script src="/config.js"></script>
+<script src="/shared.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+const params = new URLSearchParams(location.search);
+const orderId = params.get('order');
+
+BVPH.init().then(() => {
+  const order = BVPH.getOrder(orderId);
+  
+  if (!order) {
+    $('#content').innerHTML = `
+      <div class="error-state">
+        <h2>Order not found</h2>
+        <p>This order may have expired or the link is invalid.</p>
+        <p style="margin-top:1rem;"><a href="/">← Back to shop</a></p>
+      </div>`;
+    return;
+  }
+  
+  const books = order.isCart ? order.books : [{ 
+    title: order.bookTitle, 
+    author: order.bookAuthor, 
+    price: order.bookPrice,
+    cover: order.bookCover 
+  }];
+  
+  const total = order.isCart 
+    ? books.reduce((sum, b) => sum + (Number(b.price) || 0), 0)
+    : Number(order.bookPrice) || 0;
+  
+  const booksHtml = books.map(b => {
+    const coverStyle = b.cover ? `background-image:url('${esc(b.cover)}');` : '';
+    return `<div class="book-row">
+      <div class="book-cover" style="${coverStyle}"></div>
+      <div class="book-info">
+        <div class="book-title">${esc(b.title)}</div>
+        <div class="book-author">by ${esc(b.author || 'Unknown')}</div>
+      </div>
+      <div class="book-price">₱${b.price || 0}</div>
+    </div>`;
+  }).join('');
+  
+  const isWithinSC = order.withinSC;
+  
+  const paymentHtml = isWithinSC ? `
+    <div class="payment-method">
+      <h3>🎉 Free delivery within San Carlos City!</h3>
+      <p>We'll meet up or hand-deliver your book. Pay via bank transfer or InstaPay.</p>
+    </div>
+    <div class="bank-details">
+      <strong>BPI</strong><br>
+      Account Name: Karen Pearl Ong<br>
+      Account Number: 1234 5678 90
+    </div>
+    <p style="font-size:.9rem;color:#666;">Or scan QR code via GCash/Maya/InstaPay</p>
+    <div class="note">
+      <strong>📱 After payment:</strong> Send a screenshot of your payment to our Facebook or Instagram, along with your order ID. We'll confirm and arrange delivery!
+    </div>
+  ` : `
+    <div class="payment-method">
+      <h3>📦 Cash on Delivery (COD)</h3>
+      <p>Your book will be shipped via J&T or LBC. Pay when it arrives!</p>
+    </div>
+    <p style="font-size:.9rem;color:#555;margin:1rem 0;">
+      Shipping fee will be calculated based on your location and added to your total. 
+      We'll message you to confirm before shipping.
+    </p>
+    <div class="note">
+      <strong>📱 What's next:</strong> We'll reach out via the contact info you provided to confirm your order and shipping details.
+    </div>
+  `;
+  
+  $('#content').innerHTML = `
+    <h1>Order <em>confirmed!</em></h1>
+    <p class="sub">Thank you for your order. Here's what happens next.</p>
+    
+    <div class="order-id">Order ID: ${esc(order.id)}</div>
+    
+    ${booksHtml}
+    
+    <div class="total-row">
+      <span>Total</span>
+      <span>₱${total}</span>
+    </div>
+    
+    <div class="customer-info">
+      <h3>Delivery to</h3>
+      <p><strong>${esc(order.customerName)}</strong></p>
+      ${order.address ? `<p>${esc(order.address)}</p>` : '<p><em>San Carlos City (free delivery)</em></p>'}
+      ${order.notes ? `<p style="color:#666;font-size:.9rem;margin-top:.5rem;">Note: ${esc(order.notes)}</p>` : ''}
+    </div>
+    
+    <div class="payment-section">
+      <h2>Payment</h2>
+      ${paymentHtml}
+    </div>
+    
+    <div class="cta">
+      <a href="/" class="btn">Continue browsing →</a>
+    </div>
+  `;
+});
+</script>
+</body>
+</html>
