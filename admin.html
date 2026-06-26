@@ -507,6 +507,8 @@
 .sub-tab-content.active { display:block; }
 .msg-tab-content { display:none; }
 .msg-tab-content.active { display:block; }
+.traffic-tab-content { display:none; }
+.traffic-tab-content.active { display:block; }
 @media(max-width:680px){
   .sub-tab-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:12px 0;gap:6px;}
   .sub-tab-btn{white-space:nowrap;flex-shrink:0;padding:8px 12px;font-size:.6rem;}
@@ -796,6 +798,12 @@
 
     <!-- ============= TRAFFIC TAB ============= -->
     <div class="tab-content" id="tab-traffic">
+    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+      <button class="sub-tab-btn active" data-traffictab="analytics" onclick="switchTrafficTab('analytics')">analytics</button>
+      <button class="sub-tab-btn" data-traffictab="leads" onclick="switchTrafficTab('leads')">leads <span id="leadsBadge" class="tab-badge">0</span></button>
+    </div>
+    
+    <div class="traffic-tab-content active" id="traffictab-analytics">
     <div class="panel">
       <h2>traffic <span class="accent">watch</span></h2>
       <button onclick="resetAnalytics()" style="margin-bottom:16px;padding:8px 16px;background:rgba(200,80,80,.2);border:1px solid rgba(200,80,80,.4);color:#e87a7a;border-radius:6px;font-size:.75rem;cursor:pointer;">reset all data</button>
@@ -804,6 +812,17 @@
         <div class="empty">v5</div>
       </div>
     </div>
+    </div>
+    
+    <div class="traffic-tab-content" id="traffictab-leads">
+    <div class="panel">
+      <h2><span class="accent">leads</span> <span id="leadsCount" style="opacity:.6;font-weight:normal;font-size:1rem;">(0)</span></h2>
+      <div class="sub">— where people heard about us (from notify requests)</div>
+      <div id="leadsBreakdown" style="margin-top:20px;"></div>
+      <div id="leadsList" style="margin-top:24px;"></div>
+    </div>
+    </div>
+    
     </div><!-- end tab-traffic -->
 
     <!-- ============= CATALOGUE TAB ============= -->
@@ -2266,6 +2285,97 @@
         </div>
       </div>`;
     }).join('');
+  };
+
+  // ===== TRAFFIC TABS =====
+  window.switchTrafficTab = (tab) => {
+    document.querySelectorAll('[data-traffictab]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.traffictab === tab);
+    });
+    document.querySelectorAll('.traffic-tab-content').forEach(el => {
+      el.classList.toggle('active', el.id === 'traffictab-' + tab);
+    });
+    if (tab === 'leads') renderLeads();
+  };
+  
+  const renderLeads = () => {
+    const reqs = BVPH.getNotifyRequests();
+    const total = reqs.length;
+    $('#leadsCount').textContent = `(${total})`;
+    $('#leadsBadge').textContent = total;
+    
+    if (!total) {
+      $('#leadsBreakdown').innerHTML = '';
+      $('#leadsList').innerHTML = '<div class="empty" style="padding:24px;font-size:.9rem;">no leads yet</div>';
+      return;
+    }
+    
+    // Count by source
+    const sources = {};
+    reqs.forEach(r => {
+      const src = r.source || 'unknown';
+      sources[src] = (sources[src] || 0) + 1;
+    });
+    
+    // Sort by count
+    const sorted = Object.entries(sources).sort((a,b) => b[1] - a[1]);
+    
+    // Source labels
+    const labels = {
+      facebook: '📘 Facebook',
+      instagram: '📸 Instagram', 
+      tiktok: '🎵 TikTok',
+      friend: '👥 Friend / Word of mouth',
+      google: '🔍 Google search',
+      other: '📍 Other',
+      unknown: '❓ Unknown'
+    };
+    
+    // Render breakdown bars
+    const maxCount = sorted[0]?.[1] || 1;
+    $('#leadsBreakdown').innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        ${sorted.map(([src, count]) => {
+          const pct = Math.round((count / maxCount) * 100);
+          return `
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                <span style="font-size:.85rem;">${labels[src] || src}</span>
+                <span style="font-family:'DM Mono',monospace;font-size:.8rem;color:var(--copper);">${count}</span>
+              </div>
+              <div style="background:rgba(0,0,0,.3);border-radius:4px;height:8px;overflow:hidden;">
+                <div style="background:var(--copper);height:100%;width:${pct}%;border-radius:4px;"></div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+    
+    // Render recent leads list
+    const recent = reqs.slice(0, 10);
+    const formatDate = (ts) => {
+      if (!ts) return '';
+      const d = new Date(ts);
+      return d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    };
+    
+    $('#leadsList').innerHTML = `
+      <h3 style="font-size:.9rem;color:var(--ink-soft);margin-bottom:12px;font-weight:normal;">recent leads</h3>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        ${recent.map(r => `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(0,0,0,.2);border-radius:6px;flex-wrap:wrap;gap:8px;">
+            <div>
+              <span style="color:var(--copper);font-weight:500;">${escapeHtml(r.email)}</span>
+              <span style="font-size:.8rem;color:var(--ink-soft);margin-left:8px;">${labels[r.source] || r.source || ''}</span>
+            </div>
+            <div style="font-size:.75rem;color:var(--ink-soft);">
+              📖 ${escapeHtml(r.bookTitle || '')} · ${formatDate(r.createdAt)}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
   };
 
   // ===== NOTIFY REQUESTS =====
