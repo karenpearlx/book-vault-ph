@@ -190,7 +190,7 @@ body{margin:0;font-family:"Cormorant Garamond",Georgia,serif;background:var(--cr
   };
 
   const cardHtml = p => `
-    <a class="blog-card" href="/blog/${encodeURIComponent(p.slug)}">
+    <a class="blog-card" href="/blog/post.html?slug=${encodeURIComponent(p.slug)}">
       <div class="blog-card-img" ${p.featured_image ? `style="background-image:url('${esc(p.featured_image)}');background-size:cover;background-position:center;"` : ''}>${!p.featured_image ? '📖' : ''}</div>
       <div class="blog-card-body">
         <h3>${esc(p.title)}</h3>
