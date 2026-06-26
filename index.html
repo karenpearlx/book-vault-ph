@@ -41,7 +41,7 @@
   "url": "https://thebookvaultph.com/",
   "image": "https://thebookvaultph.com/favicon.svg",
   "telephone": "",
-  "email": "phthebookvault@gmail.com",
+  "email": "info@thebookvaultph.com",
   "priceRange": "₱100–₱500",
   "currenciesAccepted": "PHP",
   "paymentAccepted": "BPI, InstaPay, GCash, Maya, Cash on Delivery",
@@ -332,20 +332,29 @@ body::before{
 /* ============== COMING SOON BANNER ============== */
 /* Bundle deal banner */
 .bundle-banner{
-  background:linear-gradient(135deg, #FFB347 0%, var(--copper) 50%, #E8A04C 100%);
-  color:var(--burgundy-deep);padding:28px 32px;text-align:center;
+  background:linear-gradient(135deg, #D89A55 0%, #C4863D 100%);
+  color:var(--cream);padding:36px 40px;text-align:center;
 }
 .bundle-banner-content{display:flex;flex-direction:column;gap:10px;align-items:center;}
-.bundle-banner-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center;}
-.bundle-banner p{
-  margin:0;font-family:"DM Mono",monospace;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;
+.bundle-banner-row{display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center;}
+.bundle-banner-item{
+  padding:0 32px;
+  border-right:1px solid rgba(255,255,255,.25);
 }
-.bundle-banner strong{color:var(--burgundy);font-weight:700;}
-.bundle-banner .divider{width:5px;height:5px;background:var(--burgundy);border-radius:50%;opacity:.4;}
-@media(max-width:600px){
-  .bundle-banner-row{flex-direction:column;gap:10px;}
-  .bundle-banner .divider{display:none;}
-  .bundle-banner p{font-size:.75rem;}
+.bundle-banner-item:last-child{border-right:none;}
+.bundle-banner p{
+  margin:0;font-size:1.1rem;letter-spacing:.02em;font-weight:500;
+}
+.bundle-banner strong{
+  color:#fff;font-weight:700;font-size:1.25rem;
+  background:rgba(0,0,0,.15);padding:4px 12px;border-radius:6px;margin-left:8px;
+}
+@media(max-width:700px){
+  .bundle-banner-row{flex-direction:column;gap:16px;}
+  .bundle-banner-item{border-right:none;border-bottom:1px solid rgba(255,255,255,.15);padding:0 0 16px 0;}
+  .bundle-banner-item:last-child{border-bottom:none;padding-bottom:0;}
+  .bundle-banner p{font-size:1rem;}
+  .bundle-banner strong{font-size:1.1rem;}
 }
 
 .coming-soon-banner{
@@ -983,9 +992,12 @@ body::before{
 <div class="bundle-banner">
   <div class="bundle-banner-content">
     <div class="bundle-banner-row">
-      <p>Buy 3+ books → <strong>10% off</strong></p>
-      <span class="divider"></span>
-      <p>Refer 3 friends → <strong>20% off</strong> your next order</p>
+      <div class="bundle-banner-item">
+        <p>Buy 3+ books <strong>10% off</strong></p>
+      </div>
+      <div class="bundle-banner-item">
+        <p>Refer 3 friends <strong>20% off</strong></p>
+      </div>
     </div>
   </div>
 </div>

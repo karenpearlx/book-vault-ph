@@ -156,7 +156,7 @@ body{margin:0;font-family:"Cormorant Garamond",Georgia,serif;background:var(--cr
       <svg class="icon icon-gmail" viewBox="0 0 24 24"><path fill="#4285F4" d="M22 6v12c0 1.1-.9 2-2 2h-1V9.17l-7 5.25-7-5.25V20H4c-1.1 0-2-.9-2-2V6c0-.55.23-1.05.59-1.41C2.95 4.23 3.45 4 4 4h.5l7.5 5.63L19.5 4H20c.55 0 1.05.23 1.41.59.36.36.59.86.59 1.41z"/><path fill="#EA4335" d="M23 6c0-.55-.23-1.05-.59-1.41-.36-.36-.86-.59-1.41-.59h-.5l-8.5 6.37L3.5 4H3c-.55 0-1.05.23-1.41.59C1.23 4.95 1 5.45 1 6l11 8.25L23 6z"/><path fill="#FBBC05" d="M5 20V9.17l-3-2.25V18c0 1.1.9 2 2 2h1z"/><path fill="#34A853" d="M19 20h1c1.1 0 2-.9 2-2V6.92l-3 2.25V20z"/></svg>
       <h3>Email</h3>
       <p>For detailed inquiries or bulk orders.</p>
-      <a href="/cdn-cgi/l/email-protection#4c3c243824292e2323273a2d3920380c2b212d2520622f2321">Send an email</a>
+      <a href="mailto:info@thebookvaultph.com">Send an email</a>
     </div>
     
     <div class="contact-card">
@@ -227,7 +227,7 @@ BVPH.init().then(() => {
       if (error) throw error;
       
       // Also send via Formsubmit
-      fetch('https://formsubmit.co/ajax/phthebookvault@gmail.com', {
+      fetch('https://formsubmit.co/ajax/info@thebookvaultph.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(data)
