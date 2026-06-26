@@ -833,7 +833,7 @@ body::before{
 
 /* ============== HOW TO ORDER ============== */
 .howto{
-  background:var(--burgundy-deep);color:var(--cream);padding:80px 28px 0;position:relative;overflow:hidden;
+  background:var(--burgundy-deep);color:var(--cream);padding:80px 28px;position:relative;overflow:hidden;
 }
 .howto::before{
   content:"";position:absolute;inset:0;
@@ -842,11 +842,11 @@ body::before{
   pointer-events:none;
 }
 .howto-inner{max-width:1280px;margin:0 auto;position:relative;}
-.howto h2{
+.howto h2, .howto .howto-h2{
   font-family:"Playfair Display",serif;font-weight:400;font-size:clamp(1.8rem,3.5vw,2.6rem);
   color:var(--cream);margin:0 0 8px;
 }
-.howto h2 em{font-style:italic;color:var(--copper-soft);}
+.howto h2 em, .howto .howto-h2 em{font-style:italic;color:var(--copper-soft);}
 .howto .lede{color:rgba(253,248,243,.7);font-style:italic;margin:0 0 48px;}
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;}
 @media (max-width:880px){.steps{grid-template-columns:repeat(2,1fr);}}
@@ -1198,34 +1198,7 @@ body::before{
       </div>
     </div>
     
-    <div class="faq-inner" id="faq" style="margin-top:80px;">
-      <h2 style="font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(1.6rem,3vw,2rem);color:var(--cream);text-align:center;margin:0 0 40px;">Frequently Asked <em style="font-style:italic;color:var(--copper-soft);">Questions</em></h2>
     
-    <div class="faq-item" onclick="this.classList.toggle('open')">
-      <div class="faq-q">How do I order a book?</div>
-      <div class="faq-a">Browse the shelf, click a book you like, then hit "Buy now" or "Order this book." Fill out the form with your name and address, pay via bank transfer, and send us your receipt on Instagram. We'll confirm and ship it out!</div>
-    </div>
-    
-    <div class="faq-item" onclick="this.classList.toggle('open')">
-      <div class="faq-q">What payment methods do you accept?</div>
-      <div class="faq-a">We accept bank transfers via BPI. After placing your order, you'll see our payment details. Send the payment and screenshot of your receipt to @thebookvaultph on Instagram to confirm.</div>
-    </div>
-    
-    <div class="faq-item" onclick="this.classList.toggle('open')">
-      <div class="faq-q">How much is shipping?</div>
-      <div class="faq-a">Free delivery within San Carlos City! For other areas, shipping is via J&T or LBC. We'll send you a quote based on your location after you place your order.</div>
-    </div>
-    
-    <div class="faq-item" onclick="this.classList.toggle('open')">
-      <div class="faq-q">What condition are the books in?</div>
-      <div class="faq-a">Most of our books are Like New or in Very Good condition. Each listing shows the book's condition. If you want photos of a specific book before ordering, just DM us!</div>
-    </div>
-    
-    <div class="faq-item" onclick="this.classList.toggle('open')">
-      <div class="faq-q">Can I return or exchange a book?</div>
-      <div class="faq-a">Since all our books are handpicked and inspected before shipping, we don't accept returns for change of mind. However, if the book arrives damaged, send us a photo within 24 hours and we'll work something out.</div>
-    </div>
-    </div>
   </div>
 </section>
 
