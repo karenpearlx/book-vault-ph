@@ -1,7 +1,7 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
-  "rewrites": [
-    { "source": "/book/(.*)", "destination": "/book/index.html" }
+  "routes": [
+    { "src": "/book/([^/]+)", "dest": "/book/index.html" }
   ]
 }
