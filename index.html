@@ -1165,7 +1165,7 @@ body::before{
   function coverHTML(book, cls='cover-img'){
     const hasImg = !!book.cover;
     const style = hasImg ? `background-image:url('${esc(book.cover)}');` : '';
-    return `<div class="${cls} ${hasImg?'has-img':''}" style="${style}">
+    return `<div class="${cls} ${hasImg?'has-img':''}" data-cover-id="${book.id}" style="${style}">
       <div class="pub">${esc(padNo(book.title))}</div>
       <div>
         <div class="ttl">${esc(book.title)}</div>
@@ -1256,6 +1256,20 @@ body::before{
       return;
     }
     grid.innerHTML = filtered.map(bookCard).join('');
+    loadCoversForBooks(filtered.map(b => b.id));
+  }
+
+  async function loadCoversForBooks(ids) {
+    const covers = await BVPH.getCovers(ids);
+    for (const id of ids) {
+      const coverUrl = covers[id];
+      if (!coverUrl) continue;
+      const el = document.querySelector(`[data-cover-id="${id}"]`);
+      if (el) {
+        el.style.backgroundImage = `url('${coverUrl}')`;
+        el.classList.add('has-img');
+      }
+    }
   }
 
   function renderComingSoon(){
@@ -1293,6 +1307,7 @@ body::before{
           </div>
         </div>
       </div>`;
+    loadCoversForBooks([feat.id]);
   }
 
   let currentBookId = null;
@@ -1320,15 +1335,16 @@ body::before{
     if (idx < books.length - 1) openDetail(books[idx + 1].id);
   }
 
-  function openDetail(id){
+  async function openDetail(id){
     BVPH.track('book_click', { bookId: id });
     currentBookId = id;
     const b = BVPH.getBook(id);
     if (!b) return;
     const cover = $('#bdCover');
-    const hasImg = !!b.cover;
+    const coverUrl = b.cover || await BVPH.getCover(id);
+    const hasImg = !!coverUrl;
     cover.className = 'bd-cover' + (hasImg ? ' has-img' : '');
-    cover.style.backgroundImage = hasImg ? `url('${b.cover}')` : '';
+    cover.style.backgroundImage = hasImg ? `url('${coverUrl}')` : '';
     cover.innerHTML = `
       <div class="pub">${esc(padNo(b.title))}</div>
       <div>
