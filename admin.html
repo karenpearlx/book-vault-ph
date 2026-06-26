@@ -4308,7 +4308,7 @@ $('#downloadAllWatermarked')?.addEventListener('click', () => {
           </div>
         </div>
         <div class="row-actions">
-          ${p.status === 'published' ? `<a class="icon-btn view" target="_blank" href="/blog/post.html?slug=${encodeURIComponent(p.slug)}">↗ view</a>` : ''}
+          ${p.status === 'published' ? `<a class="icon-btn view" target="_blank" href="/blog/${encodeURIComponent(p.slug)}">↗ view</a>` : ''}
           <button class="icon-btn edit" data-action="edit">edit</button>
           ${p.status !== 'archived' ? `<button class="icon-btn" data-action="archive" style="color:#bdb5a8;">archive</button>` : `<button class="icon-btn edit" data-action="unarchive">unarchive</button>`}
           <button class="icon-btn del" data-action="delete">del</button>
@@ -4465,7 +4465,7 @@ $('#downloadAllWatermarked')?.addEventListener('click', () => {
   $b('#blogPreviewBtn').addEventListener('click', () => {
     const slug = $b('#bf_slug').value.trim();
     if (!slug) { setMsg('save first to preview', 'err'); return; }
-    window.open(`/blog/post.html?slug=${encodeURIComponent(slug)}&preview=1`, '_blank');
+    window.open(`/blog/${encodeURIComponent(slug)}&preview=1`, '_blank');
   });
 
   // ---------- Duplicate post ----------
@@ -4840,7 +4840,7 @@ San Carlos, Pangasinan: free local delivery. Nationwide: COD via J&T Express or 
 **[Book Title]** by [Author]
 - Genre: [x] | Condition: like-new | Price: PHP [x]
 - Why we picked it: [one honest sentence]
-- [Shop this title](/book?slug=xxx)
+- [Shop this title](/book/xxx)
 
 ## Frequently asked questions
 
@@ -4888,7 +4888,7 @@ ${topic} doesn't have to be complicated. Pick a trustworthy seller, check the co
 **[Book Title]** by [Author]
 - Genre: x | Condition: like-new | Price: PHP x
 - Why we picked it: (1 sentence)
-- [Shop this title](/book?slug=xxx)
+- [Shop this title](/book/xxx)
 
 ## Frequently asked questions
 ### [Exact question?]
@@ -5032,8 +5032,8 @@ Rules: no em dashes, mention "The Book Vault PH, an online preloved bookshop in 
       }
       list.innerHTML = items.map((x, i) => {
         const href = activeTab === 'books'
-          ? `/book?slug=${encodeURIComponent(x.slug||'')}`
-          : `/blog/post.html?slug=${encodeURIComponent(x.slug||'')}`;
+          ? `/book/${encodeURIComponent(x.slug||'')}`
+          : `/blog/${encodeURIComponent(x.slug||'')}`;
         const md = `[${(x.title||'').replace(/[\[\]]/g,'')}](${href})`;
         const sub = activeTab === 'books' && x.author ? ` <span style="color:var(--ink-soft);font-size:.82rem;">by ${esc(x.author)}</span>` : '';
         return `<div class="ai-suggestion" data-md="${esc(md)}"><strong>${esc(x.title||'(no title)')}</strong>${sub}<br><code style="background:rgba(0,0,0,.3);padding:2px 6px;border-radius:3px;font-size:.75rem;color:var(--copper-bright);">${esc(href)}</code></div>`;
@@ -5112,7 +5112,7 @@ Rules: no em dashes, mention "The Book Vault PH, an online preloved bookshop in 
 
   function rowHtml(k, postsById){
     const linked = k.blog_post_id && postsById[k.blog_post_id];
-    const link = linked ? `<a href="${linked.status === 'published' ? '/blog/post.html?slug=' + encodeURIComponent(linked.slug) : '#'}" target="_blank">↗ ${esc(linked.title || 'post')}</a>` : '<span style="opacity:.6;">no post linked</span>';
+    const link = linked ? `<a href="${linked.status === 'published' ? '/blog/' + encodeURIComponent(linked.slug) : '#'}" target="_blank">↗ ${esc(linked.title || 'post')}</a>` : '<span style="opacity:.6;">no post linked</span>';
     return `
       <div class="kw-row" data-id="${k.id}">
         <div class="kw-text">
