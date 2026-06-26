@@ -395,7 +395,7 @@
           notes,
           paymentMethod: withinSC ? 'qr' : 'cod',
         });
-        location.href = '/payment.html?order=' + encodeURIComponent(order.id);
+        location.href = '/payment?order=' + encodeURIComponent(order.id);
       } catch(err) {
         console.error(err);
         btn.disabled = false;
@@ -536,7 +536,7 @@
           paymentMethod: withinSC ? 'qr' : 'cod',
         });
         BVPH.clearCart();
-        location.href = '/payment.html?order=' + encodeURIComponent(order.id);
+        location.href = '/payment?order=' + encodeURIComponent(order.id);
       } catch(err) {
         console.error(err);
         btn.disabled = false;

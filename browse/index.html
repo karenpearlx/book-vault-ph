@@ -4,19 +4,19 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-<title>Coming Soon — The Book Vault PH</title>
-<meta name="description" content="See what books are arriving soon at The Book Vault PH. Get notified when your favorite titles become available.">
+<title>Browse Books — The Book Vault PH</title>
+<meta name="description" content="Browse our collection of cheap, like-new books. Thrillers, romance, fantasy, gothic horror and more. Free delivery in San Carlos City, COD nationwide.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="The Book Vault PH">
-<meta property="og:title" content="Coming Soon — The Book Vault PH">
-<meta property="og:description" content="See what books are arriving soon. Get notified when your favorite titles become available.">
-<meta property="og:url" content="https://thebookvaultph.com/coming-soon.html">
+<meta property="og:title" content="Browse Books — The Book Vault PH">
+<meta property="og:description" content="Browse our collection of cheap, like-new books. Thrillers, romance, fantasy and more.">
+<meta property="og:url" content="https://thebookvaultph.com/browse">
 <meta property="og:image" content="https://thebookvaultph.com/og-preview.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Coming Soon — The Book Vault PH">
-<meta name="twitter:description" content="See what books are arriving soon at The Book Vault PH.">
+<meta name="twitter:title" content="Browse Books — The Book Vault PH">
+<meta name="twitter:description" content="Browse our collection of cheap, like-new books.">
 <meta name="twitter:image" content="https://thebookvaultph.com/og-preview.png">
-<meta name="description" content="Books arriving soon at The Book Vault PH. Preview upcoming preloved books before they hit the shelf." />
+<meta name="description" content="Browse all available books at The Book Vault PH. Thrillers, romance, gothic horror and more." />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="theme-color" content="#4A1C2A">
 
@@ -182,7 +182,13 @@ body::before{
 .nav-cart-icon{position:relative;display:flex;align-items:center;justify-content:center;margin-left:12px;color:var(--copper);transition:color .2s;}
 .nav-cart-icon:hover{color:#d4a04a;}
 .nav-cart-icon svg{width:22px;height:22px;}
-.nav-cart-icon .cart-count{position:absolute;top:-6px;right:-8px;font-family:"DM Mono",monospace;font-size:.5rem;letter-spacing:0;background:var(--copper);color:var(--burgundy-deep);min-width:16px;height:16px;padding:0 4px;border-radius:999px;display:inline-grid;place-items:center;font-weight:600;}
+.nav-cart-icon .cart-count{
+  position:absolute;top:-6px;right:-8px;
+  font-family:"DM Mono",monospace;font-size:.5rem;letter-spacing:0;
+  background:var(--copper);color:var(--burgundy-deep);
+  min-width:16px;height:16px;padding:0 4px;border-radius:999px;
+  display:inline-grid;place-items:center;font-weight:600;
+}
 .nav-cart-icon.bump .cart-count{animation:cartBadgeBump .4s ease;}
 @keyframes cartBadgeBump{0%{transform:scale(1);}50%{transform:scale(1.4);}100%{transform:scale(1);}}
 .wl-bg{position:fixed;inset:0;background:rgba(20,8,12,.72);backdrop-filter:blur(6px);
@@ -231,10 +237,10 @@ body::before{
 .cart-close{position:absolute;top:14px;right:14px;font-size:1.4rem;line-height:1;color:var(--burgundy);background:rgba(253,248,243,.9);border:0;width:36px;height:36px;border-radius:50%;cursor:pointer;}
 .cart-list{padding:16px 32px 24px;display:flex;flex-direction:column;gap:14px;}
 .cart-row{display:grid;grid-template-columns:54px 1fr auto;gap:14px;align-items:center;padding:12px;border:1px solid var(--rule);border-radius:6px;background:var(--cream-warm);}
-.cart-row .cart-cover{width:54px;height:78px;border-radius:3px;background:linear-gradient(160deg,var(--burgundy),var(--burgundy-deep));background-size:cover;background-position:center;}
+.cart-row .cart-cover{width:54px;height:78px;border-radius:3px;background:linear-gradient(160deg,var(--burgundy),var(--burgundy-deep));background-size:cover;background-position:center;box-shadow:0 4px 12px -4px rgba(46,15,26,.35);}
 .cart-row .cart-meta{min-width:0;}
-.cart-row .cart-ttl{font-family:"Playfair Display",serif;font-weight:500;color:var(--burgundy);font-size:1.05rem;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.cart-row .cart-by{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--ink-soft);font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cart-row .cart-ttl{font-family:"Playfair Display",serif;font-weight:500;color:var(--burgundy);font-size:1.05rem;line-height:1.15;margin:0 0 2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cart-row .cart-by{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--ink-soft);font-size:.9rem;margin:0 0 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .cart-row .cart-pr{font-family:"DM Mono",monospace;font-size:.7rem;color:var(--copper);letter-spacing:.1em;}
 .cart-row .cart-rm{background:transparent;color:var(--ink-soft);border:1px solid var(--rule);font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;padding:8px 12px;border-radius:999px;cursor:pointer;}
 .cart-row .cart-rm:hover{color:var(--burgundy);border-color:var(--burgundy);}
@@ -249,6 +255,11 @@ body::before{
   font-family:"DM Mono",monospace;font-size:.75rem;letter-spacing:.1em;
   box-shadow:0 8px 32px rgba(0,0,0,.3);z-index:9999;opacity:0;transition:all .3s ease;pointer-events:none;}
 .cart-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.btn-cart{width:42px;height:42px;border-radius:50%;border:1px solid var(--copper);background:transparent;color:var(--copper);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.btn-cart svg{width:18px;height:18px;}
+.btn-cart:hover{background:var(--copper);color:var(--cream);}
+.btn-cart.added{background:var(--copper);color:var(--cream);animation:cartPop .4s ease;}
+@keyframes cartPop{0%{transform:scale(1);}50%{transform:scale(1.25);}100%{transform:scale(1);}}
 
 .book .meta-genre{
   font-family:"DM Mono",monospace;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;
@@ -266,29 +277,6 @@ body::before{
 .book .rating{font-family:"DM Mono",monospace;font-size:.7rem;color:var(--copper);margin-top:4px;display:flex;align-items:center;gap:4px;}
 .book .rating .stars{letter-spacing:-1px;font-size:.85rem;}
 .book .price{font-family:"Playfair Display",serif;font-weight:600;color:var(--copper);font-size:1.2rem;}
-.remind-btn{
-  margin-top:24px;padding:0;width:auto;
-  background:transparent;border:none;
-  color:var(--ink-soft);font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.08em;
-  cursor:pointer;transition:color .2s;text-transform:lowercase;
-}
-.remind-btn:hover{color:var(--copper);}
-
-/* Reminder Modal */
-.remind-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1100;display:none;align-items:center;justify-content:center;padding:20px;}
-.remind-modal-bg.show{display:flex;}
-.remind-modal{background:var(--cream);border-radius:12px;padding:32px;max-width:400px;width:100%;position:relative;text-align:center;}
-.remind-close{position:absolute;top:12px;right:12px;background:none;border:none;font-size:1.5rem;color:var(--ink-soft);cursor:pointer;}
-.remind-modal h3{font-family:"Playfair Display",serif;font-size:1.4rem;color:var(--burgundy);margin:0 0 8px;}
-.remind-modal p{color:var(--ink-soft);font-size:.95rem;margin:0 0 20px;}
-.remind-modal #remindBookTitle{font-style:italic;color:var(--ink);}
-#remindForm{display:flex;flex-direction:column;gap:12px;}
-#remindForm input,#remindForm select{padding:14px 16px;border:1px solid var(--rule);border-radius:6px;font-size:1rem;background:var(--cream);}
-#remindForm input:focus,#remindForm select:focus{outline:none;border-color:var(--copper);}
-#remindForm select{color:var(--ink);cursor:pointer;}
-#remindForm button{padding:14px;background:var(--burgundy);border:none;border-radius:6px;color:var(--cream);font-family:"DM Mono",monospace;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
-#remindForm button:hover{background:var(--copper);}
-.remind-note{font-size:.75rem;color:var(--ink-soft);margin-top:16px !important;}
 
 .empty-state{
   grid-column:1/-1;text-align:center;padding:80px 24px;
@@ -336,58 +324,45 @@ body::before{
 .bd-info .meta-row{font-family:"DM Mono",monospace;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--copper);margin-bottom:10px;display:flex;gap:14px;flex-wrap:wrap;}
 .bd-info h3{font-family:"Playfair Display",serif;font-weight:500;font-size:clamp(1.6rem,3vw,2.2rem);color:var(--burgundy);line-height:1.05;margin:0 0 6px;}
 .bd-info .by{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--ink-soft);margin:0 0 18px;font-size:1.05rem;}
-.bd-info .summary{color:var(--ink);font-size:1.02rem;line-height:1.55;margin-bottom:24px;}
-.bd-info .summary.empty{font-style:italic;color:#8B7A66;}
+.bd-info .summary{color:var(--ink);font-size:1rem;line-height:1.7;margin-bottom:24px;
+  font-family:"Cormorant Garamond",serif;font-size:1.1rem;
+  padding:16px 20px;background:rgba(107,45,60,.04);border-left:3px solid var(--copper-soft);border-radius:0 8px 8px 0;}
+.bd-info .summary.empty{font-style:italic;color:#8B7A66;background:none;border:none;padding:0;}
 .bd-info .gr-row{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
 .bd-info .gr-rating{display:flex;align-items:center;gap:6px;font-family:"DM Mono",monospace;font-size:.8rem;letter-spacing:.1em;color:var(--copper);}
 .bd-info .gr-rating .stars{color:var(--copper-soft);font-size:1rem;letter-spacing:-1px;}
 .bd-info .gr-link{font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);text-decoration:none;padding:6px 12px;border:1px solid rgba(184,115,51,.4);border-radius:999px;}
 .bd-info .gr-link:hover{border-color:var(--copper);background:rgba(184,115,51,.1);}
-.bd-info .pricerow{display:flex;align-items:center;gap:14px;margin-top:auto;padding-top:18px;border-top:1px dashed var(--rule);}
+.bd-info .pricerow{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:auto;padding-top:18px;border-top:1px dashed var(--rule);}
+.pricerow-btns{display:flex;align-items:center;gap:10px;}
 .bd-info .price{font-family:"Playfair Display",serif;font-weight:600;color:var(--copper);font-size:2rem;line-height:1;}
+.bd-navrow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0 0;margin-top:20px;border-top:1px solid var(--rule);}
+.bd-navrow .bd-nav{background:none;border:none;color:var(--ink-soft);font-family:"Cormorant Garamond",serif;font-size:.9rem;cursor:pointer;display:flex;align-items:center;gap:6px;transition:color .2s;padding:8px 0;}
+.bd-navrow .bd-nav:hover{color:var(--burgundy);}
+.bd-navrow .bd-nav:disabled{opacity:.3;cursor:not-allowed;}
+.bd-navrow .bd-nav:disabled:hover{color:var(--ink-soft);}
 .bd-info .coming-badge{font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;background:rgba(255,155,0,.2);color:var(--copper);padding:8px 16px;border-radius:999px;border:1px solid var(--copper);}
 .bd-info .btn-reserve{display:inline-block;font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;background:var(--copper);color:var(--burgundy-deep);padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:600;transition:transform .2s,box-shadow .2s;}
 .bd-info .btn-reserve:hover{transform:translateY(-2px);box-shadow:0 8px 20px -8px rgba(255,155,0,.5);}
 
-/* Modal nav buttons - only show when modal is open */
-.bd-nav{
-  display:none;
-}
-.bd-bg.show .bd-nav{
-  position:fixed;top:50%;transform:translateY(-50%);
-  width:52px;height:52px;border-radius:50%;border:0;
-  background:#FDF8F3;color:#4A1C2A;
-  font-size:1.6rem;cursor:pointer;z-index:9999;
-  display:grid;place-items:center;
-  box-shadow:0 4px 24px rgba(0,0,0,.4);
-}
-.bd-bg.show .bd-nav:hover{background:#FF9B00;color:#2E0F1A;transform:translateY(-50%) scale(1.1);}
-.bd-bg.show .bd-nav:disabled{opacity:.4;cursor:not-allowed;background:rgba(253,248,243,.6);}
-.bd-bg.show .bd-nav:disabled:hover{transform:translateY(-50%);}
-.bd-nav.prev{left:20px;}
-.bd-nav.next{right:20px;}
-@media (max-width:900px){
-  .bd-bg.show .bd-nav{width:44px;height:44px;font-size:1.3rem;}
-  .bd-nav.prev{left:10px;}
-  .bd-nav.next{right:10px;}
-}
-
 /* NOTIFY BANNER */
-.notify-banner{
-  background:var(--cream-warm);border:1px solid var(--cream-shadow);border-radius:8px;
-  padding:32px;margin-bottom:48px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;
+.browse-controls{
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:32px;
 }
-.notify-banner .ico{font-size:2rem;}
-.notify-banner .text{flex:1;min-width:200px;}
-.notify-banner h3{font-family:"Playfair Display",serif;font-weight:500;font-size:1.2rem;color:var(--burgundy);margin:0 0 4px;}
-.notify-banner p{margin:0;color:var(--ink-soft);font-size:.95rem;}
-.notify-banner a{
-  font-family:"DM Mono",monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;
-  background:var(--burgundy);color:var(--cream);text-decoration:none;
-  padding:12px 22px;border-radius:999px;white-space:nowrap;
-  transition:background .2s;
+.search-wrap{flex:1;min-width:200px;}
+.search-wrap input{
+  width:100%;padding:12px 16px;border:1px solid var(--cream-shadow);border-radius:8px;
+  background:var(--cream);font-size:.95rem;color:var(--ink);
 }
-.notify-banner a:hover{background:var(--copper);}
+.search-wrap input:focus{outline:none;border-color:var(--copper);}
+.search-wrap input::placeholder{color:var(--ink-soft);}
+.sort-wrap{display:flex;align-items:center;gap:10px;}
+.sort-wrap label{font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);}
+.sort-wrap select{
+  padding:10px 14px;border:1px solid var(--cream-shadow);border-radius:8px;
+  background:var(--cream);font-size:.9rem;color:var(--ink);cursor:pointer;
+}
+.sort-wrap select:focus{outline:none;border-color:var(--copper);}
 
 /* FOOTER */
 .footer{
@@ -409,20 +384,6 @@ body::before{
 .page-btn:hover:not(:disabled){background:var(--burgundy-deep);}
 .page-btn:disabled{opacity:.4;cursor:not-allowed;}
 .page-info{font-family:"DM Mono",monospace;font-size:.8rem;color:var(--ink-soft);}
-
-/* Loading skeleton */
-.skeleton{
-  background:linear-gradient(90deg,var(--cream-warm) 25%,var(--cream-shadow) 50%,var(--cream-warm) 75%);
-  background-size:200% 100%;
-  animation:shimmer 1.5s infinite;
-}
-@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
-.skeleton-card{aspect-ratio:2/3;border-radius:3px;margin-bottom:16px;}
-.skeleton-text{height:1em;border-radius:4px;margin-bottom:8px;}
-.skeleton-text.short{width:60%;}
-
-/* Lazy image fade in */
-.cover-img{transition:background-image .3s ease;}
 </style>
 </head>
 <body>
@@ -436,13 +397,13 @@ body::before{
     <button class="nav-burger" aria-label="Menu" aria-expanded="false" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
     <div class="nav-links" id="navLinks">
       <a href="/">Home</a>
-      <a href="/browse.html">Browse</a>
-      <a href="/coming-soon.html">Coming Soon</a>
+      <a href="/browse">Browse</a>
+      <a href="/coming-soon">Coming Soon</a>
       <a href="#" class="nav-wl" id="navWlLink" onclick="event.preventDefault();openWishlist();document.getElementById('navLinks').classList.remove('open');">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
         <span>Wishlist</span><span class="wl-count" id="navWlCount" style="display:none;">0</span>
       </a>
-      <a href="/contact.html" onclick="document.getElementById('navLinks').classList.remove('open')">Contact</a>
+      <a href="/contact" onclick="document.getElementById('navLinks').classList.remove('open')">Contact</a>
     </div>
     <a href="#" class="nav-cart-icon" id="navCartLink" onclick="event.preventDefault();openCart();" title="Cart">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
@@ -452,64 +413,40 @@ body::before{
 </nav>
 
 <div class="hero">
-  <h1>Books <em>arriving soon</em></h1>
+  <h1>Browse <em>all books</em></h1>
   <p>A preview of what's coming to the vault. These books aren't available yet, but they will be soon.</p>
   <a class="back-link" href="/">← Back to the shelf</a>
 </div>
 
 <main class="content">
-  <div class="notify-banner">
-    <span class="ico">🔔</span>
-    <div class="text">
-      <h3>Want to know when these drop?</h3>
-      <p>Follow us on Instagram for first dibs when new books hit the shelf.</p>
+  <div class="browse-controls">
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="Search by title, author, or genre..." oninput="handleSearch()">
     </div>
-    <a href="https://instagram.com/thebookvaultph" target="_blank" rel="noopener">Follow @thebookvaultph</a>
+    <div class="sort-wrap">
+      <label for="sortSelect">Sort by</label>
+      <select id="sortSelect" onchange="handleSort()">
+        <option value="popular">Most Popular</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="title">Title A-Z</option>
+        <option value="rating">Highest Rated</option>
+      </select>
+    </div>
   </div>
 
   <div class="section-head">
-    <h2>Coming to the vault</h2>
+    <h2>Browse the shelf</h2>
     <p id="countText">Loading...</p>
   </div>
 
-  <div class="shelf" id="comingGrid">
-    <!-- Loading skeletons -->
-    <div class="book skeleton-book"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
-    <div class="book skeleton-book"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
-    <div class="book skeleton-book"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
-    <div class="book skeleton-book"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
-    <div class="book skeleton-book"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
-    <div class="book skeleton-book"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
-  </div>
+  <div class="shelf" id="comingGrid"></div>
   
   <div class="pagination" id="pagination">
     <button class="page-btn" id="prevBtn" onclick="prevPage()">← Previous</button>
     <span class="page-info" id="pageInfo">Page 1 of 1</span>
     <button class="page-btn" id="nextBtn" onclick="nextPage()">Next →</button>
   </div>
-<!-- Reminder Modal -->
-<div class="remind-modal-bg" id="remindBg" onclick="closeReminder()">
-  <div class="remind-modal" onclick="event.stopPropagation()">
-    <button class="remind-close" onclick="closeReminder()">×</button>
-    <h3>🔔 Get notified</h3>
-    <p>We'll let you know when <span id="remindBookTitle" style="font-style:italic;color:var(--burgundy);"></span> becomes available</p>
-    <form id="remindForm" onsubmit="submitReminder(event)">
-      <input type="email" id="remindEmail" placeholder="Your email" required>
-      <input type="tel" id="remindPhone" placeholder="Phone number (optional)">
-      <select id="remindSource" required>
-        <option value="">How did you hear about us?</option>
-        <option value="facebook">Facebook</option>
-        <option value="instagram">Instagram</option>
-        <option value="tiktok">TikTok</option>
-        <option value="friend">Friend / Word of mouth</option>
-        <option value="google">Google search</option>
-        <option value="other">Other</option>
-      </select>
-      <button type="submit" id="remindSubmit">Notify me</button>
-    </form>
-    <p class="remind-note">We'll only contact you once when this book is ready.</p>
-  </div>
-</div>
 </main>
 
 <footer class="footer">
@@ -539,20 +476,18 @@ body::before{
     <div class="cart-list" id="cartList"></div>
     <div class="cart-footer" id="cartFooter" style="display:none;">
       <div class="cart-total">Total: <span id="cartTotal">₱0</span></div>
-      <a href="/order.html?cart=1" class="cart-checkout">Checkout →</a>
+      <a href="/order?cart=1" class="cart-checkout">Checkout →</a>
     </div>
   </div>
 </div>
 
 <!-- DETAIL MODAL -->
 <div class="bd-bg" id="bdBg" onclick="if(event.target===this)closeDetail()">
-  <button class="bd-nav prev" id="bdPrev" onclick="prevBook()" aria-label="Previous book">←</button>
   <div class="bd-modal" role="dialog" aria-modal="true">
     <button class="bd-close" aria-label="Close" onclick="closeDetail()">×</button>
     <div class="bd-cover-pane"><div class="bd-cover" id="bdCover"></div></div>
     <div class="bd-info" id="bdInfo"></div>
   </div>
-  <button class="bd-nav next" id="bdNext" onclick="nextBook()" aria-label="Next book">→</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -565,7 +500,9 @@ body::before{
   const padNo = title => 'No. ' + String(Math.abs((title||'').length*7) % 99 + 1).padStart(3,'0');
 
   function coverHTML(book){
-    return `<div class="cover-img" data-book-id="${esc(book.id)}">
+    const hasImg = !!book.cover;
+    const style = hasImg ? `background-image:url('${esc(book.cover)}');` : '';
+    return `<div class="cover-img ${hasImg?'has-img':''}" data-cover-id="${book.id}" style="${style}">
       <div class="pub">${esc(padNo(book.title))}</div>
       <div>
         <div class="ttl">${esc(book.title)}</div>
@@ -573,21 +510,6 @@ body::before{
       </div>
       <div class="auth">BVPH</div>
     </div>`;
-  }
-  
-  async function loadVisibleCovers() {
-    const cards = document.querySelectorAll('.cover-img[data-book-id]:not(.cover-loaded)');
-    for (const card of cards) {
-      const id = card.dataset.bookId;
-      if (!id) continue;
-      card.classList.add('cover-loaded');
-      BVPH.getCover(id).then(coverUrl => {
-        if (coverUrl) {
-          card.style.backgroundImage = `url('${coverUrl}')`;
-          card.classList.add('has-img');
-        }
-      });
-    }
   }
 
   const HEART_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
@@ -601,7 +523,7 @@ body::before{
     const stars = rating ? '★'.repeat(Math.round(rating)) + '☆'.repeat(5-Math.round(rating)) : '';
     return `<article class="book" onclick="openDetail('${book.id}')" role="button" tabindex="0" aria-label="${esc(book.title)} by ${esc(book.author||'Unknown')}">
       <div class="cover-wrap">
-        <span class="badge">Coming Soon</span>
+        
         ${heartBtn(book)}
         ${coverHTML(book)}
       </div>
@@ -613,32 +535,16 @@ body::before{
     </article>`;
   }
 
-  let currentBookId = null;
-
-  function updateNavButtons() {
-    const idx = allComing.findIndex(b => b.id === currentBookId);
-    document.getElementById('bdPrev').disabled = idx <= 0;
-    document.getElementById('bdNext').disabled = idx >= allComing.length - 1;
-  }
-
-  function prevBook() {
-    const idx = allComing.findIndex(b => b.id === currentBookId);
-    if (idx > 0) openDetail(allComing[idx - 1].id);
-  }
-
-  function nextBook() {
-    const idx = allComing.findIndex(b => b.id === currentBookId);
-    if (idx < allComing.length - 1) openDetail(allComing[idx + 1].id);
-  }
-
   async function openDetail(id){
-    currentBookId = id;
     BVPH.track('book_click', { bookId: id });
     const b = BVPH.getBook(id);
     if (!b) return;
+    currentBookId = id;
     const cover = document.getElementById('bdCover');
-    cover.className = 'bd-cover';
-    cover.style.backgroundImage = '';
+    const coverUrl = b.cover || await BVPH.getCover(id);
+    const hasImg = !!coverUrl;
+    cover.className = 'bd-cover' + (hasImg ? ' has-img' : '');
+    cover.style.backgroundImage = hasImg ? `url('${coverUrl}')` : '';
     cover.innerHTML = `
       <div class="pub">${esc(padNo(b.title))}</div>
       <div>
@@ -646,19 +552,12 @@ body::before{
         <div class="auth">${esc(b.author||'')}</div>
       </div>
       <div class="auth">BVPH</div>`;
-    // Load cover asynchronously
-    BVPH.getCover(id).then(coverUrl => {
-      if (coverUrl && currentBookId === id) {
-        cover.style.backgroundImage = `url('${coverUrl}')`;
-        cover.classList.add('has-img');
-      }
-    });
 
     const rating = b.rating ? Number(b.rating) : null;
     const stars = rating ? '★'.repeat(Math.round(rating)) + '☆'.repeat(5-Math.round(rating)) : '';
 
     const summary = b.summary
-      ? `<p class="summary">${esc(b.summary)}</p>`
+      ? `<div class="summary">${esc(b.summary).replace(/\n/g, '<br>')}</div>`
       : `<p class="summary empty">No summary yet, but trust the cover.</p>`;
 
     const grRow = (rating || b.goodreads_url) ? `<div class="gr-row">
@@ -679,37 +578,48 @@ body::before{
       <div class="pricerow">
         <span class="price">${peso(b.sellPrice)}</span>
         ${(b.quantity && b.quantity > 1) ? `<span style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-soft);">${b.quantity} copies</span>` : ''}
-        <a class="btn-reserve" href="/order.html?book=${encodeURIComponent(b.id)}&reserve=1">Reserve →</a>
+        <div class="pricerow-btns">
+          <a class="btn-reserve" href="/order?book=${encodeURIComponent(b.id)}">Buy now →</a>
+          <button class="btn-cart" onclick="addToCart('${b.id}')" title="Add to cart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          </button>
+        </div>
       </div>
-      <button class="remind-btn" data-remind-id="${b.id}" data-remind-title="${esc(b.title)}">notify me when available →</button>`;
+      <div class="bd-navrow">
+        <button class="bd-nav" id="bdPrev" onclick="prevBook()">← previous</button>
+        <button class="bd-nav" id="bdNext" onclick="nextBook()">next →</button>
+      </div>`;
     document.getElementById('bdBg').classList.add('show');
     document.body.style.overflow = 'hidden';
     updateNavButtons();
   }
 
   function closeDetail(){
-    currentBookId = null;
     document.getElementById('bdBg').classList.remove('show');
     document.body.style.overflow = '';
+    currentBookId = null;
   }
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeDetail(); closeWishlist(); closeCart(); closeReminder(); }
-    if (currentBookId && document.getElementById('bdBg').classList.contains('show')) {
-      if (e.key === 'ArrowLeft') prevBook();
-      if (e.key === 'ArrowRight') nextBook();
-    }
-  });
-  
-  // Event delegation for remind buttons
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('[data-remind-id]');
-    if (btn) {
-      e.stopPropagation();
-      const id = btn.dataset.remindId;
-      const title = btn.dataset.remindTitle;
-      openReminder(id, title);
-    }
+  function updateNavButtons(){
+    const idx = allComing.findIndex(b => b.id === currentBookId);
+    const prev = document.getElementById('bdPrev');
+    const next = document.getElementById('bdNext');
+    if(prev) prev.disabled = idx <= 0;
+    if(next) next.disabled = idx < 0 || idx >= allComing.length - 1;
+  }
+  function prevBook(){
+    const idx = allComing.findIndex(b => b.id === currentBookId);
+    if(idx > 0) openDetail(allComing[idx - 1].id);
+  }
+  function nextBook(){
+    const idx = allComing.findIndex(b => b.id === currentBookId);
+    if(idx >= 0 && idx < allComing.length - 1) openDetail(allComing[idx + 1].id);
+  }
+
+  document.addEventListener('keydown', e => { 
+    if (e.key === 'Escape') { closeDetail(); closeWishlist(); closeCart(); }
+    if (e.key === 'ArrowLeft' && currentBookId) prevBook();
+    if (e.key === 'ArrowRight' && currentBookId) nextBook();
   });
 
   // ----- Wishlist -----
@@ -741,9 +651,11 @@ body::before{
       return;
     }
     list.innerHTML = books.map(b => {
+      const hasImg = !!b.cover;
+      const style = hasImg ? `background-image:url('${esc(b.cover)}');` : '';
       const isComing = b.status === 'coming_soon';
       return `<div class="wl-row">
-        <div class="wl-cover" data-wl-cover="${b.id}"></div>
+        <div class="wl-cover" style="${style}"></div>
         <div class="wl-meta">
           <p class="wl-ttl">${esc(b.title)}</p>
           <p class="wl-by">by ${esc(b.author||'Unknown')}</p>
@@ -752,20 +664,10 @@ body::before{
         <div class="wl-actions">
           <button class="wl-btn wl-rm" type="button" onclick="toggleWl('${b.id}')">Remove</button>
           <button class="wl-btn wl-view" type="button" onclick="closeWishlist();openDetail('${b.id}')">View</button>
-          ${isComing ? '' : `<a class="wl-btn wl-view" href="/order.html?book=${encodeURIComponent(b.id)}">Order</a>`}
+          ${isComing ? '' : `<a class="wl-btn wl-view" href="/order?book=${encodeURIComponent(b.id)}">Order</a>`}
         </div>
       </div>`;
     }).join('');
-    // Load wishlist covers
-    const wlIds = books.map(b => b.id);
-    if (wlIds.length) {
-      BVPH.getCovers(wlIds).then(covers => {
-        document.querySelectorAll('[data-wl-cover]').forEach(el => {
-          const id = el.dataset.wlCover;
-          if (covers[id]) el.style.backgroundImage = `url('${covers[id]}')`;
-        });
-      });
-    }
   }
   function openWishlist(){ renderWishlist(); document.getElementById('wlBg').classList.add('show'); document.body.style.overflow='hidden'; }
   function closeWishlist(){ document.getElementById('wlBg').classList.remove('show'); document.body.style.overflow=''; }
@@ -797,7 +699,7 @@ body::before{
     }
     list.innerHTML = books.map(b => `
       <div class="cart-row">
-        <div class="cart-cover" data-cart-cover="${b.id}"></div>
+        <div class="cart-cover" style="${b.cover ? `background-image:url('${b.cover}')` : ''}"></div>
         <div class="cart-meta">
           <div class="cart-ttl">${esc(b.title)}</div>
           <div class="cart-by">by ${esc(b.author||'Unknown')}</div>
@@ -808,92 +710,35 @@ body::before{
     `).join('');
     document.getElementById('cartTotal').textContent = peso(BVPH.getCartTotal());
     footer.style.display = 'flex';
-    // Load cart covers
-    const cartIds = books.map(b => b.id);
-    if (cartIds.length) {
-      BVPH.getCovers(cartIds).then(covers => {
-        document.querySelectorAll('[data-cart-cover]').forEach(el => {
-          const id = el.dataset.cartCover;
-          if (covers[id]) el.style.backgroundImage = `url('${covers[id]}')`;
-        });
-      });
-    }
   }
   function openCart(){ renderCart(); document.getElementById('cartBg').classList.add('show'); document.body.style.overflow='hidden'; }
   function closeCart(){ document.getElementById('cartBg').classList.remove('show'); document.body.style.overflow=''; }
   function addToCart(id){
     BVPH.addToCart(id);
     renderCartCount();
+    const btn = document.querySelector('.btn-cart');
+    if (btn) { btn.classList.add('added'); setTimeout(() => btn.classList.remove('added'), 500); }
     const navCart = document.getElementById('navCartLink');
     if (navCart) { navCart.classList.add('bump'); setTimeout(() => navCart.classList.remove('bump'), 500); }
+    showCartToast();
+  }
+  function showCartToast(){
+    let toast = document.getElementById('cartToast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'cartToast';
+      toast.className = 'cart-toast';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = `✓ Added to cart`;
+    toast.classList.add('show');
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => toast.classList.remove('show'), 2000);
   }
   function removeFromCart(id){
     BVPH.removeFromCart(id);
     renderCartCount();
     renderCart();
-  }
-
-  // Reminder modal
-  let remindBookId = null;
-  let remindBookTitle = '';
-  
-  function openReminder(bookId, title) {
-    remindBookId = bookId;
-    remindBookTitle = title;
-    document.getElementById('remindBookTitle').textContent = title;
-    // Reset form HTML in case it was replaced by success message
-    document.getElementById('remindForm').innerHTML = `
-      <input type="email" id="remindEmail" placeholder="Your email" required>
-      <input type="tel" id="remindPhone" placeholder="Phone number (optional)">
-      <select id="remindSource" required>
-        <option value="">How did you hear about us?</option>
-        <option value="facebook">Facebook</option>
-        <option value="instagram">Instagram</option>
-        <option value="tiktok">TikTok</option>
-        <option value="friend">Friend / Word of mouth</option>
-        <option value="google">Google search</option>
-        <option value="other">Other</option>
-      </select>
-      <button type="submit" id="remindSubmit">Notify me</button>
-    `;
-    document.getElementById('remindBg').classList.add('show');
-    document.body.style.overflow = 'hidden';
-  }
-  
-  function closeReminder() {
-    document.getElementById('remindBg').classList.remove('show');
-    document.body.style.overflow = '';
-    remindBookId = null;
-  }
-  
-  function submitReminder(e) {
-    e.preventDefault();
-    const email = document.getElementById('remindEmail').value.trim();
-    const phone = document.getElementById('remindPhone').value.trim();
-    const source = document.getElementById('remindSource').value;
-    
-    if (!email || !source) return;
-    
-    BVPH.addNotifyRequest({
-      bookId: remindBookId,
-      bookTitle: remindBookTitle,
-      email,
-      phone,
-      source
-    });
-    
-    BVPH.track('notify_request', { bookId: remindBookId, source });
-    
-    // Show success
-    document.getElementById('remindForm').innerHTML = `
-      <div style="padding:20px 0;color:var(--burgundy);">
-        <div style="font-size:2rem;margin-bottom:10px;">✓</div>
-        <p style="margin:0;font-weight:500;">You're on the list!</p>
-        <p style="margin:8px 0 0;font-size:.9rem;color:var(--ink-soft);">We'll notify you when this book is available.</p>
-      </div>
-    `;
-    
-    setTimeout(closeReminder, 2000);
   }
 
   // expose to window for onclick handlers
@@ -908,35 +753,75 @@ body::before{
   window.closeCart = closeCart;
   window.addToCart = addToCart;
   window.removeFromCart = removeFromCart;
-  window.openReminder = openReminder;
-  window.closeReminder = closeReminder;
-  window.submitReminder = submitReminder;
 
   const PAGE_SIZE = 30;
   let currentPage = 1;
   let allComing = [];
+  let searchTerm = '';
+  let currentBookId = null;
+  let sortBy = 'popular';
 
-  function render(){
-    const all = BVPH.getBooks();
-    const pinnedTitles = ['grey', 'if i stay', 'the time traveler\'s wife', 'time traveler\'s wife'];
-    allComing = all.filter(b => b.status === 'coming_soon')
-      .sort((a, b) => {
-        const aTitle = (a.title || '').toLowerCase();
-        const bTitle = (b.title || '').toLowerCase();
-        const aPinned = pinnedTitles.some(p => aTitle.includes(p));
-        const bPinned = pinnedTitles.some(p => bTitle.includes(p));
-        if (aPinned && !bPinned) return -1;
-        if (bPinned && !aPinned) return 1;
+  function handleSearch(){
+    searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    currentPage = 1;
+    render();
+  }
+
+  function handleSort(){
+    sortBy = document.getElementById('sortSelect').value;
+    currentPage = 1;
+    render();
+  }
+
+  window.handleSearch = handleSearch;
+  window.handleSort = handleSort;
+
+  function sortBooks(books){
+    switch(sortBy){
+      case 'price-low': return books.sort((a,b) => (Number(a.sellPrice)||0) - (Number(b.sellPrice)||0));
+      case 'price-high': return books.sort((a,b) => (Number(b.sellPrice)||0) - (Number(a.sellPrice)||0));
+      case 'title': return books.sort((a,b) => (a.title||'').localeCompare(b.title||''));
+      case 'rating': return books.sort((a,b) => (Number(b.rating)||0) - (Number(a.rating)||0));
+      default: return books.sort((a, b) => {
         const aAdapted = /adapted|movie|series|film|netflix|hbo|hulu/i.test(a.summary || '');
         const bAdapted = /adapted|movie|series|film|netflix|hbo|hulu/i.test(b.summary || '');
         if (bAdapted && !aAdapted) return 1;
         if (aAdapted && !bAdapted) return -1;
         return (Number(b.rating) || 0) - (Number(a.rating) || 0);
       });
+    }
+  }
+
+  async function loadCoversForPage(ids) {
+    const covers = await BVPH.getCovers(ids);
+    for (const id of ids) {
+      const coverUrl = covers[id];
+      if (!coverUrl) continue;
+      const el = document.querySelector(`[data-cover-id="${id}"]`);
+      if (el) {
+        el.style.backgroundImage = `url('${coverUrl}')`;
+        el.classList.add('has-img');
+      }
+    }
+  }
+
+  function render(){
+    const all = BVPH.getBooks();
+    let filtered = all.filter(b => b.status === 'available' || !b.status);
+    
+    if(searchTerm){
+      filtered = filtered.filter(b => 
+        (b.title||'').toLowerCase().includes(searchTerm) ||
+        (b.author||'').toLowerCase().includes(searchTerm) ||
+        (b.genre||'').toLowerCase().includes(searchTerm)
+      );
+    }
+    
+    allComing = sortBooks(filtered);
     
     document.getElementById('countText').textContent = allComing.length 
-      ? `${allComing.length} book${allComing.length > 1 ? 's' : ''} on the way`
-      : 'Check back soon for new arrivals';
+      ? `${allComing.length} book${allComing.length > 1 ? 's' : ''} available`
+      : 'No books available right now';
 
     const grid = document.getElementById('comingGrid');
     const pagination = document.getElementById('pagination');
@@ -944,7 +829,7 @@ body::before{
     if (!allComing.length) {
       grid.innerHTML = `<div class="empty-state">
         <div class="ic">📦</div>
-        No books in the pipeline right now. Check back soon, or browse what's already on the shelf.
+        No books available right now. Check back soon!
       </div>`;
       pagination.style.display = 'none';
       return;
@@ -958,6 +843,9 @@ body::before{
     
     grid.innerHTML = pageBooks.map(bookCard).join('');
     
+    // Load covers lazily
+    loadCoversForPage(pageBooks.map(b => b.id));
+    
     document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
     document.getElementById('prevBtn').disabled = currentPage === 1;
     document.getElementById('nextBtn').disabled = currentPage === totalPages;
@@ -969,7 +857,6 @@ body::before{
     if (currentPage < totalPages) {
       currentPage++;
       render();
-      loadVisibleCovers();
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
   }
@@ -978,7 +865,6 @@ body::before{
     if (currentPage > 1) {
       currentPage--;
       render();
-      loadVisibleCovers();
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
   }
@@ -995,12 +881,12 @@ body::before{
     if (!a) return;
     const href = a.getAttribute('href') || '';
     const bookId = new URL(a.href, location.origin).searchParams.get('book');
-    if (href.includes('/order.html')) BVPH.track('buy_now_click', { bookId, element: (a.textContent || 'order button').trim(), target: href });
+    if (href.includes('/order')) BVPH.track('buy_now_click', { bookId, element: (a.textContent || 'order button').trim(), target: href });
     else if (a.closest('.nav') || a.closest('nav') || a.classList.contains('nav-wl')) BVPH.track('nav_click', { element: (a.textContent || 'nav link').trim(), target: href });
   }, true);
-  BVPH.init().then(async () => {
-    BVPH.trackPageView('coming soon'); render(); renderWlCount(); renderCartCount(); await loadVisibleCovers(); });
-  BVPH.onChange(() => { render(); loadVisibleCovers(); });
+  BVPH.init().then(() => {
+    BVPH.trackPageView('browse'); render(); renderWlCount(); renderCartCount(); });
+  BVPH.onChange(render);
   BVPH.onWishlistChange(renderWlCount);
   BVPH.onCartChange(renderCartCount);
   window.addEventListener('storage', e => { 
