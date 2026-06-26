@@ -681,7 +681,7 @@ body::before{
         ${(b.quantity && b.quantity > 1) ? `<span style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-soft);">${b.quantity} copies</span>` : ''}
         <a class="btn-reserve" href="/order.html?book=${encodeURIComponent(b.id)}&reserve=1">Reserve →</a>
       </div>
-      <button class="remind-btn" onclick="openReminder('${b.id}','${esc(b.title).replace(/'/g, "\\'")}')">notify me when available →</button>`;
+      <button class="remind-btn" data-remind-id="${b.id}" data-remind-title="${esc(b.title)}">notify me when available →</button>`;
     document.getElementById('bdBg').classList.add('show');
     document.body.style.overflow = 'hidden';
     updateNavButtons();
@@ -694,10 +694,21 @@ body::before{
   }
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeDetail(); closeWishlist(); closeCart(); }
+    if (e.key === 'Escape') { closeDetail(); closeWishlist(); closeCart(); closeReminder(); }
     if (currentBookId && document.getElementById('bdBg').classList.contains('show')) {
       if (e.key === 'ArrowLeft') prevBook();
       if (e.key === 'ArrowRight') nextBook();
+    }
+  });
+  
+  // Event delegation for remind buttons
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('[data-remind-id]');
+    if (btn) {
+      e.stopPropagation();
+      const id = btn.dataset.remindId;
+      const title = btn.dataset.remindTitle;
+      openReminder(id, title);
     }
   });
 
