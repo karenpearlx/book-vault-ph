@@ -807,7 +807,7 @@ body::before{
 
   function render(){
     const all = BVPH.getBooks();
-    let filtered = all.filter(b => b.status === 'available' || !b.status);
+    let filtered = all.filter(b => b.status !== 'coming_soon');
     
     if(searchTerm){
       filtered = filtered.filter(b => 
