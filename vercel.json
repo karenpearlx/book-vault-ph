@@ -1,9 +1,8 @@
 {
-  "cleanUrls": true,
   "trailingSlash": false,
   "routes": [
     { "handle": "filesystem" },
-    { "src": "/book/([^/]+)", "dest": "/book/index.html" },
-    { "src": "/blog/([^/]+)", "dest": "/blog/post.html" }
+    { "src": "/book/([^/]+)$", "dest": "/book/index.html" },
+    { "src": "/blog/([^/]+)$", "dest": "/blog/post.html" }
   ]
 }
