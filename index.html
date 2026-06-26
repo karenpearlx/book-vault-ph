@@ -566,6 +566,20 @@ body::before{
 .feat-cover .ttl{font-family:"Playfair Display",serif;font-style:italic;font-size:1.4rem;line-height:1.05;}
 .feat-cover .auth{font-family:"DM Mono",monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;opacity:.85;}
 
+.feat-author-photo{
+  width:240px;height:240px;border-radius:50%;
+  background-size:cover;background-position:center top;
+  box-shadow:0 20px 50px -15px rgba(46,15,26,.4);
+  cursor:pointer;transition:transform .35s ease;
+}
+.feat-author-photo:hover{transform:scale(1.03);}
+.author-photo-wrap{display:flex;justify-content:center;}
+.feat-info .book-rec{
+  font-size:.9rem;color:var(--ink-soft);margin-top:16px;
+  padding-top:16px;border-top:1px solid var(--rule);
+}
+.feat-info .book-rec strong{color:var(--burgundy);}
+
 .feat-info{padding-top:6px;}
 .feat-info .byline{
   font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;
@@ -1471,12 +1485,14 @@ body::before{
     const authorPhoto = featured.authorPhoto || '';
     
     $('#featuredBlock').innerHTML = `
-      <div onclick="bv.openDetail('${feat.id}')">${coverHTML(feat, 'feat-cover')}</div>
+      <div class="author-photo-wrap" onclick="bv.openDetail('${feat.id}')">
+        ${authorPhoto ? `<div class="feat-author-photo" style="background-image:url('${authorPhoto}')"></div>` : coverHTML(feat, 'feat-cover')}
+      </div>
       <div class="feat-info">
-        ${authorPhoto ? `<div class="author-photo" style="width:60px;height:60px;border-radius:50%;background-image:url('${authorPhoto}');background-size:cover;background-position:center;margin-bottom:12px;"></div>` : ''}
-        <h3>${esc(feat.title)}</h3>
-        <p class="by">by ${esc(featured.authorName)}</p>
+        <h3>${esc(featured.authorName)}</h3>
+        <p class="by">Featured Author</p>
         <p class="desc">${esc(desc)}</p>
+        <p class="book-rec">Recommended read: <strong>${esc(feat.title)}</strong></p>
         <div class="row">
           <div class="btn-row">
             <a class="btn-primary" href="/order.html?book=${encodeURIComponent(feat.id)}">Order this book</a>
