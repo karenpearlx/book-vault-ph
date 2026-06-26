@@ -567,13 +567,16 @@ body::before{
 .feat-cover .auth{font-family:"DM Mono",monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;opacity:.85;}
 
 .feat-author-photo{
-  width:240px;height:240px;border-radius:50%;
+  width:320px;height:320px;border-radius:50%;
   background-size:cover;background-position:center top;
   box-shadow:0 20px 50px -15px rgba(46,15,26,.4);
   cursor:pointer;transition:transform .35s ease;
 }
 .feat-author-photo:hover{transform:scale(1.03);}
 .author-photo-wrap{display:flex;justify-content:center;}
+@media(max-width:780px){
+  .feat-author-photo{width:220px;height:220px;}
+}
 .feat-info .book-rec{
   font-size:.9rem;color:var(--ink-soft);margin-top:16px;
   padding-top:16px;border-top:1px solid var(--rule);
