@@ -427,35 +427,38 @@ body::before{
 .categories-section h2 em{font-style:italic;color:var(--copper);}
 .categories-section .lede{color:var(--ink-soft);margin-top:8px;}
 .categories-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
-  max-width:900px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+  max-width:1000px;margin:0 auto;
 }
 .category-card{
-  background:#fff;border-radius:16px;padding:32px 24px;text-align:center;
-  text-decoration:none;color:var(--ink);
-  border:1px solid rgba(0,0,0,.06);
-  box-shadow:0 4px 20px rgba(0,0,0,.04);
-  transition:all .25s ease;
+  position:relative;border-radius:12px;overflow:hidden;
+  text-decoration:none;color:#fff;
+  height:220px;
+  background-size:cover;background-position:center;
+  transition:all .3s ease;
 }
-.category-card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 8px 30px rgba(0,0,0,.08);
-  border-color:var(--copper);
+.category-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,.7) 0%, rgba(0,0,0,.2) 50%, rgba(0,0,0,.1) 100%);
+  transition:all .3s ease;
 }
-.category-card .cat-icon{font-size:2.5rem;margin-bottom:16px;}
+.category-card:hover::before{background:linear-gradient(to top, rgba(74,28,28,.85) 0%, rgba(74,28,28,.4) 100%);}
+.category-card:hover{transform:scale(1.02);}
 .category-card h3{
-  font-family:"Playfair Display",serif;font-size:1.4rem;
-  color:var(--burgundy);margin:0 0 8px;
+  position:absolute;bottom:20px;left:20px;
+  font-family:"Playfair Display",serif;font-size:1.5rem;
+  color:#fff;margin:0;text-shadow:0 2px 8px rgba(0,0,0,.3);
+  background:rgba(255,255,255,.95);color:var(--burgundy);
+  padding:8px 16px;border-radius:6px;
 }
-.category-card p{
-  margin:0;font-size:.9rem;color:var(--ink-soft);line-height:1.5;
-}
-.cat-romance:hover{background:linear-gradient(180deg,#fff 60%,#FFE4EC 100%);}
-.cat-thriller:hover{background:linear-gradient(180deg,#fff 60%,#E8E4FF 100%);}
-.cat-ya:hover{background:linear-gradient(180deg,#fff 60%,#FFF4E4 100%);}
+.category-card p{display:none;}
+.cat-romance{background-image:url('https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=600&q=80');}
+.cat-thriller{background-image:url('https://images.unsplash.com/photo-1587876931567-564ce588bfbd?w=600&q=80');}
+.cat-ya{background-image:url('https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&q=80');}
 @media(max-width:700px){
-  .categories-grid{grid-template-columns:1fr;max-width:320px;}
+  .categories-grid{grid-template-columns:1fr;max-width:400px;}
   .categories-section{padding:48px 20px;}
+  .category-card{height:180px;}
 }
 .coming-link{
   font-family:"DM Mono",monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;
@@ -1069,19 +1072,13 @@ body::before{
   </div>
   <div class="categories-grid">
     <a href="/browse.html?genre=romance" class="category-card cat-romance">
-      <div class="cat-icon">💕</div>
       <h3>Romance</h3>
-      <p>Love stories that make your heart flutter</p>
     </a>
     <a href="/browse.html?genre=thriller" class="category-card cat-thriller">
-      <div class="cat-icon">🔪</div>
       <h3>Thriller</h3>
-      <p>Edge-of-your-seat suspense</p>
     </a>
     <a href="/browse.html?genre=young%20adult" class="category-card cat-ya">
-      <div class="cat-icon">✨</div>
       <h3>Young Adult</h3>
-      <p>Coming-of-age adventures</p>
     </a>
   </div>
 </section>
