@@ -648,6 +648,16 @@ body::before{
 }
 @media (max-width:680px){.shelf{grid-template-columns:repeat(2,1fr);gap:36px 18px;}}
 
+.see-more-btn{
+  grid-column:1/-1;display:block;text-align:center;
+  padding:18px 32px;margin-top:20px;
+  background:var(--burgundy);color:var(--cream);
+  font-family:"DM Mono",monospace;font-size:.85rem;letter-spacing:.1em;
+  text-decoration:none;border-radius:8px;
+  transition:background .2s,transform .2s;
+}
+.see-more-btn:hover{background:var(--copper);transform:translateY(-2px);}
+
 .book{
   display:flex;flex-direction:column;cursor:pointer;
   text-align:left;background:none;border:0;padding:0;color:inherit;font:inherit;
@@ -1357,7 +1367,9 @@ body::before{
     const all = BVPH.getBooks().filter(b => b.status !== 'coming_soon');
     const filtered = filterBooks(all);
     const grid = $('#shelfGrid');
-    // stat counter removed for now
+    const LIMIT = 10;
+    const hasMore = filtered.length > LIMIT;
+    const toShow = filtered.slice(0, LIMIT);
 
     if (state.q) {
       $('#shelfLede').innerHTML = `Showing results for <em>"${esc(state.q)}"</em> · ${filtered.length} found`;
@@ -1375,8 +1387,9 @@ body::before{
       }</div>`;
       return;
     }
-    grid.innerHTML = filtered.map(bookCard).join('');
-    loadCoversForBooks(filtered.map(b => b.id));
+    grid.innerHTML = toShow.map(bookCard).join('') + 
+      (hasMore ? `<a href="/browse" class="see-more-btn">See all ${filtered.length} books →</a>` : '');
+    loadCoversForBooks(toShow.map(b => b.id));
   }
 
   async function loadCoversForBooks(ids) {
