@@ -22,7 +22,7 @@ const BVPH = (() => {
   const K_AUTH        = 'bvph_auth_v1';
   const K_WISHLIST    = 'bvph_wishlist_v1';
   const K_CART        = 'bvph_cart_v1';
-  const PASSWORD      = 'KpearlOng99!';
+  const AUTHORIZED_EMAILS = ['kpearl099@gmail.com', 'phthebookvault@gmail.com'];
 
   const GENRES = [
     'Fiction','Non-Fiction','Thriller','Romance','Fantasy',
@@ -45,7 +45,7 @@ const BVPH = (() => {
   let sb = null;
   if (USE_SUPABASE) {
     sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-      auth: { persistSession: false, autoRefreshToken: false },
+      auth: { persistSession: true, autoRefreshToken: true },
     });
   }
 
@@ -539,11 +539,47 @@ const BVPH = (() => {
   // ---------- AUTH ----------
   const SESSION_MS = 30 * 60 * 1000;
   const _readAuth = () => { try { const raw = localStorage.getItem(K_AUTH); if (!raw || raw === '1') return null; const o = JSON.parse(raw); return o?.at ? o : null; } catch(e){ return null; } };
+  const _writeAuth = (user) => {
+    const email = (user?.email || '').toLowerCase();
+    localStorage.setItem(K_AUTH, JSON.stringify({ at: Date.now(), email }));
+  };
+  const _isAuthorizedEmail = (email) => AUTHORIZED_EMAILS.includes((email || '').toLowerCase());
   const sessionMsLeft = () => { const a = _readAuth(); return a ? Math.max(0, (a.at + SESSION_MS) - Date.now()) : 0; };
+  const getSession = async () => {
+    if (!USE_SUPABASE || !sb?.auth) return null;
+    const { data, error } = await sb.auth.getSession();
+    if (error) throw error;
+    const session = data?.session || null;
+    if (!session?.user || !_isAuthorizedEmail(session.user.email)) return null;
+    if (!_readAuth()) _writeAuth(session.user);
+    return session;
+  };
   const isAuthed = () => sessionMsLeft() > 0;
-  const login = (pw) => { if (pw === PASSWORD) { localStorage.setItem(K_AUTH, JSON.stringify({ at: Date.now() })); return true; } return false; };
-  const logout = () => localStorage.removeItem(K_AUTH);
-  const enforceSession = () => { if (_readAuth() && !isAuthed()) { logout(); return false; } return isAuthed(); };
+  const login = async (email, password) => {
+    if (!USE_SUPABASE || !sb?.auth) throw new Error('Supabase Auth is not configured.');
+    const normalizedEmail = (email || '').toLowerCase().trim();
+    if (!_isAuthorizedEmail(normalizedEmail)) throw new Error('This email is not allowed to access the admin.');
+    const { data, error } = await sb.auth.signInWithPassword({ email: normalizedEmail, password });
+    if (error) throw error;
+    if (!data?.user || !_isAuthorizedEmail(data.user.email)) {
+      await sb.auth.signOut();
+      throw new Error('This email is not allowed to access the admin.');
+    }
+    _writeAuth(data.user);
+    return true;
+  };
+  const logout = async () => {
+    localStorage.removeItem(K_AUTH);
+    if (USE_SUPABASE && sb?.auth) await sb.auth.signOut();
+  };
+  const enforceSession = async () => {
+    const a = _readAuth();
+    if (a && sessionMsLeft() <= 0) { await logout(); return false; }
+    if (!a) return false;
+    const session = await getSession();
+    if (!session) { await logout(); return false; }
+    return true;
+  };
 
   // ---------- UTIL ----------
   const newId = () => (window.crypto?.randomUUID?.() || ('b_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7)));
@@ -630,7 +666,7 @@ const BVPH = (() => {
     getOrders, saveOrders, addOrder, getOrder, markOrderPaymentSent, markOrderPaid, getPaidOrders, getPendingOrders,
     getNotifyRequests, saveNotifyRequests, addNotifyRequest, deleteNotifyRequest,
     newId, fileToDataUrl,
-    isAuthed, login, logout, enforceSession, sessionMsLeft, SESSION_MS,
+    isAuthed, getSession, login, logout, enforceSession, sessionMsLeft, SESSION_MS,
     getWishlist, isInWishlist, addToWishlist, removeFromWishlist, toggleWishlist,
     onWishlistChange, getWishlistBooks,
     getCart, getCartCount, isInCart, addToCart, updateCartQty, removeFromCart, clearCart, onCartChange, getCartBooks, getCartTotal,

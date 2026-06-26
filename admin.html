@@ -825,8 +825,9 @@
   <form class="login-card" id="loginForm" autocomplete="off">
     <svg class="mark"><use href="#pom-mark"/></svg>
     <h1>the vault<span class="b">admin entrance</span></h1>
-    <p class="sub">whispers only. enter the keyword to unlock.</p>
-    <input type="password" id="pwInput" placeholder="password" autofocus>
+    <p class="sub">whispers only. sign in to unlock.</p>
+    <input type="email" id="emailInput" placeholder="email" autocomplete="email" autofocus>
+    <input type="password" id="pwInput" placeholder="password" autocomplete="current-password" style="margin-top:12px;">
     <div class="err" id="loginErr"></div>
     <button type="submit">unlock the vault →</button>
     <a class="back" href="/">← back to the shop</a>
@@ -1811,14 +1812,16 @@
   // ===== LOGIN =====
   const loginScreen = $('#loginScreen');
   const app = $('#app');
-  const showApp = () => { localStorage.setItem('bvph_admin','1'); loginScreen.style.display='none'; app.classList.add('show'); render(); };
+  const showApp = () => { localStorage.setItem('bvph_admin','1'); loginScreen.style.display='none'; app.classList.add('show'); render(); startSessionWatcher(); };
   const showLogin = () => { loginScreen.style.display=''; app.classList.remove('show'); };
 
   // boot: load data from Supabase (or localStorage fallback) and then render
   (async () => {
     try { await BVPH.init(); } catch(e) { console.error('[init]', e); }
     updateBackendPill();
-    if (BVPH.isAuthed()) showApp();
+    try {
+      if (await BVPH.getSession()) showApp();
+    } catch(e) { console.error('[auth session]', e); }
     // live updates from other tabs/devices via Supabase realtime
     BVPH.onChange(() => { if (app.classList.contains('show')) render(); });
   })();
@@ -1831,21 +1834,28 @@
     else { pill.textContent = '● local only'; pill.style.color = '#e87a7a'; pill.style.borderColor = 'rgba(232,122,122,.4)'; }
   }
 
-  $('#loginForm').addEventListener('submit', e => {
+  $('#loginForm').addEventListener('submit', async e => {
     e.preventDefault();
+    const email = $('#emailInput').value.trim();
     const pw = $('#pwInput').value;
-    if (BVPH.login(pw)) {
-      $('#loginErr').textContent='';
+    const btn = e.currentTarget.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = 'unlocking…';
+    $('#loginErr').textContent='';
+    try {
+      await BVPH.login(email, pw);
       showApp();
-      startSessionWatcher();
-    } else {
-      $('#loginErr').textContent='wrong password. try again.';
+    } catch (err) {
+      $('#loginErr').textContent = err?.message || 'login failed. try again.';
       $('#pwInput').select();
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'unlock the vault →';
     }
   });
 
-  const doLogout = (reason) => {
-    BVPH.logout();
+  const doLogout = async (reason) => {
+    await BVPH.logout();
     $('#pwInput').value='';
     showLogin();
     if (reason === 'timeout') {
@@ -1910,8 +1920,8 @@
     if (left <= 0) { doLogout('timeout'); return; }
     setTimeout(() => doLogout('timeout'), left + 200);
     // also poll every 30s as a backup (e.g. clock changes, tab waking)
-    sessionTimerId = setInterval(() => {
-      if (!BVPH.enforceSession()) doLogout('timeout');
+    sessionTimerId = setInterval(async () => {
+      if (!(await BVPH.enforceSession())) doLogout('timeout');
       else updateSessionPill();
     }, 30000);
     updateSessionPill();
@@ -1924,11 +1934,10 @@
     const m = Math.ceil(left / 60000);
     pill.textContent = `session · ${m}m left`;
   };
-  if (BVPH.isAuthed()) startSessionWatcher();
 
   // also re-check whenever the tab regains focus
-  window.addEventListener('focus', () => {
-    if (app.classList.contains('show') && !BVPH.enforceSession()) doLogout('timeout');
+  window.addEventListener('focus', async () => {
+    if (app.classList.contains('show') && !(await BVPH.enforceSession())) doLogout('timeout');
     else updateSessionPill();
   });
 
