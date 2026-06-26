@@ -5014,9 +5014,40 @@ Rules: no em dashes, mention "The Book Vault PH, an online preloved bookshop in 
     }
   });
 
-  // Paste image handler
+  // Paste handler for images and tables
   contentField.addEventListener('paste', async (e) => {
-    const items = e.clipboardData?.items;
+    const clip = e.clipboardData;
+    if (!clip) return;
+
+    // Check for HTML tables first
+    const html = clip.getData('text/html');
+    if (html && html.includes('<table')) {
+      e.preventDefault();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const table = doc.querySelector('table');
+      if (table) {
+        const rows = Array.from(table.querySelectorAll('tr'));
+        if (rows.length > 0) {
+          const mdRows = rows.map(row => {
+            const cells = Array.from(row.querySelectorAll('th, td'));
+            return '| ' + cells.map(c => c.textContent.trim().replace(/\|/g, '\\|').replace(/\n/g, ' ')).join(' | ') + ' |';
+          });
+          // Insert separator after first row (header)
+          if (mdRows.length > 0) {
+            const firstRowCells = rows[0].querySelectorAll('th, td').length;
+            const separator = '| ' + Array(firstRowCells).fill('---').join(' | ') + ' |';
+            mdRows.splice(1, 0, separator);
+          }
+          const mdTable = '\n' + mdRows.join('\n') + '\n';
+          if (window._bvphBlogState) window._bvphBlogState.insertContent(mdTable);
+          return;
+        }
+      }
+    }
+
+    // Check for images
+    const items = clip.items;
     if (!items) return;
     for (const item of items) {
       if (item.type.startsWith('image/')) {
