@@ -1367,7 +1367,7 @@ body::before{
     const all = BVPH.getBooks().filter(b => b.status !== 'coming_soon');
     const filtered = filterBooks(all);
     const grid = $('#shelfGrid');
-    const LIMIT = 10;
+    const LIMIT = 8;
     const hasMore = filtered.length > LIMIT;
     const toShow = filtered.slice(0, LIMIT);
 
