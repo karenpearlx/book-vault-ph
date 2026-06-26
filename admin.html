@@ -762,35 +762,32 @@
 
     <!-- FEATURED PANEL -->
     <div class="panel">
-      <h2>featured <span class="accent">of the month</span></h2>
-      <div class="sub">— curated picks shown at the top of the landing page</div>
+      <h2>featured <span class="accent">author</span></h2>
+      <div class="sub">— showcased in the "Featured Author" section on the homepage</div>
 
       <div class="row">
         <div class="field">
-          <label>featured book of the month</label>
-          <select id="featBookSelect"></select>
-          <div class="hint">pick from your saved books · mark a book as featured here or in the list below</div>
+          <label>select author</label>
+          <select id="featAuthorSelect"></select>
+          <div class="hint">pick an author from your book collection</div>
         </div>
         <div class="field">
-          <label>book description (optional)</label>
-          <textarea id="featBookDesc" placeholder="a short blurb for the featured book…"></textarea>
+          <label>select book to highlight</label>
+          <select id="featBookSelect"></select>
+          <div class="hint">which book by this author to feature</div>
         </div>
       </div>
 
       <div class="row">
-        <div class="field">
-          <label>featured author of the month</label>
-          <input type="text" id="featAuthorName" placeholder="e.g. Shirley Jackson">
-        </div>
-        <div class="field">
-          <label>author bio (optional)</label>
-          <textarea id="featAuthorBio" placeholder="a short note about why you love them…"></textarea>
+        <div class="field" style="flex:1;">
+          <label>book description (optional)</label>
+          <textarea id="featBookDesc" placeholder="a short blurb about this book…"></textarea>
         </div>
       </div>
 
       <div class="btn-row">
-        <button class="btn btn-primary" id="saveFeatBtn">save featured</button>
-        <button class="btn btn-ghost" id="clearFeatBtn">clear all</button>
+        <button class="btn btn-primary" id="saveFeatBtn">save featured author</button>
+        <button class="btn btn-ghost" id="clearFeatBtn">clear</button>
       </div>
     </div>
 
@@ -1693,31 +1690,56 @@
 
   // ===== FEATURED =====
   const refreshFeatured = () => {
-    const books = BVPH.getBooks().filter(b=>!b.demo);
+    const books = BVPH.getBooks().filter(b=>!b.demo && b.status === 'on_hand');
     const feat = BVPH.getFeatured();
-    const sel = $('#featBookSelect');
-    sel.innerHTML = `<option value="">— none selected —</option>` +
-      books.map(b=>`<option value="${b.id}" ${b.id===feat.bookId?'selected':''}>${b.title} · ${b.author}</option>`).join('');
+    
+    // Get unique authors
+    const authors = [...new Set(books.map(b => b.author).filter(Boolean))].sort();
+    const authorSel = $('#featAuthorSelect');
+    const currentAuthor = feat.authorName || '';
+    authorSel.innerHTML = `<option value="">— select author —</option>` +
+      authors.map(a => `<option value="${a}" ${a === currentAuthor ? 'selected' : ''}>${a}</option>`).join('');
+    
+    // Filter books by selected author
+    updateFeaturedBooks();
+    
     $('#featBookDesc').value = feat.bookDescription || '';
-    $('#featAuthorName').value = feat.authorName || '';
-    $('#featAuthorBio').value = feat.authorBio || '';
   };
+  
+  const updateFeaturedBooks = () => {
+    const books = BVPH.getBooks().filter(b=>!b.demo && b.status === 'on_hand');
+    const feat = BVPH.getFeatured();
+    const selectedAuthor = $('#featAuthorSelect').value;
+    const bookSel = $('#featBookSelect');
+    
+    if (!selectedAuthor) {
+      bookSel.innerHTML = `<option value="">— select author first —</option>`;
+      return;
+    }
+    
+    const authorBooks = books.filter(b => b.author === selectedAuthor);
+    bookSel.innerHTML = `<option value="">— select book —</option>` +
+      authorBooks.map(b => `<option value="${b.id}" ${b.id === feat.bookId ? 'selected' : ''}>${b.title}</option>`).join('');
+  };
+  
+  $('#featAuthorSelect').addEventListener('change', updateFeaturedBooks);
 
   $('#saveFeatBtn').addEventListener('click', async () => {
     const bookId = $('#featBookSelect').value || null;
+    const authorName = $('#featAuthorSelect').value || '';
     const btn = $('#saveFeatBtn');
     btn.disabled = true; btn.textContent = 'saving…';
     try {
       await BVPH.saveFeatured({
         bookId,
         bookDescription: $('#featBookDesc').value.trim(),
-        authorName: $('#featAuthorName').value.trim(),
-        authorBio: $('#featAuthorBio').value.trim(),
+        authorName,
+        authorBio: '',
       });
       render();
-      toast('featured saved ✦');
+      toast('featured author saved ✦');
     } catch(e) { console.error(e); toast('save failed'); }
-    finally { btn.disabled = false; btn.textContent = 'save featured'; }
+    finally { btn.disabled = false; btn.textContent = 'save featured author'; }
   });
 
   $('#clearFeatBtn').addEventListener('click', async () => {
