@@ -331,48 +331,72 @@ body::before{
 
 /* ============== COMING SOON BANNER ============== */
 /* Bundle deal banner */
-.bundle-banner{
-  background:linear-gradient(135deg, #FFB347 0%, #E8A135 50%, #D4922A 100%);
-  color:var(--burgundy-deep);padding:36px 40px;text-align:center;
-  position:relative;overflow:hidden;
+/* Perks Banner */
+.perks-banner{
+  background:var(--cream);padding:48px 24px;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
 }
-.bundle-banner::before{
-  content:'';position:absolute;inset:0;opacity:.08;
-  background-image:
-    radial-gradient(circle at 15% 50%, var(--burgundy) 2px, transparent 2px),
-    radial-gradient(circle at 85% 30%, var(--burgundy) 3px, transparent 3px),
-    radial-gradient(circle at 45% 80%, var(--burgundy) 2px, transparent 2px),
-    radial-gradient(circle at 75% 70%, var(--burgundy) 4px, transparent 4px),
-    radial-gradient(circle at 25% 20%, var(--burgundy) 3px, transparent 3px);
-  pointer-events:none;
+.perks-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:40px;
+  max-width:1000px;margin:0 auto;
 }
-.bundle-banner::after{
-  content:'';position:absolute;inset:0;opacity:.06;
-  background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 5c1 0 2 4 2 8s-1 8-2 8-2-4-2-8 1-8 2-8zm0 14c4 0 8 1 8 2s-4 2-8 2-8-1-8-2 4-2 8-2z' fill='%234A1C1C' fill-opacity='.3'/%3E%3C/svg%3E");
-  pointer-events:none;
+.perk-item{display:flex;align-items:flex-start;gap:16px;}
+.perk-icon{
+  width:48px;height:48px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;
 }
-.bundle-banner-content{position:relative;z-index:1;display:flex;flex-direction:column;gap:10px;align-items:center;}
-.bundle-banner-row{display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center;}
-.bundle-banner-item{
-  padding:0 40px;
-  border-right:2px solid rgba(74,28,28,.15);
+.perk-text h4{
+  margin:0 0 6px;font-family:"DM Mono",monospace;font-size:.8rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink);font-weight:600;
 }
-.bundle-banner-item:last-child{border-right:none;}
-.bundle-banner p{
-  margin:0;font-size:1.15rem;letter-spacing:.02em;font-weight:500;
-  display:flex;align-items:center;gap:12px;
+.perk-text p{margin:0;font-size:.9rem;color:var(--ink-soft);line-height:1.5;}
+@media(max-width:800px){
+  .perks-grid{grid-template-columns:1fr;gap:28px;max-width:400px;}
+  .perk-item{text-align:left;}
 }
-.bundle-banner strong{
-  color:var(--burgundy);font-weight:700;font-size:1.2rem;
-  background:rgba(255,255,255,.85);padding:6px 14px;border-radius:8px;
-  box-shadow:0 2px 8px rgba(0,0,0,.1);
+
+/* Blog Section */
+.blog-section{padding:64px 24px;background:#F8F5F2;}
+.blog-section .section-head{text-align:center;margin-bottom:40px;}
+.blog-section h2{font-family:"Playfair Display",serif;font-size:2rem;color:var(--burgundy);margin:0;}
+.blog-section h2 em{font-style:italic;color:var(--copper);}
+.blog-section .lede{color:var(--ink-soft);margin-top:8px;}
+.blog-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:28px;
+  max-width:1100px;margin:0 auto;
 }
-@media(max-width:700px){
-  .bundle-banner-row{flex-direction:column;gap:20px;}
-  .bundle-banner-item{border-right:none;border-bottom:2px solid rgba(74,28,28,.1);padding:0 0 20px 0;}
-  .bundle-banner-item:last-child{border-bottom:none;padding-bottom:0;}
-  .bundle-banner p{font-size:1rem;flex-direction:column;gap:8px;}
-  .bundle-banner strong{font-size:1.1rem;}
+.blog-card{
+  background:#fff;border-radius:12px;overflow:hidden;
+  text-decoration:none;color:var(--ink);
+  box-shadow:0 4px 20px rgba(0,0,0,.04);
+  transition:all .25s ease;
+}
+.blog-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,.08);}
+.blog-card-img{
+  height:180px;background:linear-gradient(135deg,#E8D5CC 0%,#D4C4B5 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:3rem;color:var(--copper);
+}
+.blog-card-body{padding:20px;}
+.blog-card h3{
+  font-family:"Playfair Display",serif;font-size:1.15rem;
+  color:var(--burgundy);margin:0 0 8px;line-height:1.4;
+}
+.blog-card .blog-date{
+  font-family:"DM Mono",monospace;font-size:.7rem;
+  color:var(--ink-soft);letter-spacing:.05em;margin-bottom:10px;
+}
+.blog-card p{margin:0;font-size:.9rem;color:var(--ink-soft);line-height:1.5;}
+.blog-card .read-more{
+  display:inline-block;margin-top:14px;
+  font-family:"DM Mono",monospace;font-size:.75rem;
+  color:var(--copper);text-transform:uppercase;letter-spacing:.08em;font-weight:600;
+}
+.blog-card:hover .read-more{color:var(--burgundy);}
+.blog-empty{text-align:center;padding:40px;color:var(--ink-soft);font-style:italic;}
+@media(max-width:800px){
+  .blog-grid{grid-template-columns:1fr;max-width:400px;}
 }
 
 .coming-soon-banner{
@@ -1068,15 +1092,28 @@ body::before{
   <div class="featured-block" id="featuredBlock"></div>
 </section>
 
-<!-- ============== BUNDLE DEAL BANNER ============== -->
-<div class="bundle-banner">
-  <div class="bundle-banner-content">
-    <div class="bundle-banner-row">
-      <div class="bundle-banner-item">
-        <p>Buy 3+ books <strong>10% off</strong></p>
+<!-- ============== PERKS BANNER ============== -->
+<div class="perks-banner">
+  <div class="perks-grid">
+    <div class="perk-item">
+      <div class="perk-icon">📦</div>
+      <div class="perk-text">
+        <h4>Buy 3+, Get 10% Off</h4>
+        <p>Bundle up your favorites and save on your order!</p>
       </div>
-      <div class="bundle-banner-item">
-        <p>Refer 3 friends <strong>20% off</strong></p>
+    </div>
+    <div class="perk-item">
+      <div class="perk-icon">💌</div>
+      <div class="perk-text">
+        <h4>Refer 3 Friends, Get 20% Off</h4>
+        <p>Share the love and get rewarded on your next purchase.</p>
+      </div>
+    </div>
+    <div class="perk-item">
+      <div class="perk-icon">🚚</div>
+      <div class="perk-text">
+        <h4>Free Shipping</h4>
+        <p>On orders ₱899 and above, delivered nationwide.</p>
       </div>
     </div>
   </div>
@@ -1105,6 +1142,17 @@ body::before{
     </div>
   </div>
   <div class="shelf" id="shelfGrid"></div>
+</section>
+
+<!-- ============== BLOG SECTION ============== -->
+<section class="blog-section" id="blog">
+  <div class="section-head">
+    <h2>From the <em>vault</em></h2>
+    <p class="lede">Book reviews, reading lists, and bookish musings</p>
+  </div>
+  <div class="blog-grid" id="blogGrid">
+    <div class="blog-empty">Blog posts coming soon! 📚</div>
+  </div>
 </section>
 
 <!-- ============== HOW TO ORDER ============== -->
