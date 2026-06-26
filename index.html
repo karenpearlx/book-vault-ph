@@ -337,23 +337,20 @@ body::before{
   border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
 }
 .perks-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:40px;
-  max-width:1000px;margin:0 auto;
+  display:flex;justify-content:center;align-items:center;gap:0;
+  max-width:1100px;margin:0 auto;
 }
-.perk-item{display:flex;align-items:flex-start;gap:16px;}
-.perk-icon{
-  width:48px;height:48px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.8rem;
-}
+.perk-item{flex:1;text-align:center;padding:0 40px;}
+.perk-divider{width:1px;height:60px;background:var(--rule);}
 .perk-text h4{
-  margin:0 0 6px;font-family:"DM Mono",monospace;font-size:.8rem;
+  margin:0 0 8px;font-family:"DM Mono",monospace;font-size:.8rem;
   letter-spacing:.08em;text-transform:uppercase;color:var(--ink);font-weight:600;
 }
 .perk-text p{margin:0;font-size:.9rem;color:var(--ink-soft);line-height:1.5;}
 @media(max-width:800px){
-  .perks-grid{grid-template-columns:1fr;gap:28px;max-width:400px;}
-  .perk-item{text-align:left;}
+  .perks-grid{flex-direction:column;gap:24px;max-width:400px;}
+  .perk-item{padding:0;text-align:center;}
+  .perk-divider{width:60px;height:1px;}
 }
 
 /* Blog Section */
@@ -1093,21 +1090,20 @@ body::before{
 <div class="perks-banner">
   <div class="perks-grid">
     <div class="perk-item">
-      <div class="perk-icon">📦</div>
       <div class="perk-text">
         <h4>Buy 3+, Get 10% Off</h4>
         <p>Bundle up your favorites and save on your order!</p>
       </div>
     </div>
+    <div class="perk-divider"></div>
     <div class="perk-item">
-      <div class="perk-icon">💌</div>
       <div class="perk-text">
         <h4>Refer 3 Friends, Get 20% Off</h4>
         <p>Share the love and get rewarded on your next purchase.</p>
       </div>
     </div>
+    <div class="perk-divider"></div>
     <div class="perk-item">
-      <div class="perk-icon">🚚</div>
       <div class="perk-text">
         <h4>Free Shipping</h4>
         <p>On orders ₱899 and above, delivered nationwide.</p>
