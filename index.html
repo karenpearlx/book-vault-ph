@@ -332,28 +332,46 @@ body::before{
 /* ============== COMING SOON BANNER ============== */
 /* Bundle deal banner */
 .bundle-banner{
-  background:linear-gradient(135deg, #D89A55 0%, #C4863D 100%);
-  color:var(--cream);padding:36px 40px;text-align:center;
+  background:linear-gradient(135deg, #FFB347 0%, #E8A135 50%, #D4922A 100%);
+  color:var(--burgundy-deep);padding:36px 40px;text-align:center;
+  position:relative;overflow:hidden;
 }
-.bundle-banner-content{display:flex;flex-direction:column;gap:10px;align-items:center;}
+.bundle-banner::before{
+  content:'';position:absolute;inset:0;opacity:.08;
+  background-image:
+    radial-gradient(circle at 15% 50%, var(--burgundy) 2px, transparent 2px),
+    radial-gradient(circle at 85% 30%, var(--burgundy) 3px, transparent 3px),
+    radial-gradient(circle at 45% 80%, var(--burgundy) 2px, transparent 2px),
+    radial-gradient(circle at 75% 70%, var(--burgundy) 4px, transparent 4px),
+    radial-gradient(circle at 25% 20%, var(--burgundy) 3px, transparent 3px);
+  pointer-events:none;
+}
+.bundle-banner::after{
+  content:'';position:absolute;inset:0;opacity:.06;
+  background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 5c1 0 2 4 2 8s-1 8-2 8-2-4-2-8 1-8 2-8zm0 14c4 0 8 1 8 2s-4 2-8 2-8-1-8-2 4-2 8-2z' fill='%234A1C1C' fill-opacity='.3'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.bundle-banner-content{position:relative;z-index:1;display:flex;flex-direction:column;gap:10px;align-items:center;}
 .bundle-banner-row{display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center;}
 .bundle-banner-item{
-  padding:0 32px;
-  border-right:1px solid rgba(255,255,255,.25);
+  padding:0 40px;
+  border-right:2px solid rgba(74,28,28,.15);
 }
 .bundle-banner-item:last-child{border-right:none;}
 .bundle-banner p{
-  margin:0;font-size:1.1rem;letter-spacing:.02em;font-weight:500;
+  margin:0;font-size:1.15rem;letter-spacing:.02em;font-weight:500;
+  display:flex;align-items:center;gap:12px;
 }
 .bundle-banner strong{
-  color:#fff;font-weight:700;font-size:1.25rem;
-  background:rgba(0,0,0,.15);padding:4px 12px;border-radius:6px;margin-left:8px;
+  color:var(--burgundy);font-weight:700;font-size:1.2rem;
+  background:rgba(255,255,255,.85);padding:6px 14px;border-radius:8px;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
 }
 @media(max-width:700px){
-  .bundle-banner-row{flex-direction:column;gap:16px;}
-  .bundle-banner-item{border-right:none;border-bottom:1px solid rgba(255,255,255,.15);padding:0 0 16px 0;}
+  .bundle-banner-row{flex-direction:column;gap:20px;}
+  .bundle-banner-item{border-right:none;border-bottom:2px solid rgba(74,28,28,.1);padding:0 0 20px 0;}
   .bundle-banner-item:last-child{border-bottom:none;padding-bottom:0;}
-  .bundle-banner p{font-size:1rem;}
+  .bundle-banner p{font-size:1rem;flex-direction:column;gap:8px;}
   .bundle-banner strong{font-size:1.1rem;}
 }
 
@@ -378,6 +396,43 @@ body::before{
 }
 .coming-soon-banner h2 em{font-style:italic;color:var(--copper);}
 .coming-soon-banner p{margin:0;color:var(--ink-soft);font-size:.95rem;}
+
+/* Categories Section */
+.categories-section{padding:60px 24px;background:var(--cream);}
+.categories-section h2{font-family:"Playfair Display",serif;font-size:2rem;color:var(--burgundy);margin:0;}
+.categories-section h2 em{font-style:italic;color:var(--copper);}
+.categories-section .lede{color:var(--ink-soft);margin-top:8px;}
+.categories-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  max-width:900px;margin:0 auto;
+}
+.category-card{
+  background:#fff;border-radius:16px;padding:32px 24px;text-align:center;
+  text-decoration:none;color:var(--ink);
+  border:1px solid rgba(0,0,0,.06);
+  box-shadow:0 4px 20px rgba(0,0,0,.04);
+  transition:all .25s ease;
+}
+.category-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 8px 30px rgba(0,0,0,.08);
+  border-color:var(--copper);
+}
+.category-card .cat-icon{font-size:2.5rem;margin-bottom:16px;}
+.category-card h3{
+  font-family:"Playfair Display",serif;font-size:1.4rem;
+  color:var(--burgundy);margin:0 0 8px;
+}
+.category-card p{
+  margin:0;font-size:.9rem;color:var(--ink-soft);line-height:1.5;
+}
+.cat-romance:hover{background:linear-gradient(180deg,#fff 60%,#FFE4EC 100%);}
+.cat-thriller:hover{background:linear-gradient(180deg,#fff 60%,#E8E4FF 100%);}
+.cat-ya:hover{background:linear-gradient(180deg,#fff 60%,#FFF4E4 100%);}
+@media(max-width:700px){
+  .categories-grid{grid-template-columns:1fr;max-width:320px;}
+  .categories-section{padding:48px 20px;}
+}
 .coming-link{
   font-family:"DM Mono",monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;
   background:var(--copper);color:var(--burgundy-deep);text-decoration:none;
@@ -978,6 +1033,31 @@ body::before{
     </div>
     <a class="coming-link" href="/coming-soon.html">
       See all books →
+    </a>
+  </div>
+</section>
+
+<!-- ============== POPULAR CATEGORIES ============== -->
+<section class="section categories-section">
+  <div class="section-head" style="text-align:center;margin-bottom:32px;">
+    <h2>Most popular <em>categories</em></h2>
+    <p class="lede">Find your next favorite read</p>
+  </div>
+  <div class="categories-grid">
+    <a href="/browse.html?genre=romance" class="category-card cat-romance">
+      <div class="cat-icon">💕</div>
+      <h3>Romance</h3>
+      <p>Love stories that make your heart flutter</p>
+    </a>
+    <a href="/browse.html?genre=thriller" class="category-card cat-thriller">
+      <div class="cat-icon">🔪</div>
+      <h3>Thriller</h3>
+      <p>Edge-of-your-seat suspense</p>
+    </a>
+    <a href="/browse.html?genre=young%20adult" class="category-card cat-ya">
+      <div class="cat-icon">✨</div>
+      <h3>Young Adult</h3>
+      <p>Coming-of-age adventures</p>
     </a>
   </div>
 </section>
