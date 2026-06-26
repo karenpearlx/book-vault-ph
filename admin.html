@@ -623,6 +623,13 @@
 .notify-actions { margin-top:12px; display:flex; gap:8px; }
 .notify-actions button { padding:6px 12px; font-size:.7rem; border-radius:4px; cursor:pointer; }
 .notify-actions .btn-delete { background:rgba(220,53,69,.15); border:1px solid rgba(220,53,69,.3); color:#dc3545; }
+.avail-badge { font-size:.65rem; padding:2px 8px; border-radius:10px; text-transform:uppercase; letter-spacing:.05em; font-family:'DM Mono',monospace; }
+.avail-badge.available { background:rgba(125,201,125,.2); color:#7dc97d; }
+.avail-badge.not-available { background:rgba(150,150,150,.15); color:#999; }
+.notified-badge { font-size:.65rem; padding:2px 8px; border-radius:10px; background:rgba(100,180,255,.15); color:#64b4ff; font-family:'DM Mono',monospace; }
+.btn-send-email { font-size:.7rem; padding:4px 10px; background:var(--copper); color:var(--cream); border-radius:4px; text-decoration:none; font-family:'DM Mono',monospace; }
+.btn-send-email:hover { background:#c9a066; }
+.btn-tiny { font-size:.6rem; padding:2px 6px; background:transparent; border:1px solid rgba(150,150,150,.3); color:#999; border-radius:3px; cursor:pointer; }
 
 /* AI Image Gen Styles */
 .template-grid { display:flex; flex-wrap:wrap; gap:8px; }
@@ -2271,7 +2278,7 @@
     });
   };
   
-  const renderNotifyRequests = () => {
+  const renderNotifyRequests = async () => {
     const reqs = BVPH.getNotifyRequests();
     $('#notifyCount').textContent = `(${reqs.length})`;
     $('#notifyBadge').textContent = reqs.length;
@@ -2283,6 +2290,11 @@
     }
     $('#notifyEmpty').style.display = 'none';
     
+    // Get all books to check availability
+    const allBooks = await BVPH.getBooks();
+    const bookMap = {};
+    allBooks.forEach(b => { bookMap[b.id] = b; });
+    
     // Group by email
     const grouped = {};
     reqs.forEach(r => {
@@ -2290,8 +2302,16 @@
       if (!grouped[key]) {
         grouped[key] = { email: r.email, phone: r.phone, source: r.source, books: [] };
       }
-      grouped[key].books.push({ id: r.id, bookId: r.bookId, title: r.bookTitle, createdAt: r.createdAt });
-      // Update phone/source if newer request has them
+      const book = bookMap[r.bookId];
+      const isAvailable = book && book.status === 'on_hand';
+      grouped[key].books.push({ 
+        id: r.id, 
+        bookId: r.bookId, 
+        title: r.bookTitle, 
+        createdAt: r.createdAt,
+        notified: r.notified || false,
+        isAvailable
+      });
       if (r.phone && !grouped[key].phone) grouped[key].phone = r.phone;
       if (r.source && !grouped[key].source) grouped[key].source = r.source;
     });
@@ -2300,6 +2320,12 @@
       if (!ts) return '';
       const d = new Date(ts);
       return d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric' });
+    };
+    
+    const makeEmailLink = (email, title) => {
+      const subject = encodeURIComponent(`Good news! "${title}" is now available 📚`);
+      const body = encodeURIComponent(`Hi!\n\nGreat news — the book "${title}" you were waiting for is now available and ready to be purchased!\n\nCheck out our available books here:\nhttps://thebookvaultph.com/browse.html\n\nHappy reading! 📖\n\n— The Book Vault PH`);
+      return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${subject}&body=${body}`;
     };
     
     $('#notifyList').innerHTML = Object.values(grouped).map(g => `
@@ -2313,14 +2339,26 @@
         </div>
         <div class="notify-books">
           ${g.books.map(b => `
-            <div class="notify-book">
-              <span class="notify-book-title">📖 ${escapeHtml(b.title)}</span>
-              <span class="notify-book-date">${formatDate(b.createdAt)}</span>
+            <div class="notify-book" style="flex-wrap:wrap;gap:8px;">
+              <div style="display:flex;align-items:center;gap:8px;flex:1;">
+                <span class="notify-book-title">📖 ${escapeHtml(b.title)}</span>
+                ${b.isAvailable 
+                  ? `<span class="avail-badge available">✓ available</span>` 
+                  : `<span class="avail-badge not-available">not yet</span>`}
+                ${b.notified ? `<span class="notified-badge">✉ notified</span>` : ''}
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span class="notify-book-date">${formatDate(b.createdAt)}</span>
+                ${b.isAvailable && !b.notified ? `
+                  <a href="${makeEmailLink(g.email, b.title)}" target="_blank" class="btn-send-email" onclick="markAsNotified('${b.id}')">📧 send email</a>
+                ` : ''}
+                ${b.notified ? `<button class="btn-tiny" onclick="unmarkNotified('${b.id}')">undo</button>` : ''}
+              </div>
             </div>
           `).join('')}
         </div>
         <div class="notify-actions">
-          ${g.books.map(b => `<button class="btn-delete" onclick="deleteNotifyReq('${b.id}')">Remove "${escapeHtml(b.title).substring(0,15)}..."</button>`).join('')}
+          ${g.books.map(b => `<button class="btn-delete" onclick="deleteNotifyReq('${b.id}')">✕ ${escapeHtml(b.title).substring(0,20)}</button>`).join('')}
         </div>
       </div>
     `).join('');
@@ -2330,6 +2368,28 @@
     BVPH.deleteNotifyRequest(id);
     renderNotifyRequests();
     toast('notification request removed');
+  };
+  
+  window.markAsNotified = (id) => {
+    const reqs = BVPH.getNotifyRequests();
+    const req = reqs.find(r => r.id === id);
+    if (req) {
+      req.notified = true;
+      req.notifiedAt = Date.now();
+      BVPH.saveNotifyRequests(reqs);
+      setTimeout(renderNotifyRequests, 500);
+    }
+  };
+  
+  window.unmarkNotified = (id) => {
+    const reqs = BVPH.getNotifyRequests();
+    const req = reqs.find(r => r.id === id);
+    if (req) {
+      req.notified = false;
+      delete req.notifiedAt;
+      BVPH.saveNotifyRequests(reqs);
+      renderNotifyRequests();
+    }
   };
 
   // ===== EXPENSES =====
