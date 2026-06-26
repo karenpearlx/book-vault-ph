@@ -858,8 +858,10 @@ body::before{
 .bd-info .meta-row{font-family:"DM Mono",monospace;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--copper);margin-bottom:10px;display:flex;gap:14px;flex-wrap:wrap;}
 .bd-info h3{font-family:"Playfair Display",serif;font-weight:500;font-size:clamp(1.6rem,3vw,2.2rem);color:var(--burgundy);line-height:1.05;margin:0 0 6px;}
 .bd-info .by{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--ink-soft);margin:0 0 18px;font-size:1.05rem;}
-.bd-info .summary{color:var(--ink);font-size:1.02rem;line-height:1.55;margin-bottom:24px;}
-.bd-info .summary.empty{font-style:italic;color:#8B7A66;}
+.bd-info .summary{color:var(--ink);font-size:1rem;line-height:1.7;margin-bottom:24px;
+  font-family:"Cormorant Garamond",serif;font-size:1.1rem;
+  padding:16px 20px;background:rgba(107,45,60,.04);border-left:3px solid var(--copper-soft);border-radius:0 8px 8px 0;}
+.bd-info .summary.empty{font-style:italic;color:#8B7A66;background:none;border:none;padding:0;}
 .bd-info .gr-row{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
 .bd-info .gr-rating{display:flex;align-items:center;gap:6px;font-family:"DM Mono",monospace;font-size:.8rem;letter-spacing:.1em;color:var(--copper);}
 .bd-info .gr-rating .stars{color:var(--copper-soft);font-size:1rem;letter-spacing:-1px;}
@@ -1353,7 +1355,7 @@ body::before{
     const stars = rating ? '★'.repeat(Math.round(rating)) + '☆'.repeat(5-Math.round(rating)) : '';
 
     const summary = b.summary
-      ? `<p class="summary">${esc(b.summary)}</p>`
+      ? `<div class="summary">${esc(b.summary).replace(/\n/g, '<br>')}</div>`
       : `<p class="summary empty">No summary yet, but trust the cover.</p>`;
 
     const grRow = (rating || b.goodreads_url) ? `<div class="gr-row">
