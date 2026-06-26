@@ -222,7 +222,8 @@ BVPH.init().then(() => {
   const isWithinSC = order.withinSC;
   const isPaid = order.status === 'paid';
   
-  const paymentHtml = isWithinSC ? `
+  // QR payment section (always shown - book payment)
+  const qrSection = `
     <div class="card">
       <div class="card-header">Scan to <em>pay</em></div>
       <div class="card-sub">BPI / InstaPay / GCash / Maya</div>
@@ -254,15 +255,18 @@ BVPH.init().then(() => {
         </div>
       `}
     </div>
-  ` : `
+  `;
+  
+  // Shipping info (only for outside San Carlos)
+  const shippingSection = !isWithinSC ? `
     <div class="card">
-      <div class="card-header">Cash on <em>Delivery</em></div>
-      <div class="card-sub">Pay when your book arrives</div>
+      <div class="card-header">Shipping <em>fee</em></div>
+      <div class="card-sub">Cash on Delivery (COD)</div>
       
-      <p style="margin-bottom:1.5rem;color:var(--copper-soft);">Your book will be shipped via J&T or LBC. Shipping fee will be added to your total.</p>
+      <p style="margin-bottom:1rem;color:var(--copper-soft);">Pay the book via QR above. Shipping fee is paid to the courier when your book arrives.</p>
       
       <table class="shipping-table">
-        <tr><th>Destination</th><th class="price">Shipping Fee</th></tr>
+        <tr><th>Destination</th><th class="price">Shipping Fee (COD)</th></tr>
         <tr><td>Within Visayas</td><td class="price">₱100 – ₱150</td></tr>
         <tr><td>Luzon</td><td class="price">₱150 – ₱200</td></tr>
         <tr><td>Mindanao</td><td class="price">₱150 – ₱200</td></tr>
@@ -270,14 +274,16 @@ BVPH.init().then(() => {
       
       <div class="note-box">
         <strong>📦 What's next:</strong>
-        <p>We'll message you to confirm your order, final shipping fee, and estimated delivery date before we ship.</p>
+        <p>After we confirm your payment, we'll message you with the exact shipping fee and estimated delivery date before we ship.</p>
       </div>
       
       <p style="font-size:.85rem;color:var(--copper-soft);margin-top:1rem;">
-        Questions about shipping? <a href="/contact.html">Contact us</a>
+        Questions? <a href="/contact.html">Contact us</a>
       </p>
     </div>
-  `;
+  ` : '';
+  
+  const paymentHtml = qrSection + shippingSection;
   
   $('#content').innerHTML = `
     <div class="page-header">
@@ -293,9 +299,10 @@ BVPH.init().then(() => {
       ${booksHtml}
       
       <div class="total-row">
-        <span>Total</span>
-        <span>₱${total}${!isWithinSC ? ' + shipping' : ''}</span>
+        <span>Book total</span>
+        <span>₱${total}</span>
       </div>
+      ${!isWithinSC ? `<p style="font-size:.85rem;color:var(--copper-soft);margin-top:.5rem;">+ shipping fee (COD, see below)</p>` : `<p style="font-size:.85rem;color:var(--copper-soft);margin-top:.5rem;">Free delivery within San Carlos City 🎉</p>`}
       
       <div class="customer-box">
         <h4>Delivering to</h4>
