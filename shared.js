@@ -144,7 +144,7 @@ const BVPH = (() => {
       _books = _readBooksLocal();
       return _books;
     }
-    const { data, error } = await sb.from('books').select('id,title,author,genre,condition,price_bought,price_sell,summary,is_featured,status,rating,goodreads_url,cover_url,created_at').order('created_at', { ascending: false });
+    const { data, error } = await sb.from('books').select('id,title,author,genre,condition,price_bought,price_sell,summary,is_featured,status,rating,goodreads_url,created_at').order('created_at', { ascending: false });
     if (error) {
       console.error('[BVPH] load books error:', error);
       if (_books === null) _books = _readBooksLocal();
