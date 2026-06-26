@@ -99,6 +99,7 @@ const BVPH = (() => {
     rating: r.rating ? Number(r.rating) : null,
     goodreads_url: r.goodreads_url || '',
     featured: !!r.is_featured,
+    has_adaptation: !!r.has_adaptation,
     status: r.status || 'available',
     quantity: r.quantity || 1,
     sale_status: r.sale_status || 'available',
