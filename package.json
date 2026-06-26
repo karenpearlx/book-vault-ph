@@ -1,0 +1,12 @@
+{
+  "name": "book-vault-ph",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "backup": "node scripts/backup.mjs",
+    "sitemap": "node scripts/gen-sitemap.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}

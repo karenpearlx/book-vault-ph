@@ -548,11 +548,12 @@
 .ai-suggestion {
   padding:14px 16px;margin-bottom:10px;border:1px solid var(--border);border-radius:6px;
   background:rgba(0,0,0,.2);cursor:pointer;transition:all .15s ease;
-  font-size:.92rem;line-height:1.5;color:var(--ink-soft);
-  white-space:pre-wrap;
+  font-size:.95rem;line-height:1.5;color:#E8DDD5;
+  white-space:pre-wrap;text-decoration:none;
 }
 .ai-suggestion:hover {
-  border-color:var(--copper-bright);background:rgba(216,154,85,.08);color:var(--ink);
+  border-color:var(--copper-bright);background:rgba(216,154,85,.15);color:#FDF8F3;
+  text-decoration:none;
 }
 .ai-suggestion .ai-num {
   font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
@@ -828,6 +829,7 @@
     <p class="sub">whispers only. sign in to unlock.</p>
     <input type="email" id="emailInput" placeholder="email" autocomplete="email" autofocus>
     <input type="password" id="pwInput" placeholder="password" autocomplete="current-password" style="margin-top:12px;">
+    <label style="display:flex;align-items:center;gap:8px;margin-top:14px;color:#C9B89A;font-size:.85rem;cursor:pointer;"><input type="checkbox" id="rememberMe" style="width:16px;height:16px;cursor:pointer;accent-color:var(--copper-bright);"> remember me</label>
     <div class="err" id="loginErr"></div>
     <button type="submit">unlock the vault →</button>
     <a class="back" href="/">← back to the shop</a>
@@ -1431,7 +1433,7 @@
             <div class="row">
               <div class="field">
                 <label>primary keyword <small style="color:var(--ink-soft);">(SEO target)</small></label>
-                <input type="text" id="bf_primaryKeyword" placeholder="best thriller books philippines">
+                <select id="bf_primaryKeyword"><option value="">-- select keyword --</option></select>
               </div>
               <div class="field">
                 <label>category</label>
@@ -1834,10 +1836,24 @@
     else { pill.textContent = '● local only'; pill.style.color = '#e87a7a'; pill.style.borderColor = 'rgba(232,122,122,.4)'; }
   }
 
+  // Restore saved email on load
+  const savedEmail = localStorage.getItem('bvph_admin_email');
+  if (savedEmail) {
+    $('#emailInput').value = savedEmail;
+    $('#rememberMe').checked = true;
+    $('#pwInput').focus();
+  }
+
   $('#loginForm').addEventListener('submit', async e => {
     e.preventDefault();
     const email = $('#emailInput').value.trim();
     const pw = $('#pwInput').value;
+    // Save or clear email based on remember me
+    if ($('#rememberMe').checked) {
+      localStorage.setItem('bvph_admin_email', email);
+    } else {
+      localStorage.removeItem('bvph_admin_email');
+    }
     const btn = e.currentTarget.querySelector('button[type="submit"]');
     btn.disabled = true;
     btn.textContent = 'unlocking…';
@@ -4164,7 +4180,8 @@ $('#downloadAllWatermarked')?.addEventListener('click', () => {
     $b('#bf_slug').value = p.slug || '';
     $b('#bf_slugPreview').textContent = p.slug || 'your-slug';
     $b('#bf_category').value = p.category || '';
-    $b('#bf_primaryKeyword').value = p.primary_keyword || '';
+    if (window._bvphRefreshKeywordDropdown) window._bvphRefreshKeywordDropdown(p.primary_keyword || '');
+    else $b('#bf_primaryKeyword').value = p.primary_keyword || '';
     $b('#bf_excerpt').value = p.excerpt || '';
     $b('#bf_excerptCount').textContent = (p.excerpt || '').length;
     $b('#bf_image').value = p.featured_image || '';
@@ -4442,7 +4459,7 @@ $('#downloadAllWatermarked')?.addEventListener('click', () => {
   $b('#blogPreviewBtn').addEventListener('click', () => {
     const slug = $b('#bf_slug').value.trim();
     if (!slug) { setMsg('save first to preview', 'err'); return; }
-    window.open(`/blog/${encodeURIComponent(slug)}?preview=1`, '_blank');
+    window.open(`/blog/post.html?slug=${encodeURIComponent(slug)}&preview=1`, '_blank');
   });
 
   // ---------- Duplicate post ----------
@@ -4647,6 +4664,50 @@ $('#downloadAllWatermarked')?.addEventListener('click', () => {
     });
   }
   setTimeout(boot, 500);
+})();
+
+// ============================================================
+// PRIMARY KEYWORD DROPDOWN (from blog_keywords table)
+// ============================================================
+(function initKeywordDropdown(){
+  const sb = BVPH.supabase && BVPH.supabase();
+  const sel = document.getElementById('bf_primaryKeyword');
+  if (!sel) return;
+
+  async function loadKeywords(){
+    if (!sb) return [];
+    const { data, error } = await sb.from('blog_keywords').select('keyword, phase').order('phase').order('keyword');
+    if (error) { console.warn('[keywords] load', error); return []; }
+    return data || [];
+  }
+
+  async function renderDropdown(currentValue){
+    const keywords = await loadKeywords();
+    sel.innerHTML = '<option value="">-- select keyword --</option>';
+    let currentPhase = 0;
+    keywords.forEach(k => {
+      if (k.phase !== currentPhase) {
+        const sep = document.createElement('option');
+        sep.disabled = true;
+        sep.textContent = `── Phase ${k.phase} ──`;
+        sel.appendChild(sep);
+        currentPhase = k.phase;
+      }
+      const o = document.createElement('option');
+      o.value = k.keyword;
+      o.textContent = k.keyword;
+      sel.appendChild(o);
+    });
+    if (currentValue) sel.value = currentValue;
+    window._bvphKeywords = keywords;
+  }
+
+  function boot(){
+    if (!BVPH.supabase || !BVPH.supabase()) return setTimeout(boot, 300);
+    renderDropdown();
+  }
+  setTimeout(boot, 500);
+  window._bvphRefreshKeywordDropdown = renderDropdown;
 })();
 
 // ============================================================
