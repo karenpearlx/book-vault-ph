@@ -593,8 +593,18 @@
 .order-footer { display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid rgba(216,154,85,.1); }
 .order-total { font-family:'DM Mono',monospace; color:var(--copper); font-weight:600; }
 .order-date { font-size:.75rem; color:#8B7A66; }
-.order-card .btn-sm { margin-top:10px; padding:8px 14px; font-size:.75rem; border-radius:6px; cursor:pointer; background:rgba(125,201,125,.2); border:1px solid rgba(125,201,125,.4); color:#7dc97d; }
-.order-card .btn-sm:hover { background:rgba(125,201,125,.3); }
+.order-actions { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+.order-card .btn-sm { padding:8px 14px; font-size:.75rem; border-radius:6px; cursor:pointer; }
+.order-card .btn-sm:hover { opacity:.9; }
+.order-card .btn-pending { background:rgba(255,193,7,.2); border:1px solid rgba(255,193,7,.4); color:#ffc107; }
+.order-card .btn-sold { background:rgba(125,201,125,.2); border:1px solid rgba(125,201,125,.4); color:#7dc97d; }
+.order-card .btn-delete { background:rgba(220,53,69,.15); border:1px solid rgba(220,53,69,.3); color:#dc3545; }
+.order-card.processing { border-left-color:#ffc107; }
+.order-card.new { border-left-color:#64b4ff; }
+.order-status.processing { background:rgba(255,193,7,.15); color:#ffc107; }
+.order-status.new { background:rgba(100,180,255,.15); color:#64b4ff; }
+.order-card.sold { border-left-color:#7dc97d; }
+.order-status.sold { background:rgba(125,201,125,.2); color:#7dc97d; }
 
 /* AI Image Gen Styles */
 .template-grid { display:flex; flex-wrap:wrap; gap:8px; }
@@ -863,10 +873,16 @@
     <!-- SUB-TAB: SOLD -->
     <div class="sub-tab-content" id="subtab-sold">
     <div class="panel">
-      <h2><span class="accent">sold</span> <span id="soldCount" style="opacity:.6;font-weight:normal;font-size:1rem;">(0)</span></h2>
-      <div class="sub">— completed sales</div>
+      <h2><span class="accent">sold</span> books <span id="soldCount" style="opacity:.6;font-weight:normal;font-size:1rem;">(0)</span></h2>
+      <div class="sub">— books marked as sold</div>
       <div id="soldList" class="status-list" style="margin-top:20px;"></div>
       <div id="soldEmpty" class="empty" style="padding:24px;font-size:.9rem;">no sold books yet</div>
+    </div>
+    <div class="panel" style="margin-top:20px;">
+      <h2><span class="accent">sold</span> orders <span id="soldOrdersCount" style="opacity:.6;font-weight:normal;font-size:1rem;">(0)</span></h2>
+      <div class="sub">— completed customer orders</div>
+      <div id="soldOrdersList" class="status-list" style="margin-top:20px;"></div>
+      <div id="soldOrdersEmpty" class="empty" style="padding:24px;font-size:.9rem;">no sold orders yet</div>
     </div>
     </div><!-- end subtab-sold -->
 
@@ -878,8 +894,8 @@
       
       <div style="display:flex;gap:12px;margin:20px 0;flex-wrap:wrap;">
         <button class="sub-tab-btn active" data-orderfilter="all" onclick="filterOrders('all')">all</button>
-        <button class="sub-tab-btn" data-orderfilter="pending" onclick="filterOrders('pending')">pending</button>
-        <button class="sub-tab-btn" data-orderfilter="paid" onclick="filterOrders('paid')">paid ✓</button>
+        <button class="sub-tab-btn" data-orderfilter="paid" onclick="filterOrders('paid')">new 💸</button>
+        <button class="sub-tab-btn" data-orderfilter="pending" onclick="filterOrders('pending')">processing ⏳</button>
       </div>
       
       <div id="ordersList" class="status-list" style="margin-top:20px;"></div>
@@ -2052,6 +2068,7 @@
     
     // Render orders
     renderOrders();
+    renderSoldOrders();
 
     // Attach event listeners
     $$('[data-marksold]').forEach(btn => btn.addEventListener('click', async () => {
@@ -2078,11 +2095,11 @@
   };
   
   const renderOrders = () => {
-    // Only show orders where customer clicked "Payment sent" (payment_sent) or already confirmed (paid)
-    const allOrders = BVPH.getOrders().filter(o => o.status === 'payment_sent' || o.status === 'paid');
+    // Show orders: payment_sent (new), pending (processing), sold handled in sold tab
+    const allOrders = BVPH.getOrders().filter(o => o.status === 'payment_sent' || o.status === 'pending');
     let orders = allOrders;
-    if (orderFilter === 'pending') orders = allOrders.filter(o => o.status === 'payment_sent');
-    if (orderFilter === 'paid') orders = allOrders.filter(o => o.status === 'paid');
+    if (orderFilter === 'pending') orders = allOrders.filter(o => o.status === 'pending');
+    if (orderFilter === 'paid') orders = allOrders.filter(o => o.status === 'payment_sent'); // "paid" filter = new payment sent
     
     $('#ordersCount').textContent = `(${allOrders.length})`;
     $('#ordersBadge').textContent = allOrders.filter(o => o.status === 'payment_sent').length;
@@ -2103,8 +2120,8 @@
     $('#ordersList').innerHTML = orders.map(o => {
       const books = o.isCart ? o.books : [{ title: o.bookTitle, author: o.bookAuthor, price: o.bookPrice }];
       const total = o.isCart ? books.reduce((sum, b) => sum + (Number(b.price) || 0), 0) : Number(o.bookPrice) || 0;
-      const statusClass = o.status === 'paid' ? 'paid' : 'pending';
-      const statusText = o.status === 'paid' ? '✓ Confirmed' : 'Payment sent';
+      const statusClass = o.status === 'pending' ? 'processing' : 'new';
+      const statusText = o.status === 'pending' ? '⏳ Processing' : '💸 Payment sent';
       
       return `<div class="order-card ${statusClass}">
         <div class="order-header">
@@ -2123,15 +2140,92 @@
           <span class="order-total">Total: ₱${total}</span>
           <span class="order-date">${formatDate(o.createdAt)}</span>
         </div>
-        ${o.status !== 'paid' ? `<button class="btn btn-sm" onclick="markOrderPaid('${o.id}')">Mark as paid</button>` : ''}
+        <div class="order-actions">
+          ${o.status === 'payment_sent' ? `<button class="btn btn-sm btn-pending" onclick="markOrderPending('${o.id}')">Mark pending</button>` : ''}
+          ${o.status === 'pending' ? `<button class="btn btn-sm btn-sold" onclick="markOrderSold('${o.id}')">Mark as sold</button>` : ''}
+          <button class="btn btn-sm btn-delete" onclick="deleteOrder('${o.id}')">Delete</button>
+        </div>
       </div>`;
     }).join('');
   };
   
-  window.markOrderPaid = (id) => {
-    BVPH.markOrderPaid(id);
+  window.markOrderPending = (id) => {
+    const orders = BVPH.getOrders();
+    const order = orders.find(o => o.id === id);
+    if (order) {
+      order.status = 'pending';
+      order.pendingAt = Date.now();
+      BVPH.saveOrders(orders);
+    }
     renderOrders();
-    toast('order marked as paid ✦');
+    toast('order marked as pending ⏳');
+  };
+  
+  window.markOrderSold = (id) => {
+    const orders = BVPH.getOrders();
+    const order = orders.find(o => o.id === id);
+    if (order) {
+      order.status = 'sold';
+      order.soldAt = Date.now();
+      BVPH.saveOrders(orders);
+    }
+    renderOrders();
+    renderSoldOrders();
+    toast('order marked as sold ✦');
+  };
+  
+  window.deleteOrder = (id) => {
+    if (!confirm('Delete this order?')) return;
+    const orders = BVPH.getOrders().filter(o => o.id !== id);
+    BVPH.saveOrders(orders);
+    renderOrders();
+    renderSoldOrders();
+    toast('order deleted');
+  };
+  
+  const renderSoldOrders = () => {
+    const soldOrders = BVPH.getOrders().filter(o => o.status === 'sold');
+    $('#soldOrdersCount').textContent = `(${soldOrders.length})`;
+    
+    if (!soldOrders.length) {
+      $('#soldOrdersList').innerHTML = '';
+      $('#soldOrdersEmpty').style.display = 'block';
+      return;
+    }
+    $('#soldOrdersEmpty').style.display = 'none';
+    
+    const formatDate = (ts) => {
+      if (!ts) return '';
+      const d = new Date(ts);
+      return d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    };
+    
+    $('#soldOrdersList').innerHTML = soldOrders.map(o => {
+      const books = o.isCart ? o.books : [{ title: o.bookTitle, author: o.bookAuthor, price: o.bookPrice }];
+      const total = o.isCart ? books.reduce((sum, b) => sum + (Number(b.price) || 0), 0) : Number(o.bookPrice) || 0;
+      
+      return `<div class="order-card sold">
+        <div class="order-header">
+          <span class="order-id">${o.id}</span>
+          <span class="order-status sold">✓ Sold</span>
+        </div>
+        <div class="order-customer">
+          <strong>${o.customerName || 'Unknown'}</strong>
+          ${o.withinSC ? '<span class="loc-badge sc">San Carlos</span>' : '<span class="loc-badge outside">Outside SC</span>'}
+        </div>
+        ${o.address ? `<div class="order-address">${o.address}</div>` : ''}
+        <div class="order-books">
+          ${books.map(b => `<div class="order-book">📖 ${b.title} <span class="order-book-price">₱${b.price || 0}</span></div>`).join('')}
+        </div>
+        <div class="order-footer">
+          <span class="order-total">Total: ₱${total}</span>
+          <span class="order-date">${formatDate(o.soldAt || o.createdAt)}</span>
+        </div>
+        <div class="order-actions">
+          <button class="btn btn-sm btn-delete" onclick="deleteOrder('${o.id}')">Delete</button>
+        </div>
+      </div>`;
+    }).join('');
   };
 
   // ===== EXPENSES =====
