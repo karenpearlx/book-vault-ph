@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/book/:slug", "destination": "/book/index.html" },
-    { "source": "/blog/:slug", "destination": "/blog/post.html" }
+    { "source": "/book/:path*", "destination": "/book/index.html" },
+    { "source": "/blog/:path*", "destination": "/blog/post.html" }
   ]
 }
