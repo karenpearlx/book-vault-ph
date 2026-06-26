@@ -505,6 +505,8 @@
 .sub-tab-btn.active .tab-badge { background:rgba(216,154,85,.4); }
 .sub-tab-content { display:none; }
 .sub-tab-content.active { display:block; }
+.msg-tab-content { display:none; }
+.msg-tab-content.active { display:block; }
 @media(max-width:680px){
   .sub-tab-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:12px 0;gap:6px;}
   .sub-tab-btn{white-space:nowrap;flex-shrink:0;padding:8px 12px;font-size:.6rem;}
@@ -605,6 +607,22 @@
 .order-status.new { background:rgba(100,180,255,.15); color:#64b4ff; }
 .order-card.sold { border-left-color:#7dc97d; }
 .order-status.sold { background:rgba(125,201,125,.2); color:#7dc97d; }
+
+/* Notify cards */
+.notify-group { background:rgba(0,0,0,.25); border:1px solid rgba(216,154,85,.15); border-radius:10px; padding:16px; margin-bottom:12px; }
+.notify-group:hover { border-color:rgba(216,154,85,.35); }
+.notify-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; flex-wrap:wrap; gap:8px; }
+.notify-email { font-weight:600; color:var(--copper); font-size:.95rem; }
+.notify-phone { font-family:'DM Mono',monospace; font-size:.8rem; color:#8B7A66; }
+.notify-source { font-size:.7rem; padding:3px 8px; background:rgba(100,180,255,.15); color:#64b4ff; border-radius:4px; text-transform:uppercase; }
+.notify-books { margin-top:10px; }
+.notify-book { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-top:1px solid rgba(216,154,85,.1); }
+.notify-book:first-child { border-top:none; padding-top:0; }
+.notify-book-title { color:var(--cream); font-style:italic; }
+.notify-book-date { font-size:.75rem; color:#8B7A66; }
+.notify-actions { margin-top:12px; display:flex; gap:8px; }
+.notify-actions button { padding:6px 12px; font-size:.7rem; border-radius:4px; cursor:pointer; }
+.notify-actions .btn-delete { background:rgba(220,53,69,.15); border:1px solid rgba(220,53,69,.3); color:#dc3545; }
 
 /* AI Image Gen Styles */
 .template-grid { display:flex; flex-wrap:wrap; gap:8px; }
@@ -963,6 +981,12 @@
 
     <!-- ============= MESSAGES TAB ============= -->
     <div class="tab-content" id="tab-messages">
+    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+      <button class="sub-tab-btn active" data-msgtab="contact" onclick="switchMsgTab('contact')">contact messages</button>
+      <button class="sub-tab-btn" data-msgtab="notify" onclick="switchMsgTab('notify')">to be notified <span id="notifyBadge" class="tab-badge">0</span></button>
+    </div>
+    
+    <div class="msg-tab-content active" id="msgtab-contact">
     <div class="panel">
       <h2><span class="accent">messages</span></h2>
       <div class="sub">— contact form submissions</div>
@@ -970,6 +994,18 @@
       <div id="messagesList" class="messages-list" style="margin-top:20px;"></div>
       <div id="messagesEmpty" class="empty" style="padding:24px;font-size:.9rem;">no messages yet</div>
     </div>
+    </div>
+    
+    <div class="msg-tab-content" id="msgtab-notify">
+    <div class="panel">
+      <h2>to be <span class="accent">notified</span> <span id="notifyCount" style="opacity:.6;font-weight:normal;font-size:1rem;">(0)</span></h2>
+      <div class="sub">— people waiting for book availability</div>
+      
+      <div id="notifyList" style="margin-top:20px;"></div>
+      <div id="notifyEmpty" class="empty" style="padding:24px;font-size:.9rem;">no notification requests yet</div>
+    </div>
+    </div>
+    
     </div><!-- end tab-messages -->
 
     <!-- ============= STUDIO TAB ============= -->
@@ -2063,6 +2099,7 @@
     // Render orders
     renderOrders();
     renderSoldOrders();
+    renderNotifyRequests();
 
     // Attach event listeners
     $$('[data-marksold]').forEach(btn => btn.addEventListener('click', async () => {
@@ -2165,6 +2202,7 @@
     }
     renderOrders();
     renderSoldOrders();
+    renderNotifyRequests();
     toast('order marked as sold ✦');
   };
   
@@ -2174,6 +2212,7 @@
     BVPH.saveOrders(orders);
     renderOrders();
     renderSoldOrders();
+    renderNotifyRequests();
     toast('order deleted');
   };
   
@@ -2220,6 +2259,77 @@
         </div>
       </div>`;
     }).join('');
+  };
+
+  // ===== NOTIFY REQUESTS =====
+  window.switchMsgTab = (tab) => {
+    document.querySelectorAll('[data-msgtab]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.msgtab === tab);
+    });
+    document.querySelectorAll('.msg-tab-content').forEach(el => {
+      el.classList.toggle('active', el.id === 'msgtab-' + tab);
+    });
+  };
+  
+  const renderNotifyRequests = () => {
+    const reqs = BVPH.getNotifyRequests();
+    $('#notifyCount').textContent = `(${reqs.length})`;
+    $('#notifyBadge').textContent = reqs.length;
+    
+    if (!reqs.length) {
+      $('#notifyList').innerHTML = '';
+      $('#notifyEmpty').style.display = 'block';
+      return;
+    }
+    $('#notifyEmpty').style.display = 'none';
+    
+    // Group by email
+    const grouped = {};
+    reqs.forEach(r => {
+      const key = r.email.toLowerCase();
+      if (!grouped[key]) {
+        grouped[key] = { email: r.email, phone: r.phone, source: r.source, books: [] };
+      }
+      grouped[key].books.push({ id: r.id, bookId: r.bookId, title: r.bookTitle, createdAt: r.createdAt });
+      // Update phone/source if newer request has them
+      if (r.phone && !grouped[key].phone) grouped[key].phone = r.phone;
+      if (r.source && !grouped[key].source) grouped[key].source = r.source;
+    });
+    
+    const formatDate = (ts) => {
+      if (!ts) return '';
+      const d = new Date(ts);
+      return d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric' });
+    };
+    
+    $('#notifyList').innerHTML = Object.values(grouped).map(g => `
+      <div class="notify-group">
+        <div class="notify-header">
+          <div>
+            <div class="notify-email">${escapeHtml(g.email)}</div>
+            ${g.phone ? `<div class="notify-phone">📱 ${escapeHtml(g.phone)}</div>` : ''}
+          </div>
+          ${g.source ? `<span class="notify-source">${escapeHtml(g.source)}</span>` : ''}
+        </div>
+        <div class="notify-books">
+          ${g.books.map(b => `
+            <div class="notify-book">
+              <span class="notify-book-title">📖 ${escapeHtml(b.title)}</span>
+              <span class="notify-book-date">${formatDate(b.createdAt)}</span>
+            </div>
+          `).join('')}
+        </div>
+        <div class="notify-actions">
+          ${g.books.map(b => `<button class="btn-delete" onclick="deleteNotifyReq('${b.id}')">Remove "${escapeHtml(b.title).substring(0,15)}..."</button>`).join('')}
+        </div>
+      </div>
+    `).join('');
+  };
+  
+  window.deleteNotifyReq = (id) => {
+    BVPH.deleteNotifyRequest(id);
+    renderNotifyRequests();
+    toast('notification request removed');
   };
 
   // ===== EXPENSES =====

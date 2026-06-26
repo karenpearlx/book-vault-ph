@@ -18,6 +18,7 @@ const BVPH = (() => {
   const K_BOOKS_LOCAL = 'bvph_books_v1';
   const K_FEAT_LOCAL  = 'bvph_featured_v1';
   const K_ORDERS      = 'bvph_orders_v1';
+  const K_NOTIFY      = 'bvph_notify_v1';
   const K_AUTH        = 'bvph_auth_v1';
   const K_WISHLIST    = 'bvph_wishlist_v1';
   const K_CART        = 'bvph_cart_v1';
@@ -494,6 +495,22 @@ const BVPH = (() => {
   };
   const getPaidOrders = () => getOrders().filter(o => o.status === 'paid');
   const getPendingOrders = () => getOrders().filter(o => o.status === 'payment_sent');
+  
+  // Notify requests
+  const getNotifyRequests = () => { try { const r = localStorage.getItem(K_NOTIFY); return r ? JSON.parse(r) : []; } catch(e){ return []; } };
+  const saveNotifyRequests = (reqs) => localStorage.setItem(K_NOTIFY, JSON.stringify(reqs));
+  const addNotifyRequest = (req) => {
+    const reqs = getNotifyRequests();
+    const id = 'n_' + Date.now().toString(36) + Math.random().toString(36).slice(2,5);
+    const full = { id, createdAt: Date.now(), ...req };
+    reqs.unshift(full);
+    saveNotifyRequests(reqs);
+    return full;
+  };
+  const deleteNotifyRequest = (id) => {
+    const reqs = getNotifyRequests().filter(r => r.id !== id);
+    saveNotifyRequests(reqs);
+  };
 
   // ---------- AUTH ----------
   const SESSION_MS = 30 * 60 * 1000;
@@ -587,6 +604,7 @@ const BVPH = (() => {
     getBooks, getBook, getFeatured, getCover, getCovers,
     saveBooks, addBook, updateBook, deleteBook, setFeaturedBook, saveFeatured,
     getOrders, saveOrders, addOrder, getOrder, markOrderPaymentSent, markOrderPaid, getPaidOrders, getPendingOrders,
+    getNotifyRequests, saveNotifyRequests, addNotifyRequest, deleteNotifyRequest,
     newId, fileToDataUrl,
     isAuthed, login, logout, enforceSession, sessionMsLeft, SESSION_MS,
     getWishlist, isInWishlist, addToWishlist, removeFromWishlist, toggleWishlist,

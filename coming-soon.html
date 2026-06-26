@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
 <title>Coming Soon — The Book Vault PH</title>
+<meta name="description" content="See what books are arriving soon at The Book Vault PH. Get notified when your favorite titles become available.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Book Vault PH">
+<meta property="og:title" content="Coming Soon — The Book Vault PH">
+<meta property="og:description" content="See what books are arriving soon. Get notified when your favorite titles become available.">
+<meta property="og:url" content="https://thebookvaultph.com/coming-soon.html">
+<meta property="og:image" content="https://thebookvaultph.com/og-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Coming Soon — The Book Vault PH">
+<meta name="twitter:description" content="See what books are arriving soon at The Book Vault PH.">
+<meta name="twitter:image" content="https://thebookvaultph.com/og-preview.png">
 <meta name="description" content="Books arriving soon at The Book Vault PH. Preview upcoming preloved books before they hit the shelf." />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="theme-color" content="#4A1C2A">
@@ -272,8 +283,9 @@ body::before{
 .remind-modal p{color:var(--ink-soft);font-size:.95rem;margin:0 0 20px;}
 .remind-modal #remindBookTitle{font-style:italic;color:var(--ink);}
 #remindForm{display:flex;flex-direction:column;gap:12px;}
-#remindForm input{padding:14px 16px;border:1px solid var(--rule);border-radius:6px;font-size:1rem;}
-#remindForm input:focus{outline:none;border-color:var(--copper);}
+#remindForm input,#remindForm select{padding:14px 16px;border:1px solid var(--rule);border-radius:6px;font-size:1rem;background:var(--cream);}
+#remindForm input:focus,#remindForm select:focus{outline:none;border-color:var(--copper);}
+#remindForm select{color:var(--ink);cursor:pointer;}
 #remindForm button{padding:14px;background:var(--burgundy);border:none;border-radius:6px;color:var(--cream);font-family:"DM Mono",monospace;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
 #remindForm button:hover{background:var(--copper);}
 .remind-note{font-size:.75rem;color:var(--ink-soft);margin-top:16px !important;}
@@ -480,12 +492,22 @@ body::before{
   <div class="remind-modal" onclick="event.stopPropagation()">
     <button class="remind-close" onclick="closeReminder()">×</button>
     <h3>🔔 Get notified</h3>
-    <p id="remindBookTitle">when this book becomes available</p>
+    <p>We'll let you know when <span id="remindBookTitle" style="font-style:italic;color:var(--burgundy);"></span> becomes available</p>
     <form id="remindForm" onsubmit="submitReminder(event)">
       <input type="email" id="remindEmail" placeholder="Your email" required>
+      <input type="tel" id="remindPhone" placeholder="Phone number (optional)">
+      <select id="remindSource" required>
+        <option value="">How did you hear about us?</option>
+        <option value="facebook">Facebook</option>
+        <option value="instagram">Instagram</option>
+        <option value="tiktok">TikTok</option>
+        <option value="friend">Friend / Word of mouth</option>
+        <option value="google">Google search</option>
+        <option value="other">Other</option>
+      </select>
       <button type="submit" id="remindSubmit">Notify me</button>
     </form>
-    <p class="remind-note">We'll only email you once when this book is ready.</p>
+    <p class="remind-note">We'll only contact you once when this book is ready.</p>
   </div>
 </div>
 </main>
@@ -800,6 +822,57 @@ body::before{
     renderCart();
   }
 
+  // Reminder modal
+  let remindBookId = null;
+  let remindBookTitle = '';
+  
+  function openReminder(bookId, title) {
+    remindBookId = bookId;
+    remindBookTitle = title;
+    document.getElementById('remindBookTitle').textContent = title;
+    document.getElementById('remindEmail').value = '';
+    document.getElementById('remindPhone').value = '';
+    document.getElementById('remindSource').value = '';
+    document.getElementById('remindBg').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  function closeReminder() {
+    document.getElementById('remindBg').classList.remove('show');
+    document.body.style.overflow = '';
+    remindBookId = null;
+  }
+  
+  function submitReminder(e) {
+    e.preventDefault();
+    const email = document.getElementById('remindEmail').value.trim();
+    const phone = document.getElementById('remindPhone').value.trim();
+    const source = document.getElementById('remindSource').value;
+    
+    if (!email || !source) return;
+    
+    BVPH.addNotifyRequest({
+      bookId: remindBookId,
+      bookTitle: remindBookTitle,
+      email,
+      phone,
+      source
+    });
+    
+    BVPH.track('notify_request', { bookId: remindBookId, source });
+    
+    // Show success
+    document.getElementById('remindForm').innerHTML = `
+      <div style="padding:20px 0;color:var(--burgundy);">
+        <div style="font-size:2rem;margin-bottom:10px;">✓</div>
+        <p style="margin:0;font-weight:500;">You're on the list!</p>
+        <p style="margin:8px 0 0;font-size:.9rem;color:var(--ink-soft);">We'll notify you when this book is available.</p>
+      </div>
+    `;
+    
+    setTimeout(closeReminder, 2000);
+  }
+
   // expose to window for onclick handlers
   window.openDetail = openDetail;
   window.closeDetail = closeDetail;
@@ -812,6 +885,9 @@ body::before{
   window.closeCart = closeCart;
   window.addToCart = addToCart;
   window.removeFromCart = removeFromCart;
+  window.openReminder = openReminder;
+  window.closeReminder = closeReminder;
+  window.submitReminder = submitReminder;
 
   const PAGE_SIZE = 30;
   let currentPage = 1;
