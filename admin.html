@@ -779,6 +779,22 @@
       </div>
 
       <div class="row">
+        <div class="field">
+          <label>author photo</label>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div id="featAuthorPhotoPreview" style="width:80px;height:80px;border-radius:50%;background:var(--rule);background-size:cover;background-position:center;flex-shrink:0;"></div>
+            <div style="flex:1;">
+              <input type="text" id="featAuthorPhotoUrl" placeholder="paste image URL...">
+              <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
+                <span style="font-size:.75rem;color:var(--ink-soft);">or</span>
+                <label class="btn btn-sm" style="cursor:pointer;margin:0;">
+                  upload file
+                  <input type="file" id="featAuthorPhotoFile" accept="image/*" style="display:none;">
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="field" style="flex:1;">
           <label>book description (optional)</label>
           <textarea id="featBookDesc" placeholder="a short blurb about this book…"></textarea>
@@ -877,7 +893,6 @@
               <th>price</th>
               <th>qty</th>
               <th>rating</th>
-              <th>featured</th>
               <th>status</th>
               <th></th>
             </tr>
@@ -1273,12 +1288,6 @@
       </div>
       <div class="row">
         <div class="field">
-          <label>featured</label>
-          <div class="checkrow"><input type="checkbox" id="f_featured"><label for="f_featured">mark as featured book of the month</label></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="field">
           <label>price bought (₱) · internal</label>
           <input type="number" id="f_cost" min="0" step="1" placeholder="0">
           <div class="hint">cost to you. never shown on the public site.</div>
@@ -1567,7 +1576,6 @@
     $('#f_condition').value = book?.condition || BVPH.CONDITIONS[0];
     $('#f_status').value = book?.status || 'available';
     $('#f_quantity').value = book?.quantity || 1;
-    $('#f_featured').checked = !!book?.featured;
     $('#f_cost').value = book?.costPrice ?? '';
     $('#f_price').value = book?.sellPrice ?? '';
     $('#f_coverUrl').value = (book?.cover && !book.cover.startsWith('data:')) ? book.cover : '';
@@ -1645,9 +1653,6 @@
     let books = BVPH.getBooks();
     if (books.some(b=>b.demo)) books = books.filter(b=>!b.demo);
 
-    const isFeatured = $('#f_featured').checked;
-    if (isFeatured) books.forEach(b=>{ if (b.id !== id) b.featured = false; });
-
     const existing = books.find(b=>b.id===id);
     const payload = {
       id,
@@ -1663,7 +1668,6 @@
       summary: $('#f_summary').value.trim(),
       rating: parseFloat($('#f_rating').value) || null,
       goodreads_url: $('#f_goodreads').value.trim() || null,
-      featured: isFeatured,
       createdAt: existing?.createdAt || Date.now(),
       updatedAt: Date.now(),
     };
@@ -1704,7 +1708,30 @@
     updateFeaturedBooks();
     
     $('#featBookDesc').value = feat.bookDescription || '';
+    
+    // Set author photo preview
+    const photoUrl = feat.authorPhoto || '';
+    $('#featAuthorPhotoUrl').value = photoUrl;
+    $('#featAuthorPhotoPreview').style.backgroundImage = photoUrl ? `url('${photoUrl}')` : '';
   };
+  
+  // Author photo handlers
+  $('#featAuthorPhotoUrl').addEventListener('input', (e) => {
+    const url = e.target.value.trim();
+    $('#featAuthorPhotoPreview').style.backgroundImage = url ? `url('${url}')` : '';
+  });
+  
+  $('#featAuthorPhotoFile').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target.result;
+      $('#featAuthorPhotoUrl').value = dataUrl;
+      $('#featAuthorPhotoPreview').style.backgroundImage = `url('${dataUrl}')`;
+    };
+    reader.readAsDataURL(file);
+  });
   
   const updateFeaturedBooks = () => {
     const books = BVPH.getBooks().filter(b=>!b.demo && b.status === 'on_hand');
@@ -1727,6 +1754,7 @@
   $('#saveFeatBtn').addEventListener('click', async () => {
     const bookId = $('#featBookSelect').value || null;
     const authorName = $('#featAuthorSelect').value || '';
+    const authorPhoto = $('#featAuthorPhotoUrl').value.trim() || '';
     const btn = $('#saveFeatBtn');
     btn.disabled = true; btn.textContent = 'saving…';
     try {
@@ -1734,6 +1762,7 @@
         bookId,
         bookDescription: $('#featBookDesc').value.trim(),
         authorName,
+        authorPhoto,
         authorBio: '',
       });
       render();
@@ -1746,7 +1775,7 @@
     const btn = $('#clearFeatBtn');
     btn.disabled = true;
     try {
-      await BVPH.saveFeatured({ bookId:null, bookDescription:'', authorName:'', authorBio:'' });
+      await BVPH.saveFeatured({ bookId:null, bookDescription:'', authorName:'', authorPhoto:'', authorBio:'' });
       render();
       toast('featured cleared');
     } catch(e) { console.error(e); toast('failed'); }
@@ -1800,7 +1829,7 @@
         statusBtns = `<button class="icon-btn" data-sold="${b.id}" style="color:#7dc97d;">sold</button> <button class="icon-btn" data-credit="${b.id}" style="color:#ffc107;">credit</button> <button class="icon-btn" data-reserve="${b.id}" style="color:#9370db;">reserve</button>`;
       }
       return `
-      <tr class="${b.featured?'featured':''} ${saleStatus==='sold'||saleStatus==='credit'||saleStatus==='reserved'?'sold-row':''}">
+      <tr class="${saleStatus==='sold'||saleStatus==='credit'||saleStatus==='reserved'?'sold-row':''}">
         <td class="cover-cell" onclick="openBookDetail('${b.id}')"><div class="mini" style="${b.cover?`background-image:url('${b.cover}')`:''}"></div></td>
         <td class="title-cell" onclick="openBookDetail('${b.id}')">${escapeHtml(b.title)}${b.demo?' <span class="badge">demo</span>':''}${b.status==='coming_soon'?' <span class="badge" style="background:rgba(216,154,85,.3);border-color:var(--copper);">coming soon</span>':''}<span class="a">${escapeHtml(b.author)}</span></td>
         <td><span class="badge">${b.genre}</span></td>
@@ -1809,7 +1838,6 @@
         <td class="price-cell">₱${b.sellPrice||0}</td>
         <td>${b.quantity || 1}</td>
         <td>${ratingCell}</td>
-        <td><button class="icon-btn star ${b.featured?'on':''}" data-star="${b.id}" title="toggle featured">${b.featured?'★':'☆'}</button></td>
         <td style="white-space:nowrap;">${statusBtns}</td>
         <td class="actions-cell">
           <button class="icon-btn edit" data-edit="${b.id}">edit</button>
