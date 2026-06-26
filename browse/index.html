@@ -363,6 +363,14 @@ body::before{
   background:var(--cream);font-size:.9rem;color:var(--ink);cursor:pointer;
 }
 .sort-wrap select:focus{outline:none;border-color:var(--copper);}
+.genre-pills{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px;}
+.genre-pills .chip{background:transparent;border:1px solid var(--rule);color:var(--ink-soft);padding:6px 14px;border-radius:999px;cursor:pointer;font-family:"DM Mono",monospace;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+.genre-pills .chip:hover{border-color:var(--copper);color:var(--ink);}
+.genre-pills .chip.active{background:var(--burgundy);color:var(--cream);border-color:var(--burgundy);}
+.genre-pills .chip .count{opacity:.6;font-size:.65rem;}
+.book.is-sold{position:relative;}
+.book.is-sold .cover-wrap::after{content:"SOLD";position:absolute;inset:0;display:grid;place-items:center;background:rgba(20,8,12,.55);color:var(--cream);font-family:"Playfair Display",serif;font-weight:700;font-size:1.4rem;letter-spacing:.3em;text-shadow:0 2px 6px rgba(0,0,0,.5);border-radius:inherit;pointer-events:none;}
+.book.is-sold .cover-wrap > *:not(.wl-heart){filter:grayscale(.6) brightness(.7);}
 
 /* FOOTER */
 .footer{
@@ -384,6 +392,9 @@ body::before{
 .page-btn:hover:not(:disabled){background:var(--burgundy-deep);}
 .page-btn:disabled{opacity:.4;cursor:not-allowed;}
 .page-info{font-family:"DM Mono",monospace;font-size:.8rem;color:var(--ink-soft);}
+#backToTop{position:fixed;bottom:24px;right:24px;width:48px;height:48px;border-radius:50%;background:var(--burgundy);color:var(--cream);border:none;font-size:1.4rem;cursor:pointer;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s,transform .2s;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,.25);}
+#backToTop.show{opacity:1;visibility:visible;}
+#backToTop:hover{transform:translateY(-3px);background:var(--copper);}
 </style>
 </head>
 <body>
@@ -399,6 +410,7 @@ body::before{
       <a href="/">Home</a>
       <a href="/browse">Browse</a>
       <a href="/coming-soon">Coming Soon</a>
+      <a href="/blog">Blog</a>
       <a href="#" class="nav-wl" id="navWlLink" onclick="event.preventDefault();openWishlist();document.getElementById('navLinks').classList.remove('open');">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
         <span>Wishlist</span><span class="wl-count" id="navWlCount" style="display:none;">0</span>
@@ -414,7 +426,7 @@ body::before{
 
 <div class="hero">
   <h1>Browse <em>all books</em></h1>
-  <p>A preview of what's coming to the vault. These books aren't available yet, but they will be soon.</p>
+  <p>Every book in the vault, ready to be claimed. Browse by rating, price, or title.</p>
   <a class="back-link" href="/">← Back to the shelf</a>
 </div>
 
@@ -434,6 +446,8 @@ body::before{
       </select>
     </div>
   </div>
+
+  <div class="genre-pills" id="genrePills"></div>
 
   <div class="section-head">
     <h2>Browse the shelf</h2>
@@ -521,7 +535,8 @@ body::before{
   function bookCard(book){
     const rating = book.rating ? Number(book.rating) : null;
     const stars = rating ? '★'.repeat(Math.round(rating)) + '☆'.repeat(5-Math.round(rating)) : '';
-    return `<article class="book" onclick="openDetail('${book.id}')" role="button" tabindex="0" aria-label="${esc(book.title)} by ${esc(book.author||'Unknown')}">
+    const sold = book.status === 'sold';
+    return `<article class="book${sold?' is-sold':''}" onclick="openDetail('${book.id}')" role="button" tabindex="0" aria-label="${esc(book.title)} by ${esc(book.author||'Unknown')}${sold?' (sold)':''}">
       <div class="cover-wrap">
         
         ${heartBtn(book)}
@@ -760,6 +775,23 @@ body::before{
   let searchTerm = '';
   let currentBookId = null;
   let sortBy = 'popular';
+  let activeGenre = 'All';
+
+  function setGenre(g){
+    activeGenre = g;
+    currentPage = 1;
+    render();
+  }
+  window.setGenre = setGenre;
+
+  function renderGenrePills(books){
+    const counts = { All: books.length };
+    books.forEach(b => { const g = b.genre || 'Other'; counts[g] = (counts[g]||0)+1; });
+    const order = ['All', ...(BVPH.GENRES||[]).filter(g => counts[g])];
+    document.getElementById('genrePills').innerHTML = order.map(g => `
+      <button class="chip ${activeGenre===g?'active':''}" onclick="setGenre('${esc(g)}')">${esc(g)}<span class="count">${counts[g]||0}</span></button>
+    `).join('');
+  }
 
   function handleSearch(){
     searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
@@ -807,8 +839,14 @@ body::before{
 
   function render(){
     const all = BVPH.getBooks();
-    let filtered = all.filter(b => b.status !== 'coming_soon');
-    
+    const browseBooks = all.filter(b => b.status !== 'coming_soon');
+    renderGenrePills(browseBooks);
+
+    let filtered = browseBooks;
+    if(activeGenre && activeGenre !== 'All'){
+      filtered = filtered.filter(b => (b.genre||'Other') === activeGenre);
+    }
+
     if(searchTerm){
       filtered = filtered.filter(b => 
         (b.title||'').toLowerCase().includes(searchTerm) ||
@@ -893,7 +931,17 @@ body::before{
     if (e.key === 'bvph_wishlist_v1') { renderWlCount(); refreshHearts(); if (document.getElementById('wlBg').classList.contains('show')) renderWishlist(); }
     if (e.key === 'bvph_cart_v1') { renderCartCount(); if (document.getElementById('cartBg').classList.contains('show')) renderCart(); }
   });
+
+  // Back to top button
+  const backToTop = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    backToTop.classList.toggle('show', window.scrollY > 400);
+  });
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 })();
 </script>
+<button id="backToTop" aria-label="Back to top">↑</button>
 </body>
 </html>

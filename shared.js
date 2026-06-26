@@ -222,6 +222,19 @@ const BVPH = (() => {
   // ---------- SYNC GETTERS ----------
   const getBooks = () => (_books !== null ? _books : _readBooksLocal());
   const getBook = (id) => getBooks().find(b => b.id === id);
+  const slugify = (s) => String(s||'')
+    .toLowerCase()
+    .normalize('NFKD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/['']/g,'')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-+|-+$/g,'')
+    .slice(0,80);
+  const getBookBySlug = (slug) => {
+    if (!slug) return null;
+    const s = String(slug).toLowerCase();
+    return getBooks().find(b => slugify(b.title) === s
+      || slugify(`${b.title}-${b.author||''}`) === s);
+  };
   const getFeatured = () => (_featured !== null ? _featured : _readFeaturedLocal());
 
   // ---------- COVER LOADING ----------
@@ -611,7 +624,7 @@ const BVPH = (() => {
   return {
     GENRES, CONDITIONS, USE_SUPABASE,
     init, loadBooks, loadFeatured, onChange, status,
-    getBooks, getBook, getFeatured, getCover, getCovers,
+    getBooks, getBook, getFeatured, getCover, getCovers, slugify, getBookBySlug,
     saveBooks, addBook, updateBook, deleteBook, setFeaturedBook, saveFeatured,
     getOrders, saveOrders, addOrder, getOrder, markOrderPaymentSent, markOrderPaid, getPaidOrders, getPendingOrders,
     getNotifyRequests, saveNotifyRequests, addNotifyRequest, deleteNotifyRequest,

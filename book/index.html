@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title id="pageTitle">Book — The Book Vault PH</title>
+<meta name="description" id="metaDesc" content="A handpicked like-new book from The Book Vault PH. Free delivery in San Carlos City, COD nationwide.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" id="canonicalLink" href="https://thebookvaultph.com/book/">
+
+<meta property="og:type" content="book">
+<meta property="og:site_name" content="The Book Vault PH">
+<meta property="og:title" id="ogTitle" content="The Book Vault PH">
+<meta property="og:description" id="ogDesc" content="Handpicked like-new books from The Book Vault PH.">
+<meta property="og:url" id="ogUrl" content="https://thebookvaultph.com/book/">
+<meta property="og:image" id="ogImage" content="https://thebookvaultph.com/og-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+<script id="schemaJson" type="application/ld+json"></script>
+
+<style>
+:root{
+  --burgundy:#4A1C2A;--burgundy-deep:#2E0F1A;--copper:#FF9B00;--copper-soft:#FFAD33;
+  --cream:#EEE0D9;--cream-warm:#F4E9D8;--ink:#3A2018;--ink-soft:#6E5347;
+  --rule:rgba(74,28,42,.14);
+}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--cream);color:var(--ink);font-family:"Cormorant Garamond",Georgia,serif;font-size:18px;line-height:1.55;}
+a{color:var(--burgundy);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+.nav{background:var(--burgundy-deep);color:var(--cream);border-bottom:1px solid rgba(184,115,51,.22);position:sticky;top:0;z-index:50;}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.brand{display:flex;align-items:center;gap:12px;color:var(--cream);}
+.brand-word{font-family:"Playfair Display",serif;font-weight:500;font-size:1.15rem;color:var(--cream);}
+.brand-word em{font-style:italic;color:var(--copper-soft);font-weight:500;}
+.nav-links{display:flex;gap:24px;}
+.nav-links a{color:var(--cream);font-family:"DM Mono",monospace;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid transparent;padding:6px 0;}
+.nav-links a:hover{color:var(--copper-soft);border-bottom-color:var(--copper-soft);text-decoration:none;}
+@media(max-width:720px){.nav-links{display:none;}}
+
+.wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px;}
+.crumbs{font-family:"DM Mono",monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:28px;}
+.crumbs a{color:var(--ink-soft);}
+.crumbs a:hover{color:var(--burgundy);}
+
+.book-layout{display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:48px;align-items:start;}
+@media(max-width:780px){.book-layout{grid-template-columns:1fr;gap:32px;}}
+
+.cover{aspect-ratio:2/3;background:linear-gradient(135deg,var(--burgundy) 0%,var(--burgundy-deep) 100%);border-radius:6px;box-shadow:0 18px 40px -10px rgba(46,15,26,.5),0 4px 10px -4px rgba(46,15,26,.25);background-size:cover;background-position:center;position:relative;overflow:hidden;}
+.cover.placeholder{display:grid;place-items:center;text-align:center;color:var(--cream);padding:24px;font-family:"Playfair Display",serif;}
+.cover.placeholder .ph-title{font-size:1.4rem;line-height:1.2;font-weight:600;}
+.cover.placeholder .ph-author{font-size:.85rem;font-style:italic;opacity:.75;margin-top:8px;}
+.sold-overlay{position:absolute;inset:0;background:rgba(20,8,12,.55);display:grid;place-items:center;color:var(--cream);font-family:"Playfair Display",serif;font-weight:700;font-size:1.8rem;letter-spacing:.3em;}
+
+.info .genre{font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--copper);margin-bottom:12px;}
+.info h1{font-family:"Playfair Display",serif;font-size:2.4rem;line-height:1.15;margin:0 0 8px;font-weight:500;}
+.info h1 em{font-style:italic;color:var(--burgundy);}
+.info .by{font-style:italic;color:var(--ink-soft);margin:0 0 20px;font-size:1.15rem;}
+.rating{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+.stars{color:var(--copper);letter-spacing:.1em;}
+.gr-link{font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);}
+
+.pricebar{display:flex;align-items:baseline;gap:14px;padding:18px 20px;background:var(--cream-warm);border:1px solid var(--rule);border-radius:8px;margin:20px 0 24px;}
+.price{font-family:"Playfair Display",serif;font-size:2rem;font-weight:600;color:var(--burgundy);}
+.cond{font-family:"DM Mono",monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);}
+
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:32px;}
+.btn{font-family:"DM Mono",monospace;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;padding:14px 24px;border-radius:6px;cursor:pointer;border:none;transition:all .2s;}
+.btn-primary{background:var(--burgundy);color:var(--cream);}
+.btn-primary:hover{background:var(--burgundy-deep);}
+.btn-secondary{background:transparent;border:1px solid var(--burgundy);color:var(--burgundy);}
+.btn-secondary:hover{background:var(--burgundy);color:var(--cream);}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+
+.summary{font-size:1.05rem;line-height:1.7;color:var(--ink);white-space:pre-wrap;}
+.summary h3{font-family:"Playfair Display",serif;font-weight:500;margin:0 0 12px;font-size:1.3rem;}
+
+.empty-state{text-align:center;padding:80px 20px;color:var(--ink-soft);}
+
+.footer{background:var(--burgundy-deep);color:var(--cream);padding:32px 24px;text-align:center;margin-top:60px;font-family:"DM Mono",monospace;font-size:.75rem;letter-spacing:.08em;}
+.footer a{color:var(--copper-soft);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="brand">
+      <span class="brand-word">The Book <em>Vault</em> PH</span>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/browse">Browse</a>
+      <a href="/coming-soon">Coming Soon</a>
+      <a href="/blog">Blog</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="crumbs" id="crumbs"><a href="/">Home</a> / <a href="/browse">Browse</a> / <span id="crumbTitle">Book</span></div>
+  <div id="content">
+    <div class="empty-state">Loading book...</div>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>© 2026 The Book Vault PH · <a href="/contact">Contact</a> · <a href="/">Home</a></p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script src="/shared.js"></script>
+<script>
+(async function(){
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const peso = n => '₱' + (Number(n)||0).toLocaleString('en-PH');
+
+  // slug from path: /book/<slug>/ or /book/<slug>
+  const path = location.pathname.replace(/\/+$/,'');
+  const slug = path.split('/').filter(Boolean).pop();
+  // If we are exactly at /book or /book/ (no slug), bail to browse
+  if (!slug || slug === 'book') {
+    document.getElementById('content').innerHTML = '<div class="empty-state">No book specified. <a href="/browse">Browse all books →</a></div>';
+    return;
+  }
+
+  await BVPH.init().catch(()=>{});
+  await BVPH.loadBooks().catch(()=>{});
+  const book = BVPH.getBookBySlug(slug);
+
+  if (!book){
+    document.getElementById('content').innerHTML = `<div class="empty-state">
+      <h2 style="font-family:'Playfair Display',serif;font-weight:500;">Book not found</h2>
+      <p>We couldn't find a book matching this URL.</p>
+      <p style="margin-top:20px;"><a href="/browse" class="btn btn-primary" style="display:inline-block;">Browse all books</a></p>
+    </div>`;
+    document.title = 'Book not found — The Book Vault PH';
+    return;
+  }
+
+  // Update meta
+  const title = `${book.title}${book.author?` by ${book.author}`:''} — The Book Vault PH`;
+  const desc = (book.summary ? book.summary.slice(0,160) : `Buy ${book.title}${book.author?' by '+book.author:''} from The Book Vault PH. Like-new condition, free delivery in San Carlos City, COD nationwide.`);
+  const url = `https://thebookvaultph.com/book/${slug}`;
+  document.title = title;
+  document.getElementById('pageTitle').textContent = title;
+  document.getElementById('metaDesc').setAttribute('content', desc);
+  document.getElementById('canonicalLink').setAttribute('href', url);
+  document.getElementById('ogTitle').setAttribute('content', title);
+  document.getElementById('ogDesc').setAttribute('content', desc);
+  document.getElementById('ogUrl').setAttribute('content', url);
+  document.getElementById('crumbTitle').textContent = book.title;
+
+  // Cover (lazy fetch)
+  const coverUrl = book.cover || await BVPH.getCover(book.id).catch(()=>null);
+  if (coverUrl) document.getElementById('ogImage').setAttribute('content', coverUrl);
+
+  const sold = book.status === 'sold';
+  const coming = book.status === 'coming_soon';
+  const rating = book.rating ? Number(book.rating) : null;
+  const stars = rating ? '★'.repeat(Math.round(rating)) + '☆'.repeat(5-Math.round(rating)) : '';
+
+  // Product schema
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": book.title,
+    "description": desc,
+    ...(coverUrl ? {"image": coverUrl} : {}),
+    ...(book.author ? {"author": {"@type":"Person","name": book.author}} : {}),
+    "category": book.genre || 'Book',
+    "brand": {"@type":"Brand","name":"The Book Vault PH"},
+    ...(rating ? {"aggregateRating":{"@type":"AggregateRating","ratingValue": rating, "bestRating": 5, "ratingCount": 1}} : {}),
+    "offers": {
+      "@type": "Offer",
+      "url": url,
+      "priceCurrency": "PHP",
+      "price": String(Number(book.sellPrice)||0),
+      "itemCondition": "https://schema.org/UsedCondition",
+      "availability": sold ? "https://schema.org/OutOfStock"
+        : coming ? "https://schema.org/PreOrder"
+        : "https://schema.org/InStock",
+      "seller": {"@type":"Organization","name":"The Book Vault PH"}
+    }
+  };
+  document.getElementById('schemaJson').textContent = JSON.stringify(schema);
+
+  const coverHtml = coverUrl
+    ? `<div class="cover" style="background-image:url('${esc(coverUrl)}')">${sold?'<div class="sold-overlay">SOLD</div>':''}</div>`
+    : `<div class="cover placeholder"><div><div class="ph-title">${esc(book.title)}</div><div class="ph-author">${esc(book.author||'')}</div></div>${sold?'<div class="sold-overlay">SOLD</div>':''}</div>`;
+
+  const summary = book.summary
+    ? `<div class="summary"><h3>About this book</h3>${esc(book.summary).replace(/\n/g,'<br>')}</div>`
+    : '';
+
+  document.getElementById('content').innerHTML = `
+    <article class="book-layout">
+      ${coverHtml}
+      <div class="info">
+        <div class="genre">${esc(book.genre||'Fiction')} · ${esc(book.condition||'Good')}</div>
+        <h1>${esc(book.title)}</h1>
+        <p class="by">by <em>${esc(book.author||'Unknown')}</em></p>
+        ${rating ? `<div class="rating"><span class="stars">${stars}</span> <span>${rating.toFixed(1)}/5</span>${book.goodreads_url?` · <a class="gr-link" href="${esc(book.goodreads_url)}" target="_blank" rel="noopener">Goodreads ↗</a>`:''}</div>`:''}
+        <div class="pricebar">
+          <span class="price">${peso(book.sellPrice)}</span>
+          <span class="cond">${sold?'Sold':coming?'Coming Soon':'Available'}</span>
+        </div>
+        <div class="actions">
+          ${sold
+            ? `<button class="btn btn-secondary" disabled>Sold out</button>`
+            : coming
+              ? `<a class="btn btn-primary" href="/coming-soon">View coming soon shelf</a>`
+              : `<a class="btn btn-primary" href="/order?book=${encodeURIComponent(book.id)}">Order this book</a>`}
+          <a class="btn btn-secondary" href="/browse">← Back to browse</a>
+        </div>
+        ${summary}
+      </div>
+    </article>
+  `;
+
+  if (BVPH.trackPageView) BVPH.trackPageView({ page:'book', bookId: book.id, slug });
+})();
+</script>
+</body>
+</html>
