@@ -333,24 +333,19 @@ body::before{
 /* Bundle deal banner */
 .bundle-banner{
   background:linear-gradient(135deg, #FFB347 0%, var(--copper) 50%, #E8A04C 100%);
-  color:var(--burgundy-deep);padding:24px 28px;text-align:center;
-  position:relative;overflow:hidden;
+  color:var(--burgundy-deep);padding:28px 32px;text-align:center;
 }
-.bundle-banner::before{
-  content:'';position:absolute;inset:0;
-  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5L35 20H50L38 30L43 45L30 35L17 45L22 30L10 20H25L30 5Z' fill='rgba(255,255,255,0.08)'/%3E%3C/svg%3E");
-  background-size:80px 80px;pointer-events:none;
-}
-.bundle-banner-content{position:relative;z-index:1;display:flex;flex-direction:column;gap:8px;align-items:center;}
-.bundle-banner-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;}
+.bundle-banner-content{display:flex;flex-direction:column;gap:10px;align-items:center;}
+.bundle-banner-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center;}
 .bundle-banner p{
-  margin:0;font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+  margin:0;font-family:"DM Mono",monospace;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;
 }
 .bundle-banner strong{color:var(--burgundy);font-weight:700;}
-.bundle-banner .divider{width:4px;height:4px;background:var(--burgundy);border-radius:50%;opacity:.5;}
+.bundle-banner .divider{width:5px;height:5px;background:var(--burgundy);border-radius:50%;opacity:.4;}
 @media(max-width:600px){
-  .bundle-banner-row{flex-direction:column;gap:6px;}
+  .bundle-banner-row{flex-direction:column;gap:10px;}
   .bundle-banner .divider{display:none;}
+  .bundle-banner p{font-size:.75rem;}
 }
 
 .coming-soon-banner{
@@ -988,9 +983,9 @@ body::before{
 <div class="bundle-banner">
   <div class="bundle-banner-content">
     <div class="bundle-banner-row">
-      <p>📚 Buy 3+ books → <strong>10% off</strong></p>
+      <p>Buy 3+ books → <strong>10% off</strong></p>
       <span class="divider"></span>
-      <p>💌 Refer 3 friends → <strong>20% off</strong> your next order</p>
+      <p>Refer 3 friends → <strong>20% off</strong> your next order</p>
     </div>
   </div>
 </div>
