@@ -161,6 +161,7 @@ h1.post-title{font-family:"Playfair Display",serif;font-weight:500;font-size:cla
       ${data.category ? `<span class="cat">${esc(data.category)}</span>` : ''}
       ${data.published_at ? `<span>${fmt(data.published_at)}</span>` : ''}
       ${data.reading_time ? `<span>${data.reading_time} min read</span>` : ''}
+      ${data.updated_at && data.published_at && new Date(data.updated_at) - new Date(data.published_at) > 86400000 ? `<span style="opacity:.7;">updated ${fmt(data.updated_at)}</span>` : ''}
     </div>
     <div class="post-body">${html}</div>
     ${tagsHtml}

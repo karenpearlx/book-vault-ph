@@ -511,6 +511,96 @@
 .traffic-tab-content.active { display:block; }
 .blog-tab-content { display:none; }
 .blog-tab-content.active { display:block; }
+
+/* AI suggest */
+.ai-suggest-btn {
+  margin-left:8px;
+  font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;
+  background:linear-gradient(135deg, rgba(216,154,85,.18), rgba(184,115,51,.12));
+  color:var(--copper-bright);border:1px solid rgba(216,154,85,.4);
+  padding:3px 9px;border-radius:4px;cursor:pointer;
+  transition:all .15s ease;
+}
+.ai-suggest-btn:hover { background:rgba(216,154,85,.3); border-color:var(--copper-bright); }
+.ai-suggest-btn:disabled { opacity:.5; cursor:wait; }
+
+.ai-modal-backdrop {
+  position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;
+  display:none;align-items:flex-start;justify-content:center;padding:60px 20px;overflow-y:auto;
+}
+.ai-modal-backdrop.open { display:flex; }
+.ai-modal {
+  background:var(--bg-panel, #1a1410);border:1px solid var(--border);
+  border-radius:10px;max-width:720px;width:100%;padding:24px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+.ai-modal h3 {
+  font-family:'Playfair Display',serif;font-size:1.3rem;margin:0 0 6px;
+  color:var(--copper-bright);
+}
+.ai-modal .ai-sub {
+  font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:18px;
+}
+.ai-modal .ai-loading {
+  padding:40px 20px;text-align:center;color:var(--ink-soft);font-style:italic;
+}
+.ai-suggestion {
+  padding:14px 16px;margin-bottom:10px;border:1px solid var(--border);border-radius:6px;
+  background:rgba(0,0,0,.2);cursor:pointer;transition:all .15s ease;
+  font-size:.92rem;line-height:1.5;color:var(--ink-soft);
+  white-space:pre-wrap;
+}
+.ai-suggestion:hover {
+  border-color:var(--copper-bright);background:rgba(216,154,85,.08);color:var(--ink);
+}
+.ai-suggestion .ai-num {
+  font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--copper-bright);margin-bottom:6px;display:block;
+}
+.ai-modal-foot {
+  display:flex;justify-content:space-between;align-items:center;margin-top:18px;
+  padding-top:14px;border-top:1px solid var(--border);
+}
+.ai-modal-foot small { color:var(--ink-soft);font-size:.7rem; }
+
+/* Keywords tracker */
+.kw-phase { margin-bottom:28px; }
+.kw-phase-head {
+  font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--copper-bright);padding-bottom:8px;border-bottom:1px solid var(--border);
+  margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;
+}
+.kw-phase-head .kw-phase-count { color:var(--ink-soft);font-size:.62rem; }
+.kw-row {
+  display:flex;align-items:center;gap:14px;padding:12px 14px;
+  border:1px solid var(--border);border-radius:6px;margin-bottom:8px;
+  background:rgba(0,0,0,.18);transition:border-color .15s;
+}
+.kw-row:hover { border-color:rgba(216,154,85,.4); }
+.kw-row .kw-text { flex:1;min-width:0; }
+.kw-row .kw-name { font-size:.95rem;color:var(--cream);margin-bottom:4px;word-break:break-word; }
+.kw-row .kw-meta { font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);display:flex;gap:10px;flex-wrap:wrap; }
+.kw-row .kw-meta a { color:var(--copper-bright);text-decoration:none; }
+.kw-row .kw-meta a:hover { text-decoration:underline; }
+.kw-row .kw-status {
+  padding:3px 9px;border-radius:3px;border:1px solid;font-weight:500;
+}
+.kw-row .kw-status.not_started { color:#bdb5a8;border-color:rgba(140,140,140,.4);background:rgba(140,140,140,.08); }
+.kw-row .kw-status.in_progress { color:#e8c47a;border-color:rgba(216,154,85,.4);background:rgba(216,154,85,.08); }
+.kw-row .kw-status.published   { color:#9ec99c;border-color:rgba(150,200,140,.4);background:rgba(150,200,140,.08); }
+.kw-row .kw-actions { display:flex;gap:6px;flex-shrink:0; }
+.kw-row .kw-actions button {
+  background:none;border:1px solid var(--border);border-radius:4px;
+  padding:4px 8px;cursor:pointer;font-size:.7rem;color:var(--ink-soft);
+}
+.kw-row .kw-actions button:hover { border-color:var(--copper-bright);color:var(--copper-bright); }
+.kw-row .kw-actions button.del:hover { border-color:#e87a7a;color:#e87a7a; }
+@media (max-width:600px) {
+  .kw-row { flex-wrap:wrap; }
+  .kw-row .kw-actions { width:100%; }
+}
+
 .blog-admin-list { display:flex; flex-direction:column; gap:12px; }
 .blog-row {
   display:flex; gap:14px; align-items:center; padding:12px 14px;
@@ -1308,10 +1398,11 @@
     <div class="tab-content" id="tab-blogs">
       <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
         <button class="sub-tab-btn active" onclick="switchBlogTab('create')" id="blogTabBtn-create">+ create</button>
-        <button class="sub-tab-btn" onclick="switchBlogTab('posts')" id="blogTabBtn-posts">posts <span id="blogCount-posts" class="tab-badge">0</span></button>
+        <button class="sub-tab-btn" onclick="switchBlogTab('posts')" id="blogTabBtn-posts">published <span id="blogCount-posts" class="tab-badge">0</span></button>
         <button class="sub-tab-btn" onclick="switchBlogTab('drafts')" id="blogTabBtn-drafts">drafts <span id="blogCount-drafts" class="tab-badge">0</span></button>
         <button class="sub-tab-btn" onclick="switchBlogTab('scheduled')" id="blogTabBtn-scheduled">scheduled <span id="blogCount-scheduled" class="tab-badge">0</span></button>
         <button class="sub-tab-btn" onclick="switchBlogTab('archived')" id="blogTabBtn-archived">archived <span id="blogCount-archived" class="tab-badge">0</span></button>
+        <button class="sub-tab-btn" onclick="switchBlogTab('keywords')" id="blogTabBtn-keywords">keywords <span id="blogCount-keywords" class="tab-badge">0</span></button>
       </div>
 
       <!-- ===== Create / Edit ===== -->
@@ -1332,8 +1423,25 @@
             <input type="hidden" id="bf_id">
 
             <div class="field">
-              <label>title *</label>
+              <label>title * <button type="button" class="ai-suggest-btn" data-suggest="title" title="AI suggest">✨ suggest</button></label>
               <input type="text" id="bf_title" required placeholder="The art of getting lost in a good thriller">
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <label>primary keyword <small style="color:var(--ink-soft);">(SEO target)</small></label>
+                <input type="text" id="bf_primaryKeyword" placeholder="best thriller books philippines">
+              </div>
+              <div class="field">
+                <label>category</label>
+                <select id="bf_category">
+                  <option value="">— pick one —</option>
+                  <option value="guides">Guides (how-to, buying guides)</option>
+                  <option value="lists">Lists (listicles, recommendations)</option>
+                  <option value="reviews">Reviews (single-book reviews)</option>
+                  <option value="local">Local (San Carlos, Pangasinan, COD)</option>
+                </select>
+              </div>
             </div>
 
             <div class="row">
@@ -1343,21 +1451,13 @@
                 <small style="color:var(--ink-soft);font-size:.7rem;">/blog/<span id="bf_slugPreview">your-slug</span></small>
               </div>
               <div class="field">
-                <label>category</label>
-                <select id="bf_category">
-                  <option value="">— pick one —</option>
-                  <option>Book Reviews</option>
-                  <option>Reading Lists</option>
-                  <option>Author Spotlights</option>
-                  <option>News</option>
-                  <option>Bookish Musings</option>
-                  <option>Recommendations</option>
-                </select>
+                <label>&nbsp;</label>
+                <button type="button" class="btn-sm" id="bf_aiSettings" style="align-self:flex-start;">⚙ AI key (optional)</button>
               </div>
             </div>
 
             <div class="field">
-              <label>excerpt / summary <small style="color:var(--ink-soft);">(<span id="bf_excerptCount">0</span>/180)</small></label>
+              <label>excerpt / summary <small style="color:var(--ink-soft);">(<span id="bf_excerptCount">0</span>/180)</small> <button type="button" class="ai-suggest-btn" data-suggest="excerpt">✨ suggest</button></label>
               <textarea id="bf_excerpt" rows="2" maxlength="180" placeholder="A short hook that shows in previews and link cards"></textarea>
             </div>
 
@@ -1381,7 +1481,7 @@
             </div>
 
             <div class="field">
-              <label>content (markdown supported) *</label>
+              <label>content (markdown supported) * <button type="button" class="ai-suggest-btn" data-suggest="content">✨ generate full post</button></label>
               <textarea id="bf_content" rows="14" required placeholder="Write your post here. **bold**, *italic*, [links](url), # headings, > quotes, - lists. Reading time auto-calculated."></textarea>
               <small style="color:var(--ink-soft);font-size:.7rem;display:flex;gap:14px;flex-wrap:wrap;">
                 <span><span id="bf_wordCount">0</span> words</span>
@@ -1390,7 +1490,7 @@
             </div>
 
             <div class="field">
-              <label>tags <small style="color:var(--ink-soft);">(comma-separated)</small></label>
+              <label>tags <small style="color:var(--ink-soft);">(comma-separated)</small> <button type="button" class="ai-suggest-btn" data-suggest="tags">✨ suggest</button></label>
               <input type="text" id="bf_tags" placeholder="thriller, freida mcfadden, recommendation">
               <div id="bf_tagChips" style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;"></div>
             </div>
@@ -1400,12 +1500,12 @@
 
               <div class="row" style="margin-top:14px;">
                 <div class="field">
-                  <label>meta title</label>
+                  <label>meta title <button type="button" class="ai-suggest-btn" data-suggest="metaTitle">✨ suggest</button></label>
                   <input type="text" id="bf_metaTitle" placeholder="defaults to post title">
                 </div>
               </div>
               <div class="field">
-                <label>meta description <small style="color:var(--ink-soft);">(<span id="bf_metaDescCount">0</span>/160)</small></label>
+                <label>meta description <small style="color:var(--ink-soft);">(<span id="bf_metaDescCount">0</span>/160)</small> <button type="button" class="ai-suggest-btn" data-suggest="metaDesc">✨ suggest</button></label>
                 <textarea id="bf_metaDesc" rows="2" maxlength="160" placeholder="defaults to excerpt"></textarea>
               </div>
               <div class="field">
@@ -1473,7 +1573,76 @@
         </div>
       </div>
 
+      <div class="blog-tab-content" id="blogtab-keywords">
+        <div class="panel">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;">
+            <div>
+              <h2>keyword <span class="accent">tracker</span></h2>
+              <div class="sub">— plan posts across brand foundation, niche capture, bigger targets</div>
+            </div>
+            <button type="button" class="btn-sm fill" id="kwAddBtn">+ add keyword</button>
+          </div>
+
+          <form id="kwForm" style="display:none;margin-top:18px;padding:16px;border:1px solid var(--border);border-radius:8px;background:rgba(0,0,0,.2);">
+            <input type="hidden" id="kw_id">
+            <div class="row">
+              <div class="field">
+                <label>keyword *</label>
+                <input type="text" id="kw_keyword" required placeholder="best thriller books philippines">
+              </div>
+              <div class="field">
+                <label>phase</label>
+                <select id="kw_phase">
+                  <option value="1">Phase 1 — Brand Foundation</option>
+                  <option value="2">Phase 2 — Niche Capture</option>
+                  <option value="3">Phase 3 — Bigger / Harder</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label>status</label>
+                <select id="kw_status">
+                  <option value="not_started">Not started</option>
+                  <option value="in_progress">In progress</option>
+                  <option value="published">Published</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>linked post (optional)</label>
+                <select id="kw_post"><option value="">— none —</option></select>
+              </div>
+            </div>
+            <div class="field">
+              <label>notes</label>
+              <textarea id="kw_notes" rows="2" placeholder="search intent, angle, competitors, etc"></textarea>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px;">
+              <button type="button" class="btn-sm" id="kwCancelBtn">cancel</button>
+              <button type="button" class="btn-sm fill" id="kwSaveBtn">save</button>
+            </div>
+            <div id="kw_msg" style="margin-top:8px;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;"></div>
+          </form>
+
+          <div id="kwPhases" style="margin-top:20px;"></div>
+          <div id="kwEmpty" class="empty" style="padding:24px;font-size:.9rem;">no keywords tracked yet — add one to start</div>
+        </div>
+      </div>
+
     </div><!-- end tab-blogs -->
+
+    <!-- AI Suggest Modal -->
+    <div class="ai-modal-backdrop" id="aiModal">
+      <div class="ai-modal">
+        <h3 id="aiModalTitle">AI suggestions</h3>
+        <div class="ai-sub" id="aiModalSub">— click one to insert</div>
+        <div id="aiModalBody"><div class="ai-loading">thinking…</div></div>
+        <div class="ai-modal-foot">
+          <small id="aiModalSource">template-based · add OpenAI key for smarter results</small>
+          <button type="button" class="btn-sm" id="aiModalClose">close</button>
+        </div>
+      </div>
+    </div>
 
 </div><!-- end container -->
 </div><!-- end app -->
@@ -3956,6 +4125,7 @@ $('#downloadAllWatermarked')?.addEventListener('click', () => {
     $b('#bf_slug').value = '';
     $b('#bf_slugPreview').textContent = 'your-slug';
     $b('#bf_category').value = '';
+    $b('#bf_primaryKeyword').value = '';
     $b('#bf_excerpt').value = '';
     $b('#bf_excerptCount').textContent = '0';
     $b('#bf_image').value = '';
@@ -3985,6 +4155,7 @@ $('#downloadAllWatermarked')?.addEventListener('click', () => {
     $b('#bf_slug').value = p.slug || '';
     $b('#bf_slugPreview').textContent = p.slug || 'your-slug';
     $b('#bf_category').value = p.category || '';
+    $b('#bf_primaryKeyword').value = p.primary_keyword || '';
     $b('#bf_excerpt').value = p.excerpt || '';
     $b('#bf_excerptCount').textContent = (p.excerpt || '').length;
     $b('#bf_image').value = p.featured_image || '';
@@ -4037,6 +4208,7 @@ $('#downloadAllWatermarked')?.addEventListener('click', () => {
       featured_image: featured,
       og_image: $b('#bf_ogImage').value.trim() || featured,
       category: $b('#bf_category').value || null,
+      primary_keyword: $b('#bf_primaryKeyword').value.trim() || null,
       tags,
       reading_time: rt.minutes,
       scheduled_at: scheduledStr ? new Date(scheduledStr).toISOString() : null,
@@ -4264,8 +4436,106 @@ $('#downloadAllWatermarked')?.addEventListener('click', () => {
     window.open(`/blog/${encodeURIComponent(slug)}?preview=1`, '_blank');
   });
 
+  // ---------- Duplicate post ----------
+  window._bvphDuplicatePost = async function(id){
+    const src = _allPosts.find(p => p.id === id);
+    if (!src) return;
+    const baseSlug = (src.slug || 'post') + '-copy';
+    let slug = baseSlug;
+    let n = 2;
+    while (_allPosts.some(p => p.slug === slug)) { slug = baseSlug + '-' + n; n++; }
+    const copy = {
+      title: (src.title || 'Untitled') + ' (Copy)',
+      slug,
+      meta_title: src.meta_title,
+      meta_description: src.meta_description,
+      excerpt: src.excerpt,
+      content: src.content,
+      featured_image: src.featured_image,
+      og_image: src.og_image,
+      category: src.category,
+      primary_keyword: src.primary_keyword,
+      tags: src.tags,
+      reading_time: src.reading_time,
+      status: 'draft',
+      published_at: null,
+      scheduled_at: null,
+      updated_at: new Date().toISOString(),
+    };
+    try {
+      await savePost(copy, true);
+      await refreshAll();
+    } catch (e) {
+      alert('duplicate failed: ' + (e.message || e));
+    }
+  };
+
+  // expose for AI / Keywords IIFEs
+  window._bvphBlogState = {
+    getPosts: () => _allPosts,
+    getForm: () => ({
+      title: $b('#bf_title').value.trim(),
+      keyword: $b('#bf_primaryKeyword').value.trim(),
+      category: $b('#bf_category').value,
+      excerpt: $b('#bf_excerpt').value.trim(),
+      content: $b('#bf_content').value,
+      tags: $b('#bf_tags').value,
+    }),
+    setField: (id, val) => {
+      const el = $b('#' + id);
+      if (!el) return;
+      el.value = val;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    },
+    insertContent: (text) => {
+      const ta = $b('#bf_content');
+      const start = ta.selectionStart, end = ta.selectionEnd;
+      ta.value = ta.value.slice(0, start) + text + ta.value.slice(end);
+      ta.dispatchEvent(new Event('input', { bubbles: true }));
+      ta.focus();
+      ta.selectionStart = ta.selectionEnd = start + text.length;
+    },
+    setTags: (arr) => {
+      $b('#bf_tags').value = arr.join(', ');
+      $b('#bf_tags').dispatchEvent(new Event('input', { bubbles: true }));
+    },
+    refresh: refreshAll,
+  };
+
+  // Patch post list cards to add Duplicate button (post-render hook)
+  const _origRender = renderList;
+  // (renderList is closure-bound, can't override. Instead inject duplicate buttons after each render via MutationObserver.)
+  const listIds = ['blogList-published','blogList-draft','blogList-scheduled','blogList-archived'];
+  const addDuplicateButtons = () => {
+    listIds.forEach(lid => {
+      const el = document.getElementById(lid);
+      if (!el) return;
+      el.querySelectorAll('.blog-row').forEach(row => {
+        if (row.querySelector('[data-action="duplicate"]')) return;
+        const actions = row.querySelector('.row-actions');
+        if (!actions) return;
+        const editBtn = actions.querySelector('[data-action="edit"]');
+        const btn = document.createElement('button');
+        btn.className = 'icon-btn';
+        btn.dataset.action = 'duplicate';
+        btn.style.color = '#9ec99c';
+        btn.textContent = '⧉ duplicate';
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          window._bvphDuplicatePost(row.dataset.id);
+        });
+        actions.insertBefore(btn, editBtn ? editBtn.nextSibling : actions.firstChild);
+      });
+    });
+  };
+  // observe DOM changes
+  const mo = new MutationObserver(addDuplicateButtons);
+  listIds.forEach(lid => {
+    const el = document.getElementById(lid);
+    if (el) mo.observe(el, { childList: true });
+  });
+
   // ---------- boot ----------
-  // wait for BVPH/sb to be ready
   function boot(){
     if (!BVPH.supabase || !BVPH.supabase()) {
       return setTimeout(boot, 300);
@@ -4275,6 +4545,603 @@ $('#downloadAllWatermarked')?.addEventListener('click', () => {
   setTimeout(boot, 400);
 })();
 
+// ============================================================
+// BLOG CATEGORIES (dynamic dropdown + create/delete)
+// ============================================================
+(function initCategories(){
+  const sb = BVPH.supabase && BVPH.supabase();
+  const TABLE = 'blog_categories';
+  const sel = document.getElementById('bf_category');
+  if (!sel) return;
+  let _cats = [];
+
+  const slugify = (s='') => s.toString().toLowerCase().trim()
+    .replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+
+  async function loadCats(){
+    if (!sb) return [];
+    const { data, error } = await sb.from(TABLE).select('*').order('name', { ascending: true });
+    if (error) { console.warn('[cats] load', error); return []; }
+    return data || [];
+  }
+
+  function renderDropdown(currentValue){
+    _cats = _cats || [];
+    sel.innerHTML = '';
+    const blank = document.createElement('option');
+    blank.value = ''; blank.textContent = '— pick one —';
+    sel.appendChild(blank);
+    _cats.forEach(c => {
+      const o = document.createElement('option');
+      o.value = c.slug; o.textContent = c.name;
+      o.dataset.id = c.id;
+      sel.appendChild(o);
+    });
+    const sep = document.createElement('option');
+    sep.disabled = true; sep.textContent = '──────────';
+    sel.appendChild(sep);
+    const add = document.createElement('option');
+    add.value = '__new__'; add.textContent = '+ create new category…';
+    sel.appendChild(add);
+    const del = document.createElement('option');
+    del.value = '__del__'; del.textContent = '× delete selected category…';
+    sel.appendChild(del);
+    if (currentValue && _cats.some(c => c.slug === currentValue)) {
+      sel.value = currentValue;
+    }
+    // expose for /blog public page if anyone wants it
+    window._bvphCategories = _cats;
+  }
+
+  async function refresh(currentValue){
+    _cats = await loadCats();
+    renderDropdown(currentValue);
+  }
+
+  let _lastPick = '';
+  sel.addEventListener('change', async (e) => {
+    const v = sel.value;
+    if (v === '__new__') {
+      const name = (prompt('New category name:') || '').trim();
+      sel.value = _lastPick;
+      if (!name) return;
+      const slug = slugify(name);
+      try {
+        await sb.from(TABLE).insert({ name, slug });
+        await refresh(slug);
+      } catch (err) {
+        alert('could not create: ' + (err.message || err));
+      }
+    } else if (v === '__del__') {
+      sel.value = _lastPick;
+      if (!_lastPick) { alert('pick a category first to delete it'); return; }
+      const cat = _cats.find(c => c.slug === _lastPick);
+      if (!cat) return;
+      if (!confirm(`Delete category "${cat.name}"? Posts in this category will keep the slug but the option will disappear from the dropdown.`)) return;
+      try {
+        await sb.from(TABLE).delete().eq('id', cat.id);
+        await refresh('');
+      } catch (err) {
+        alert('could not delete: ' + (err.message || err));
+      }
+    } else {
+      _lastPick = v;
+    }
+  });
+
+  function boot(){
+    if (!BVPH.supabase || !BVPH.supabase()) return setTimeout(boot, 300);
+    refresh().then(() => {
+      // re-apply current value once posts load (loadIntoForm sets bf_category)
+      const existing = sel.getAttribute('data-init') || '';
+      if (existing) sel.value = existing;
+    });
+  }
+  setTimeout(boot, 500);
+})();
+
+// ============================================================
+// AI SUGGESTOR (deterministic templates + optional OpenAI key)
+// ============================================================
+(function initAISuggest(){
+  const modal = document.getElementById('aiModal');
+  if (!modal) return;
+  const body = document.getElementById('aiModalBody');
+  const titleEl = document.getElementById('aiModalTitle');
+  const subEl = document.getElementById('aiModalSub');
+  const srcEl = document.getElementById('aiModalSource');
+
+  const openModal = () => modal.classList.add('open');
+  const closeModal = () => modal.classList.remove('open');
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.getElementById('aiModalClose').addEventListener('click', closeModal);
+
+  document.getElementById('bf_aiSettings').addEventListener('click', () => {
+    const cur = localStorage.getItem('bvph_openai_key') || '';
+    const v = prompt('Paste OpenAI API key for smarter suggestions (stored only in your browser). Leave empty to clear.', cur);
+    if (v === null) return;
+    if (v.trim()) localStorage.setItem('bvph_openai_key', v.trim());
+    else localStorage.removeItem('bvph_openai_key');
+    alert(v.trim() ? '✓ key saved (gpt-4o-mini will be used)' : 'key cleared — using templates');
+  });
+
+  const FIELD_LABELS = {
+    title: 'Title ideas',
+    metaTitle: 'Meta title (50–60 chars)',
+    metaDesc: 'Meta description (150–160 chars)',
+    excerpt: 'Excerpt / summary',
+    tags: 'Tag suggestions',
+    content: 'Full blog post draft',
+  };
+  const FIELD_TARGETS = {
+    title: 'bf_title',
+    metaTitle: 'bf_metaTitle',
+    metaDesc: 'bf_metaDesc',
+    excerpt: 'bf_excerpt',
+    tags: 'bf_tags',
+    content: 'bf_content',
+  };
+
+  // ---------- Deterministic template generator ----------
+  function templateGen(field, st){
+    const kw = (st.keyword || st.title || 'preloved books philippines').toLowerCase();
+    const kwCap = kw.replace(/\b\w/g, c => c.toUpperCase());
+    const cat = (st.category || '').toLowerCase();
+    const isPH = /(philippines|ph|pinoy|filipino|pangasinan|san carlos)/i.test(kw + ' ' + st.content);
+
+    if (field === 'title') {
+      return [
+        `${kwCap}: A Practical Guide for Filipino Readers`,
+        `The Best ${kwCap} You Can Actually Afford in 2026`,
+        `${kwCap} — Honest Picks from a San Carlos Bookshop`,
+      ];
+    }
+    if (field === 'metaTitle') {
+      const base = st.title || kwCap;
+      const opts = [
+        `${kwCap} | The Book Vault PH`.slice(0, 60),
+        `${base} — Preloved Books PH`.slice(0, 60),
+        `${kwCap}: Honest Guide (2026)`.slice(0, 60),
+      ];
+      return opts;
+    }
+    if (field === 'metaDesc') {
+      const ans = `Looking for ${kw}? The Book Vault PH offers like-new preloved titles from PHP 170–300, free San Carlos delivery, and COD nationwide via J&T or LBC.`;
+      const opts = [
+        ans.slice(0, 160),
+        `${kwCap.slice(0,40)}: handpicked, like-new copies from PHP 170. Free San Carlos delivery, COD nationwide. Browse the latest drops at The Book Vault PH.`.slice(0,160),
+        `Honest picks for ${kw}. Preloved bookshop in San Carlos City, Pangasinan. Affordable prices, fast COD, no surprises.`.slice(0,160),
+      ];
+      return opts;
+    }
+    if (field === 'excerpt') {
+      const fromContent = (st.content || '').replace(/[#>*_`\[\]\(\)]/g,'').replace(/\s+/g,' ').trim().slice(0, 170);
+      return [
+        fromContent || `A friendly walk-through of ${kw} for Filipino readers, with picks you can actually get this week.`,
+        `Everything you need to know about ${kw}, plus titles in stock right now at The Book Vault PH.`,
+        `Short, honest take on ${kw} — no fluff, just what's worth your money.`,
+      ].filter(Boolean).map(s => s.slice(0, 178));
+    }
+    if (field === 'tags') {
+      const baseTags = new Set();
+      kw.split(/\s+/).filter(w => w.length > 2).forEach(w => baseTags.add(w));
+      baseTags.add('preloved books');
+      if (isPH) { baseTags.add('philippines'); baseTags.add('book vault ph'); }
+      if (cat) baseTags.add(cat);
+      if (/thriller/i.test(kw)) { baseTags.add('thriller'); baseTags.add('suspense'); }
+      if (/romance/i.test(kw)) { baseTags.add('romance'); }
+      if (/horror|gothic/i.test(kw)) { baseTags.add('horror'); baseTags.add('gothic'); }
+      if (/ya|young adult/i.test(kw)) baseTags.add('ya');
+      return [Array.from(baseTags).slice(0, 10).join(', ')];
+    }
+    if (field === 'content') {
+      const topic = kwCap;
+      const phLine = isPH ? ' in the Philippines' : '';
+      const draft = `## Quick answer
+
+If you're looking for ${kw}${phLine}, the short version: The Book Vault PH, an online preloved bookshop in San Carlos City, Pangasinan, stocks handpicked like-new copies from PHP 170 to 300. Free delivery within San Carlos, COD nationwide via J&T and LBC. Below: what to look for, our current picks, and answers to the questions readers ask most.
+
+## What does "${topic}" actually mean for Filipino readers?
+
+A quick frame before we get into specifics. ${topic} is a common search in 2026 because more readers are buying online and want titles that match local prices, shipping, and condition expectations. Here is what matters most.
+
+### Condition
+
+"Like-new" means no torn pages, no markings, and a clean spine. "Pre-loved" allows light wear but still readable and complete.
+
+### Price range
+
+Expect PHP 170 to 300 for most paperbacks. Hardcovers and special editions cost more, but rarely above PHP 500 in the preloved market.
+
+### Delivery
+
+San Carlos, Pangasinan: free local delivery. Nationwide: COD via J&T Express or LBC, usually 3–7 business days.
+
+## Books we recommend from our shop
+
+(Use the Internal Link button to insert in-stock titles here. Suggested format:)
+
+**[Book Title]** by [Author]
+- Genre: [x] | Condition: like-new | Price: PHP [x]
+- Why we picked it: [one honest sentence]
+- [Shop this title](/book?slug=xxx)
+
+## Frequently asked questions
+
+### Is buying preloved books safe online?
+Yes, when the seller posts real photos of the actual copy, lists condition honestly, and offers COD. The Book Vault PH photographs every book individually and offers cash on delivery so you only pay when the order arrives.
+
+### How long does delivery take?
+San Carlos City orders ship same-day or next-day. Nationwide COD orders arrive in 3 to 7 business days through J&T or LBC.
+
+### What's the difference between like-new and pre-loved?
+Like-new books look unread. Pre-loved books are clearly read but still intact and clean. We label every listing so there are no surprises.
+
+## The bottom line
+
+${topic} doesn't have to be complicated. Pick a trustworthy seller, check the condition, and order with COD if you want zero risk. Browse current stock at The Book Vault PH and message us on Instagram @thebookvaultph if you want a personal recommendation.`;
+      return [draft];
+    }
+    return ['(no template for this field)'];
+  }
+
+  // ---------- Optional OpenAI ----------
+  async function openaiGen(field, st){
+    const key = localStorage.getItem('bvph_openai_key');
+    if (!key) return null;
+    const sys = `You write SEO copy for The Book Vault PH, an online preloved bookshop in San Carlos City, Pangasinan, Philippines (free local delivery, COD nationwide via J&T/LBC, prices PHP 170–300). No em dashes. Direct, practical, no fluff. Mention specific numbers when relevant.`;
+    const prompts = {
+      title: `Generate 3 SEO blog title options for primary keyword "${st.keyword}". Context: category=${st.category}. Each on its own line, no numbering.`,
+      metaTitle: `Generate 3 meta title options (50-60 chars, keyword near front) for keyword "${st.keyword}", title "${st.title}". One per line.`,
+      metaDesc: `Generate 3 meta descriptions (150-160 chars, first sentence is a complete direct answer mentioning a differentiator). Keyword: "${st.keyword}". Title: "${st.title}". One per line.`,
+      excerpt: `Write 3 punchy 150-char excerpts/summaries for a blog post titled "${st.title}" targeting keyword "${st.keyword}". Content snippet: ${(st.content||'').slice(0,400)}. One per line.`,
+      tags: `Suggest 6-10 lowercase comma-separated tags for a blog post about "${st.keyword}". Title: "${st.title}". One single line of comma-separated tags.`,
+      content: `Write a full markdown blog post for keyword "${st.keyword}", title "${st.title || st.keyword}", category "${st.category}". Use exactly this structure:
+
+## Quick answer
+(40-60 word direct answer, snippet-ready, Philippines context if relevant)
+
+## [H2 main topic, question form when natural]
+(content)
+
+## [H2 supporting section]
+### [H3 sub-points]
+
+## Books we recommend from our shop
+(3-5 entries with this format)
+**[Book Title]** by [Author]
+- Genre: x | Condition: like-new | Price: PHP x
+- Why we picked it: (1 sentence)
+- [Shop this title](/book?slug=xxx)
+
+## Frequently asked questions
+### [Exact question?]
+(2-4 sentence answer, first sentence complete)
+
+## The bottom line
+(2-3 sentences, soft CTA to browse collection)
+
+Rules: no em dashes, mention "The Book Vault PH, an online preloved bookshop in San Carlos City, Pangasinan" once, use specific numbers (PHP 170-300, free San Carlos delivery, COD via J&T/LBC), first 100 words must answer the query.`,
+    };
+    try {
+      const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          temperature: 0.7,
+          messages: [
+            { role: 'system', content: sys },
+            { role: 'user', content: prompts[field] || prompts.title },
+          ],
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.text();
+        console.warn('[openai]', err);
+        return null;
+      }
+      const json = await res.json();
+      const text = json.choices?.[0]?.message?.content || '';
+      if (field === 'content' || field === 'tags') return [text.trim()];
+      // split into ~3 lines
+      return text.split(/\n+/).map(s => s.replace(/^[\d.\-)\s]+/, '').trim()).filter(Boolean).slice(0, 5);
+    } catch (e) {
+      console.warn('[openai]', e);
+      return null;
+    }
+  }
+
+  async function generate(field){
+    titleEl.textContent = FIELD_LABELS[field] || 'AI suggestions';
+    subEl.textContent = '— click one to insert into the field';
+    body.innerHTML = '<div class="ai-loading">thinking…</div>';
+    openModal();
+
+    const st = (window._bvphBlogState && window._bvphBlogState.getForm()) || {};
+    let suggestions = null;
+    let source = 'template';
+    if (localStorage.getItem('bvph_openai_key')) {
+      suggestions = await openaiGen(field, st);
+      if (suggestions && suggestions.length) source = 'openai · gpt-4o-mini';
+    }
+    if (!suggestions || !suggestions.length) suggestions = templateGen(field, st);
+
+    srcEl.textContent = source === 'template'
+      ? 'template-based · click ⚙ AI key to use OpenAI for smarter results'
+      : source;
+
+    body.innerHTML = suggestions.map((s, i) => `
+      <div class="ai-suggestion" data-idx="${i}">
+        <span class="ai-num">option ${i+1}</span>${s.replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+      </div>
+    `).join('');
+    body.querySelectorAll('.ai-suggestion').forEach((el, i) => {
+      el.addEventListener('click', () => {
+        const target = FIELD_TARGETS[field];
+        if (target && window._bvphBlogState) {
+          window._bvphBlogState.setField(target, suggestions[i]);
+        }
+        closeModal();
+      });
+    });
+  }
+
+  document.querySelectorAll('.ai-suggest-btn').forEach(btn => {
+    btn.addEventListener('click', () => generate(btn.dataset.suggest));
+  });
+})();
+
+// ============================================================
+// INTERNAL LINK SUGGESTER
+// ============================================================
+(function initLinkSuggester(){
+  const contentField = document.getElementById('bf_content');
+  if (!contentField) return;
+  const label = contentField.previousElementSibling;
+  if (!label) return;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'ai-suggest-btn';
+  btn.textContent = '🔗 insert link';
+  btn.style.marginLeft = '6px';
+  label.appendChild(btn);
+
+  const sb = BVPH.supabase && BVPH.supabase();
+
+  // reuse the ai modal
+  btn.addEventListener('click', async () => {
+    const modal = document.getElementById('aiModal');
+    const body = document.getElementById('aiModalBody');
+    const titleEl = document.getElementById('aiModalTitle');
+    const subEl = document.getElementById('aiModalSub');
+    const srcEl = document.getElementById('aiModalSource');
+    titleEl.textContent = 'Insert internal link';
+    subEl.textContent = '— click a book or post to insert markdown link at cursor';
+    srcEl.textContent = 'in-stock books + published posts';
+    body.innerHTML = `
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <button type="button" class="btn-sm fill" data-ltab="books">books in stock</button>
+        <button type="button" class="btn-sm" data-ltab="posts">blog posts</button>
+      </div>
+      <input type="text" id="linkSearch" placeholder="filter…" style="width:100%;padding:8px 10px;margin-bottom:10px;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:4px;color:var(--cream);">
+      <div id="linkList" class="ai-loading">loading…</div>
+    `;
+    modal.classList.add('open');
+
+    let books = [], posts = [], activeTab = 'books';
+    try {
+      if (sb) {
+        const [bRes, pRes] = await Promise.all([
+          sb.from('books').select('id,title,slug,author,status').eq('status','on_hand').order('title'),
+          sb.from('blog_posts').select('id,title,slug,status').eq('status','published').order('title'),
+        ]);
+        books = bRes.data || [];
+        posts = pRes.data || [];
+      }
+    } catch (e) { console.warn(e); }
+
+    const esc = s => (s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const list = document.getElementById('linkList');
+    const search = document.getElementById('linkSearch');
+
+    function render(){
+      const q = (search.value||'').toLowerCase();
+      const items = (activeTab === 'books' ? books : posts).filter(x => {
+        if (!q) return true;
+        return (x.title||'').toLowerCase().includes(q) || (x.author||'').toLowerCase().includes(q);
+      });
+      if (!items.length) {
+        list.innerHTML = `<div class="ai-loading">no ${activeTab} found</div>`;
+        return;
+      }
+      list.innerHTML = items.map((x, i) => {
+        const href = activeTab === 'books'
+          ? `/book?slug=${encodeURIComponent(x.slug||'')}`
+          : `/blog/${encodeURIComponent(x.slug||'')}`;
+        const md = `[${(x.title||'').replace(/[\[\]]/g,'')}](${href})`;
+        const sub = activeTab === 'books' && x.author ? ` <span style="color:var(--ink-soft);font-size:.82rem;">by ${esc(x.author)}</span>` : '';
+        return `<div class="ai-suggestion" data-md="${esc(md)}"><strong>${esc(x.title||'(no title)')}</strong>${sub}<br><code style="background:rgba(0,0,0,.3);padding:2px 6px;border-radius:3px;font-size:.75rem;color:var(--copper-bright);">${esc(href)}</code></div>`;
+      }).join('');
+      list.querySelectorAll('.ai-suggestion').forEach(el => {
+        el.addEventListener('click', () => {
+          const md = el.dataset.md;
+          if (window._bvphBlogState) window._bvphBlogState.insertContent(md);
+          modal.classList.remove('open');
+        });
+      });
+    }
+    body.querySelectorAll('[data-ltab]').forEach(b => {
+      b.addEventListener('click', () => {
+        activeTab = b.dataset.ltab;
+        body.querySelectorAll('[data-ltab]').forEach(x => x.classList.toggle('fill', x.dataset.ltab === activeTab));
+        render();
+      });
+    });
+    search.addEventListener('input', render);
+    render();
+  });
+})();
+
+// ============================================================
+// KEYWORDS SUBTAB
+// ============================================================
+(function initKeywords(){
+  const sb = BVPH.supabase && BVPH.supabase();
+  const TABLE = 'blog_keywords';
+  const $ = s => document.querySelector(s);
+  const phasesEl = document.getElementById('kwPhases');
+  if (!phasesEl) return;
+
+  let _kw = [];
+  const PHASES = {
+    1: 'Phase 1 — Brand Foundation',
+    2: 'Phase 2 — Niche Capture',
+    3: 'Phase 3 — Bigger / Harder',
+  };
+  const STATUS_LABEL = { not_started: 'Not started', in_progress: 'In progress', published: 'Published' };
+  const esc = s => (s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  async function loadKw(){
+    if (!sb) return [];
+    const { data, error } = await sb.from(TABLE).select('*').order('phase').order('created_at');
+    if (error) { console.warn('[kw]', error); return []; }
+    return data || [];
+  }
+
+  async function saveKw(row, asNew){
+    if (asNew || !row.id) {
+      const { data, error } = await sb.from(TABLE).insert(row).select().single();
+      if (error) throw error;
+      return data;
+    } else {
+      const { data, error } = await sb.from(TABLE).update(row).eq('id', row.id).select().single();
+      if (error) throw error;
+      return data;
+    }
+  }
+  async function deleteKw(id){
+    const { error } = await sb.from(TABLE).delete().eq('id', id);
+    if (error) throw error;
+  }
+
+  function refreshPostDropdown(){
+    const posts = (window._bvphBlogState && window._bvphBlogState.getPosts()) || [];
+    const sel = $('#kw_post');
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">— none —</option>' + posts.map(p =>
+      `<option value="${p.id}">${esc(p.title || '(untitled)')} · ${esc(p.status)}</option>`
+    ).join('');
+    if (cur) sel.value = cur;
+  }
+
+  function rowHtml(k, postsById){
+    const linked = k.blog_post_id && postsById[k.blog_post_id];
+    const link = linked ? `<a href="${linked.status === 'published' ? '/blog/' + encodeURIComponent(linked.slug) : '#'}" target="_blank">↗ ${esc(linked.title || 'post')}</a>` : '<span style="opacity:.6;">no post linked</span>';
+    return `
+      <div class="kw-row" data-id="${k.id}">
+        <div class="kw-text">
+          <div class="kw-name">${esc(k.keyword)}</div>
+          <div class="kw-meta">
+            <span class="kw-status ${k.status}">${esc(STATUS_LABEL[k.status] || k.status)}</span>
+            ${link}
+            ${k.notes ? `<span style="opacity:.7;">${esc(k.notes.slice(0,80))}</span>` : ''}
+          </div>
+        </div>
+        <div class="kw-actions">
+          <button data-act="edit">edit</button>
+          <button data-act="del" class="del">del</button>
+        </div>
+      </div>`;
+  }
+
+  function render(){
+    const buckets = { 1: [], 2: [], 3: [] };
+    _kw.forEach(k => { (buckets[k.phase] || (buckets[k.phase] = [])).push(k); });
+    const posts = (window._bvphBlogState && window._bvphBlogState.getPosts()) || [];
+    const postsById = {}; posts.forEach(p => postsById[p.id] = p);
+
+    const phaseKeys = Object.keys(PHASES).map(Number).sort();
+    if (!_kw.length) {
+      phasesEl.innerHTML = '';
+      $('#kwEmpty').style.display = '';
+    } else {
+      $('#kwEmpty').style.display = 'none';
+      phasesEl.innerHTML = phaseKeys.map(p => {
+        const items = buckets[p] || [];
+        const done = items.filter(x => x.status === 'published').length;
+        return `
+          <div class="kw-phase">
+            <div class="kw-phase-head">
+              <span>${PHASES[p]}</span>
+              <span class="kw-phase-count">${done}/${items.length} published</span>
+            </div>
+            ${items.length ? items.map(k => rowHtml(k, postsById)).join('') : '<div style="opacity:.6;font-size:.85rem;padding:8px 0;">no keywords in this phase yet</div>'}
+          </div>`;
+      }).join('');
+    }
+    document.getElementById('blogCount-keywords').textContent = _kw.length;
+
+    phasesEl.querySelectorAll('.kw-row').forEach(row => {
+      const id = row.dataset.id;
+      row.querySelector('[data-act="edit"]').addEventListener('click', () => openForm(_kw.find(k => k.id === id)));
+      row.querySelector('[data-act="del"]').addEventListener('click', async () => {
+        const k = _kw.find(x => x.id === id);
+        if (!confirm(`Delete keyword "${k.keyword}"?`)) return;
+        try { await deleteKw(id); await refresh(); }
+        catch (e) { alert('delete failed: ' + (e.message || e)); }
+      });
+    });
+  }
+
+  function openForm(k){
+    refreshPostDropdown();
+    $('#kwForm').style.display = '';
+    $('#kw_id').value = k?.id || '';
+    $('#kw_keyword').value = k?.keyword || '';
+    $('#kw_phase').value = String(k?.phase || 1);
+    $('#kw_status').value = k?.status || 'not_started';
+    $('#kw_post').value = k?.blog_post_id || '';
+    $('#kw_notes').value = k?.notes || '';
+    $('#kw_msg').textContent = '';
+    $('#kw_keyword').focus();
+  }
+  function closeForm(){ $('#kwForm').style.display = 'none'; }
+
+  $('#kwAddBtn').addEventListener('click', () => openForm(null));
+  $('#kwCancelBtn').addEventListener('click', closeForm);
+  $('#kwSaveBtn').addEventListener('click', async () => {
+    const row = {
+      id: $('#kw_id').value || undefined,
+      keyword: $('#kw_keyword').value.trim(),
+      phase: parseInt($('#kw_phase').value, 10) || 1,
+      status: $('#kw_status').value,
+      blog_post_id: $('#kw_post').value || null,
+      notes: $('#kw_notes').value.trim() || null,
+    };
+    if (!row.keyword) { $('#kw_msg').textContent = 'keyword is required'; $('#kw_msg').style.color = '#e87a7a'; return; }
+    $('#kw_msg').textContent = 'saving…'; $('#kw_msg').style.color = 'var(--ink-soft)';
+    try {
+      await saveKw(row, !row.id);
+      closeForm();
+      await refresh();
+    } catch (e) {
+      $('#kw_msg').textContent = 'error: ' + (e.message || e);
+      $('#kw_msg').style.color = '#e87a7a';
+    }
+  });
+
+  async function refresh(){
+    _kw = await loadKw();
+    render();
+  }
+
+  function boot(){
+    if (!BVPH.supabase || !BVPH.supabase()) return setTimeout(boot, 300);
+    refresh();
+  }
+  setTimeout(boot, 600);
+})();
 </script>
 </body>
 </html>

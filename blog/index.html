@@ -92,6 +92,14 @@ body{margin:0;font-family:"Cormorant Garamond",Georgia,serif;background:var(--cr
   text-align:center;padding:60px 20px;color:var(--ink-soft);
   font-style:italic;grid-column:1/-1;
 }
+.blog-section{margin-bottom:56px;}
+.blog-section:last-child{margin-bottom:0;}
+.cat-heading{
+  font-family:"Playfair Display",serif;font-weight:500;font-size:1.8rem;
+  color:var(--burgundy);margin:0 0 22px;padding-bottom:10px;
+  border-bottom:1px solid var(--rule);letter-spacing:.01em;
+}
+.cat-heading::before{content:"";display:inline-block;width:24px;height:1px;background:var(--copper);vertical-align:middle;margin-right:14px;margin-bottom:5px;}
 
 /* FOOTER */
 .footer{
@@ -148,28 +156,57 @@ body{margin:0;font-family:"Cormorant Garamond",Georgia,serif;background:var(--cr
     await sb.from('blog_posts').update({ status: 'published', published_at: nowIso })
       .eq('status', 'scheduled').lte('scheduled_at', nowIso);
   } catch(e){}
-  const { data, error } = await sb.from('blog_posts')
-    .select('id,title,slug,excerpt,featured_image,category,reading_time,published_at')
-    .eq('status', 'published').order('published_at', { ascending: false });
-  const grid = document.getElementById('blogGrid');
-  if (error || !data || !data.length) {
-    grid.innerHTML = '<div class="blog-empty">Blog posts coming soon</div>';
+  const [postsRes, catsRes] = await Promise.all([
+    sb.from('blog_posts').select('id,title,slug,excerpt,featured_image,category,reading_time,published_at,updated_at').eq('status', 'published').order('published_at', { ascending: false }),
+    sb.from('blog_categories').select('name,slug').order('name'),
+  ]);
+  const data = postsRes.data || [];
+  const cats = catsRes.data || [];
+  const root = document.getElementById('blogGrid');
+  if (postsRes.error || !data.length) {
+    root.innerHTML = '<div class="blog-empty">Blog posts coming soon</div>';
     return;
   }
   const esc = s => (s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const fmt = iso => iso ? new Date(iso).toLocaleDateString('en-PH', {year:'numeric',month:'short',day:'numeric'}) : '';
-  grid.innerHTML = data.map(p => `
+
+  // group by category slug (fallback "uncategorized")
+  const bySlug = {};
+  data.forEach(p => {
+    const key = (p.category || 'uncategorized').toLowerCase();
+    (bySlug[key] = bySlug[key] || []).push(p);
+  });
+
+  // ordered list: known categories first (in the order from DB), then any unknowns, then uncategorized
+  const known = cats.map(c => c.slug.toLowerCase()).filter(s => bySlug[s]);
+  const knownSet = new Set(known);
+  const extras = Object.keys(bySlug).filter(s => !knownSet.has(s) && s !== 'uncategorized').sort();
+  const order = [...known, ...extras];
+  if (bySlug['uncategorized']) order.push('uncategorized');
+  const nameFor = slug => {
+    if (slug === 'uncategorized') return 'Other';
+    const found = cats.find(c => c.slug.toLowerCase() === slug);
+    return found ? found.name : slug.replace(/\b\w/g, c => c.toUpperCase());
+  };
+
+  const cardHtml = p => `
     <a class="blog-card" href="/blog/${encodeURIComponent(p.slug)}">
       <div class="blog-card-img" ${p.featured_image ? `style="background-image:url('${esc(p.featured_image)}');background-size:cover;background-position:center;"` : ''}>${!p.featured_image ? '📖' : ''}</div>
       <div class="blog-card-body">
-        ${p.category ? `<div style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--copper);margin-bottom:8px;">${esc(p.category)}</div>` : ''}
         <h3>${esc(p.title)}</h3>
         ${p.excerpt ? `<p>${esc(p.excerpt)}</p>` : ''}
         <div style="margin-top:12px;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);">
           ${fmt(p.published_at)}${p.reading_time ? ` · ${p.reading_time} min read` : ''}
         </div>
       </div>
-    </a>
+    </a>`;
+
+  // replace grid with sections
+  root.outerHTML = order.map(slug => `
+    <section class="blog-section" id="cat-${esc(slug)}">
+      <h2 class="cat-heading">${esc(nameFor(slug))}</h2>
+      <div class="blog-grid">${bySlug[slug].map(cardHtml).join('')}</div>
+    </section>
   `).join('');
 })();
 </script>
