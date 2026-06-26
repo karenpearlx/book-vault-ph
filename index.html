@@ -340,12 +340,12 @@ body::before{
   max-width:1100px;margin:0 auto;
 }
 .perk-item{flex:1;text-align:center;padding:0 40px;}
-.perk-divider{width:1px;height:60px;background:rgba(255,255,255,.3);}
+.perk-divider{width:1px;height:60px;background:rgba(74,28,28,.2);}
 .perk-text h4{
   margin:0 0 8px;font-family:"DM Mono",monospace;font-size:.8rem;
-  letter-spacing:.08em;text-transform:uppercase;color:#fff;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--burgundy);font-weight:600;
 }
-.perk-text p{margin:0;font-size:.9rem;color:rgba(255,255,255,.9);line-height:1.5;}
+.perk-text p{margin:0;font-size:.9rem;color:var(--ink);line-height:1.5;}
 @media(max-width:800px){
   .perks-grid{flex-direction:column;gap:24px;max-width:400px;}
   .perk-item{padding:0;text-align:center;}
@@ -833,7 +833,7 @@ body::before{
 
 /* ============== HOW TO ORDER ============== */
 .howto{
-  background:var(--burgundy-deep);color:var(--cream);padding:80px 28px;position:relative;overflow:hidden;
+  background:var(--burgundy-deep);color:var(--cream);padding:80px 28px 40px;position:relative;overflow:hidden;
 }
 .howto::before{
   content:"";position:absolute;inset:0;
@@ -877,17 +877,17 @@ body::before{
 .about-seo strong{color:var(--cream);font-weight:600;}
 
 /* ============== FOOTER ============== */
-/* FAQ Section */
-.faq-section{background:#F6EBE5;padding:60px 28px;}
+/* FAQ Section - matches howto */
+.faq-section{background:var(--burgundy-deep);padding:60px 28px;position:relative;}
 .faq-inner{max-width:800px;margin:0 auto;}
-.faq-section h2{font-family:"Playfair Display",serif;font-weight:400;font-size:clamp(1.6rem,3vw,2rem);color:var(--burgundy);text-align:center;margin:0 0 40px;}
-.faq-section h2 em{font-style:italic;color:var(--copper);}
-.faq-item{border-bottom:1px solid var(--rule);padding:20px 0;}
+.faq-section h2{font-family:"Playfair Display",serif;font-weight:400;font-size:clamp(1.6rem,3vw,2rem);color:var(--cream);text-align:center;margin:0 0 40px;}
+.faq-section h2 em{font-style:italic;color:var(--copper-soft);}
+.faq-item{border-bottom:1px solid rgba(253,248,243,.15);padding:20px 0;}
 .faq-item:last-child{border-bottom:none;}
-.faq-q{font-family:"Cormorant Garamond",serif;font-size:1.15rem;font-weight:600;color:var(--burgundy);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;}
-.faq-q::after{content:"+";font-size:1.4rem;color:var(--copper);transition:transform .2s;}
+.faq-q{font-family:"Cormorant Garamond",serif;font-size:1.15rem;font-weight:600;color:var(--cream);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.faq-q::after{content:"+";font-size:1.4rem;color:var(--copper-soft);transition:transform .2s;}
 .faq-item.open .faq-q::after{transform:rotate(45deg);}
-.faq-a{font-size:.95rem;color:var(--ink);line-height:1.6;max-height:0;overflow:hidden;transition:max-height .3s ease, padding .3s ease;padding:0;}
+.faq-a{font-size:.95rem;color:rgba(253,248,243,.85);line-height:1.6;max-height:0;overflow:hidden;transition:max-height .3s ease, padding .3s ease;padding:0;}
 .faq-item.open .faq-a{max-height:200px;padding-top:14px;}
 
 /* Contact Form Section */
