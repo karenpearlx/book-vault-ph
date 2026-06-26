@@ -1,8 +1,7 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
-    { "source": "/book/:path*", "destination": "/book/index.html" },
-    { "source": "/blog/:path*", "destination": "/blog/post.html" }
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/book/(.*)", "dest": "/book/index.html" },
+    { "src": "/blog/((?!index\\.html|post\\.html).*)", "dest": "/blog/post.html" }
   ]
 }
