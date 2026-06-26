@@ -178,7 +178,19 @@ const BVPH = (() => {
   }
 
   async function init() {
+    // Show cached data instantly (stale-while-revalidate)
+    const cachedBooks = _readBooksLocal();
+    const cachedFeatured = _readFeaturedLocal();
+    if (cachedBooks.length && !cachedBooks[0]?.demo) {
+      _books = cachedBooks;
+      _featured = cachedFeatured;
+      _notify(); // Render immediately with cached data
+    }
+    
+    // Then fetch fresh data in background
     await Promise.all([loadBooks(), loadFeatured()]);
+    _notify(); // Update with fresh data
+    
     if (USE_SUPABASE) _setupRealtime();
     return { mode: USE_SUPABASE ? 'supabase' : 'local', books: _books, featured: _featured };
   }
