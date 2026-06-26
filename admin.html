@@ -572,6 +572,30 @@
 .status-card .paid-badge { background:rgba(125,201,125,.2); color:#7dc97d; padding:3px 10px; border-radius:4px; font-size:.7rem; text-transform:uppercase; font-weight:600; }
 .status-card .unpaid-badge { background:rgba(255,193,7,.15); color:#ffc107; padding:3px 10px; border-radius:4px; font-size:.7rem; text-transform:uppercase; font-weight:600; }
 
+/* Order Cards */
+.order-card { padding:16px; background:rgba(0,0,0,.25); border:1px solid rgba(216,154,85,.15); border-radius:10px; margin-bottom:10px; }
+.order-card:hover { border-color:rgba(216,154,85,.35); }
+.order-card.paid { border-left:3px solid #7dc97d; }
+.order-card.pending { border-left:3px solid #ffc107; }
+.order-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.order-id { font-family:'DM Mono',monospace; font-size:.75rem; color:var(--copper); letter-spacing:.05em; }
+.order-status { font-size:.7rem; padding:3px 10px; border-radius:4px; text-transform:uppercase; font-weight:600; }
+.order-status.paid { background:rgba(125,201,125,.2); color:#7dc97d; }
+.order-status.pending { background:rgba(255,193,7,.15); color:#ffc107; }
+.order-customer { font-size:.95rem; color:var(--cream); margin-bottom:6px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.loc-badge { font-size:.65rem; padding:2px 8px; border-radius:3px; text-transform:uppercase; font-weight:600; }
+.loc-badge.sc { background:rgba(125,201,125,.15); color:#7dc97d; }
+.loc-badge.outside { background:rgba(100,180,255,.15); color:#64b4ff; }
+.order-address { font-size:.85rem; color:#8B7A66; margin-bottom:8px; }
+.order-books { margin:10px 0; }
+.order-book { font-size:.9rem; color:var(--cream); padding:4px 0; display:flex; justify-content:space-between; }
+.order-book-price { font-family:'DM Mono',monospace; color:var(--copper); }
+.order-footer { display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid rgba(216,154,85,.1); }
+.order-total { font-family:'DM Mono',monospace; color:var(--copper); font-weight:600; }
+.order-date { font-size:.75rem; color:#8B7A66; }
+.order-card .btn-sm { margin-top:10px; padding:8px 14px; font-size:.75rem; border-radius:6px; cursor:pointer; background:rgba(125,201,125,.2); border:1px solid rgba(125,201,125,.4); color:#7dc97d; }
+.order-card .btn-sm:hover { background:rgba(125,201,125,.3); }
+
 /* AI Image Gen Styles */
 .template-grid { display:flex; flex-wrap:wrap; gap:8px; }
 .template-btn { padding:10px 16px; border-radius:6px; border:1px solid var(--border); background:var(--cream-soft); color:var(--ink); font-size:.8rem; cursor:pointer; transition:all .2s; }
@@ -2040,6 +2064,73 @@
       await updateBookSaleStatus(id, 'available');
       toast('marked as available');
     }));
+  };
+
+  // ===== ORDERS =====
+  let orderFilter = 'all';
+  
+  window.filterOrders = (filter) => {
+    orderFilter = filter;
+    document.querySelectorAll('[data-orderfilter]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.orderfilter === filter);
+    });
+    renderOrders();
+  };
+  
+  const renderOrders = () => {
+    const allOrders = BVPH.getOrders();
+    let orders = allOrders;
+    if (orderFilter === 'pending') orders = allOrders.filter(o => o.status !== 'paid');
+    if (orderFilter === 'paid') orders = allOrders.filter(o => o.status === 'paid');
+    
+    $('#ordersCount').textContent = `(${allOrders.length})`;
+    $('#ordersBadge').textContent = allOrders.filter(o => o.status !== 'paid').length;
+    
+    if (!orders.length) {
+      $('#ordersList').innerHTML = '';
+      $('#ordersEmpty').style.display = 'block';
+      return;
+    }
+    $('#ordersEmpty').style.display = 'none';
+    
+    const formatDate = (ts) => {
+      if (!ts) return '';
+      const d = new Date(ts);
+      return d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    };
+    
+    $('#ordersList').innerHTML = orders.map(o => {
+      const books = o.isCart ? o.books : [{ title: o.bookTitle, author: o.bookAuthor, price: o.bookPrice }];
+      const total = o.isCart ? books.reduce((sum, b) => sum + (Number(b.price) || 0), 0) : Number(o.bookPrice) || 0;
+      const statusClass = o.status === 'paid' ? 'paid' : 'pending';
+      const statusText = o.status === 'paid' ? '✓ Paid' : 'Pending';
+      
+      return `<div class="order-card ${statusClass}">
+        <div class="order-header">
+          <span class="order-id">${o.id}</span>
+          <span class="order-status ${statusClass}">${statusText}</span>
+        </div>
+        <div class="order-customer">
+          <strong>${o.customerName || 'Unknown'}</strong>
+          ${o.withinSC ? '<span class="loc-badge sc">San Carlos</span>' : '<span class="loc-badge outside">Outside SC</span>'}
+        </div>
+        ${o.address ? `<div class="order-address">${o.address}</div>` : ''}
+        <div class="order-books">
+          ${books.map(b => `<div class="order-book">📖 ${b.title} <span class="order-book-price">₱${b.price || 0}</span></div>`).join('')}
+        </div>
+        <div class="order-footer">
+          <span class="order-total">Total: ₱${total}</span>
+          <span class="order-date">${formatDate(o.createdAt)}</span>
+        </div>
+        ${o.status !== 'paid' ? `<button class="btn btn-sm" onclick="markOrderPaid('${o.id}')">Mark as paid</button>` : ''}
+      </div>`;
+    }).join('');
+  };
+  
+  window.markOrderPaid = (id) => {
+    BVPH.markOrderPaid(id);
+    renderOrders();
+    toast('order marked as paid ✦');
   };
 
   // ===== EXPENSES =====
