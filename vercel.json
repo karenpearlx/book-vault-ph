@@ -2,6 +2,8 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "routes": [
-    { "src": "/book/([^/]+)", "dest": "/book/index.html" }
+    { "src": "/book/([^/]+)", "dest": "/book/index.html" },
+    { "src": "/blog/?", "dest": "/blog/index.html" },
+    { "src": "/blog/([^/]+)", "dest": "/blog/post.html" }
   ]
 }

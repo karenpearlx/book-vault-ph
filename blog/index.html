@@ -127,13 +127,52 @@ body{margin:0;font-family:"Cormorant Garamond",Georgia,serif;background:var(--cr
 
 <div class="content">
   <div class="blog-grid" id="blogGrid">
-    <div class="blog-empty">Blog posts coming soon</div>
+    <div class="blog-empty">Loading posts…</div>
   </div>
 </div>
 
 <footer class="footer">
   <p>© 2026 The Book Vault PH · <a href="/contact">Contact</a></p>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script>
+(async function(){
+  const cfg = window.BVPH_CONFIG || {};
+  if (!cfg.SUPABASE_URL) { document.getElementById('blogGrid').innerHTML = '<div class="blog-empty">Blog posts coming soon</div>'; return; }
+  const sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, { auth:{ persistSession:false }});
+  const nowIso = new Date().toISOString();
+  // Promote any scheduled posts whose time has come
+  try {
+    await sb.from('blog_posts').update({ status: 'published', published_at: nowIso })
+      .eq('status', 'scheduled').lte('scheduled_at', nowIso);
+  } catch(e){}
+  const { data, error } = await sb.from('blog_posts')
+    .select('id,title,slug,excerpt,featured_image,category,reading_time,published_at')
+    .eq('status', 'published').order('published_at', { ascending: false });
+  const grid = document.getElementById('blogGrid');
+  if (error || !data || !data.length) {
+    grid.innerHTML = '<div class="blog-empty">Blog posts coming soon</div>';
+    return;
+  }
+  const esc = s => (s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const fmt = iso => iso ? new Date(iso).toLocaleDateString('en-PH', {year:'numeric',month:'short',day:'numeric'}) : '';
+  grid.innerHTML = data.map(p => `
+    <a class="blog-card" href="/blog/${encodeURIComponent(p.slug)}">
+      <div class="blog-card-img" ${p.featured_image ? `style="background-image:url('${esc(p.featured_image)}');background-size:cover;background-position:center;"` : ''}>${!p.featured_image ? '📖' : ''}</div>
+      <div class="blog-card-body">
+        ${p.category ? `<div style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--copper);margin-bottom:8px;">${esc(p.category)}</div>` : ''}
+        <h3>${esc(p.title)}</h3>
+        ${p.excerpt ? `<p>${esc(p.excerpt)}</p>` : ''}
+        <div style="margin-top:12px;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);">
+          ${fmt(p.published_at)}${p.reading_time ? ` · ${p.reading_time} min read` : ''}
+        </div>
+      </div>
+    </a>
+  `).join('');
+})();
+</script>
 
 </body>
 </html>
