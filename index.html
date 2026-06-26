@@ -1453,12 +1453,18 @@ body::before{
     const all = BVPH.getBooks();
     const featured = BVPH.getFeatured();
     const sec = $('#featured');
+    const wrap = document.querySelector('.featured-wrap');
     
     // Find the featured book by ID from featured settings
     const feat = featured.bookId ? all.find(b => b.id === featured.bookId) : null;
     
-    if (!feat || !featured.authorName) { sec.style.display = 'none'; return; }
+    if (!feat || !featured.authorName) { 
+      sec.style.display = 'none'; 
+      if (wrap) wrap.style.display = 'none';
+      return; 
+    }
     sec.style.display = '';
+    if (wrap) wrap.style.display = '';
     
     const rawDesc = featured.bookDescription || feat.summary || 'A staff pick worth your evening.';
     const desc = rawDesc.length > 200 ? rawDesc.substring(0, 200).trim() + '...' : rawDesc;
