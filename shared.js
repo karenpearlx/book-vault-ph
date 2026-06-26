@@ -472,6 +472,18 @@ const BVPH = (() => {
     return full;
   };
   const getOrder = (id) => getOrders().find(o => o.id === id);
+  const markOrderPaid = (id) => {
+    const orders = getOrders();
+    const order = orders.find(o => o.id === id);
+    if (order) {
+      order.status = 'paid';
+      order.paidAt = Date.now();
+      saveOrders(orders);
+    }
+    return order;
+  };
+  const getPaidOrders = () => getOrders().filter(o => o.status === 'paid');
+  const getPendingOrders = () => getOrders().filter(o => o.status === 'pending');
 
   // ---------- AUTH ----------
   const SESSION_MS = 30 * 60 * 1000;
@@ -564,7 +576,7 @@ const BVPH = (() => {
     init, loadBooks, loadFeatured, onChange, status,
     getBooks, getBook, getFeatured, getCover, getCovers,
     saveBooks, addBook, updateBook, deleteBook, setFeaturedBook, saveFeatured,
-    getOrders, saveOrders, addOrder, getOrder,
+    getOrders, saveOrders, addOrder, getOrder, markOrderPaid, getPaidOrders, getPendingOrders,
     newId, fileToDataUrl,
     isAuthed, login, logout, enforceSession, sessionMsLeft, SESSION_MS,
     getWishlist, isInWishlist, addToWishlist, removeFromWishlist, toggleWishlist,

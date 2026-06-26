@@ -5,81 +5,145 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Payment — The Book Vault PH</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --cream:#FAF7F2;--burgundy:#6B2D3C;--burgundy-deep:#4A1E2A;--gold:#C9A94D;--text:#2E0F1A;
+  --cream:#FAF7F2;--burgundy:#6B2D3C;--burgundy-deep:#4A1E2A;--burgundy-darker:#3A1620;
+  --copper:#D89A55;--copper-soft:#E8C496;--gold:#C9A94D;--text:#2E0F1A;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Source Sans 3',system-ui,sans-serif;background:var(--cream);color:var(--text);line-height:1.6;min-height:100vh;}
-a{color:var(--burgundy);text-decoration:none;}
+body{font-family:'Source Sans 3',system-ui,sans-serif;background:var(--burgundy-darker);color:var(--cream);line-height:1.6;min-height:100vh;}
+a{color:var(--copper-soft);text-decoration:none;}
 a:hover{text-decoration:underline;}
 
-.nav{background:var(--burgundy-deep);padding:1rem 2rem;display:flex;align-items:center;gap:1.5rem;}
-.nav-logo{font-family:'Playfair Display',serif;color:#fff;font-size:1.1rem;}
-.nav-logo em{color:var(--gold);font-style:italic;}
-.nav a{color:rgba(255,255,255,.8);font-size:.9rem;}
-.nav a:hover{color:#fff;text-decoration:none;}
+/* NAV */
+.nav{background:linear-gradient(180deg,rgba(58,22,32,.95) 0%,rgba(58,22,32,.8) 100%);
+  padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(216,154,85,.15);backdrop-filter:blur(8px);}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--cream);}
+.brand-word{font-family:'Playfair Display',serif;font-weight:500;font-size:1.15rem;}
+.brand-word em{font-style:italic;color:var(--copper-soft);}
+.nav-links{display:flex;gap:1.5rem;}
+.nav-links a{color:rgba(255,255,255,.7);font-size:.9rem;transition:color .2s;}
+.nav-links a:hover{color:var(--copper-soft);text-decoration:none;}
 
-.container{max-width:600px;margin:3rem auto;padding:0 1.5rem;}
-.card{background:#fff;border-radius:12px;padding:2.5rem;box-shadow:0 4px 24px rgba(46,15,26,.08);}
+/* CONTAINER */
+.container{max-width:680px;margin:0 auto;padding:2.5rem 1.5rem 4rem;}
 
-h1{font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:.5rem;}
-h1 em{color:var(--burgundy);font-style:italic;}
-.sub{color:#666;margin-bottom:2rem;}
+/* HEADER */
+.page-header{text-align:center;margin-bottom:2.5rem;}
+.page-header h1{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:500;margin-bottom:.5rem;}
+.page-header h1 em{font-style:italic;color:var(--copper);}
+.page-header .sub{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--copper-soft);opacity:.8;}
+.checkmark{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;
+  background:linear-gradient(135deg,var(--copper) 0%,#B8864A 100%);color:var(--burgundy-darker);font-size:1.5rem;margin-bottom:1rem;
+  box-shadow:0 4px 20px rgba(216,154,85,.3);}
 
-.order-id{font-family:'DM Mono',monospace;font-size:.85rem;color:#888;margin-bottom:1.5rem;}
+/* CARD */
+.card{background:linear-gradient(145deg,rgba(74,30,42,.6) 0%,rgba(58,22,32,.8) 100%);
+  border:1px solid rgba(216,154,85,.2);border-radius:16px;padding:2rem;margin-bottom:1.5rem;
+  box-shadow:0 8px 32px rgba(0,0,0,.25);}
+.card-header{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:500;margin-bottom:.25rem;}
+.card-header em{font-style:italic;color:var(--copper);}
+.card-sub{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--copper-soft);opacity:.7;margin-bottom:1.5rem;}
 
-.book-row{display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid #eee;}
-.book-cover{width:60px;height:85px;border-radius:4px;background:linear-gradient(135deg,var(--burgundy),var(--burgundy-deep));background-size:cover;background-position:center;flex-shrink:0;}
+/* ORDER ID */
+.order-id{display:inline-block;font-family:'DM Mono',monospace;font-size:.8rem;color:var(--copper);
+  background:rgba(216,154,85,.1);border:1px solid rgba(216,154,85,.25);border-radius:6px;padding:.4rem .8rem;margin-bottom:1.5rem;}
+
+/* BOOK ROW */
+.book-row{display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid rgba(216,154,85,.15);}
+.book-row:last-child{border-bottom:none;}
+.book-cover{width:55px;height:80px;border-radius:6px;background:linear-gradient(135deg,var(--burgundy),var(--burgundy-deep));
+  background-size:cover;background-position:center;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.3);}
 .book-info{flex:1;}
-.book-title{font-weight:600;margin-bottom:.25rem;}
-.book-author{font-size:.9rem;color:#666;}
-.book-price{font-family:'DM Mono',monospace;font-weight:600;color:var(--burgundy);}
+.book-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:500;color:var(--cream);margin-bottom:.2rem;}
+.book-author{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--copper-soft);opacity:.8;}
+.book-price{font-family:'DM Mono',monospace;font-weight:600;color:var(--copper);font-size:1.05rem;}
 
-.total-row{display:flex;justify-content:space-between;padding:1rem 0;font-weight:600;font-size:1.1rem;border-top:2px solid var(--burgundy-deep);margin-top:.5rem;}
+/* TOTAL */
+.total-row{display:flex;justify-content:space-between;padding:1.25rem 0 .5rem;
+  border-top:2px solid rgba(216,154,85,.3);margin-top:.75rem;}
+.total-row span:first-child{font-family:'Playfair Display',serif;font-size:1.1rem;}
+.total-row span:last-child{font-family:'DM Mono',monospace;font-size:1.2rem;font-weight:600;color:var(--copper);}
 
-.payment-section{margin-top:2rem;padding-top:2rem;border-top:1px solid #eee;}
-.payment-section h2{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:1rem;}
+/* CUSTOMER INFO */
+.customer-box{background:rgba(216,154,85,.08);border:1px solid rgba(216,154,85,.15);border-radius:10px;padding:1.25rem;margin-top:1.5rem;}
+.customer-box h4{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--copper);margin-bottom:.5rem;}
+.customer-box p{font-size:.95rem;color:var(--cream);margin:.25rem 0;}
+.customer-box .note{font-size:.85rem;color:var(--copper-soft);opacity:.8;margin-top:.5rem;}
 
-.payment-method{background:var(--cream);padding:1.5rem;border-radius:8px;margin-bottom:1rem;}
-.payment-method h3{font-size:1rem;margin-bottom:.5rem;color:var(--burgundy);}
-.payment-method p{font-size:.95rem;color:#555;}
+/* QR SECTION */
+.qr-section{text-align:center;padding:1.5rem 0;}
+.qr-wrap{display:inline-block;background:#fff;padding:1rem;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.2);}
+.qr-wrap img{max-width:200px;border-radius:4px;}
+.qr-label{margin-top:1rem;font-family:'DM Mono',monospace;font-size:.75rem;color:var(--copper-soft);}
 
-.qr-wrap{text-align:center;margin:1.5rem 0;}
-.qr-wrap img{max-width:200px;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.1);}
-.qr-note{font-size:.85rem;color:#666;margin-top:.5rem;}
+/* SHIPPING TABLE */
+.shipping-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.9rem;}
+.shipping-table th,.shipping-table td{padding:.6rem .8rem;text-align:left;border-bottom:1px solid rgba(216,154,85,.15);}
+.shipping-table th{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);font-weight:500;}
+.shipping-table td{color:var(--cream);}
+.shipping-table .price{font-family:'DM Mono',monospace;color:var(--copper);text-align:right;}
 
-.bank-details{background:#f5f5f5;padding:1rem;border-radius:6px;font-family:'DM Mono',monospace;font-size:.9rem;margin:1rem 0;}
+/* BUTTONS */
+.btn{display:inline-block;padding:.9rem 2rem;border-radius:8px;font-weight:600;font-size:.95rem;
+  text-decoration:none;cursor:pointer;border:none;transition:all .2s;}
+.btn-primary{background:linear-gradient(135deg,var(--copper) 0%,#B8864A 100%);color:var(--burgundy-darker);
+  box-shadow:0 4px 16px rgba(216,154,85,.3);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(216,154,85,.4);text-decoration:none;}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.btn-secondary{background:rgba(216,154,85,.1);border:1px solid rgba(216,154,85,.3);color:var(--copper-soft);}
+.btn-secondary:hover{background:rgba(216,154,85,.15);text-decoration:none;}
 
-.customer-info{margin-top:2rem;padding:1rem;background:#f9f9f9;border-radius:8px;}
-.customer-info h3{font-size:.9rem;color:#888;margin-bottom:.5rem;}
-.customer-info p{font-size:.95rem;}
+/* NOTE BOX */
+.note-box{background:rgba(216,154,85,.1);border-left:3px solid var(--copper);padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;}
+.note-box strong{color:var(--copper);}
+.note-box p{font-size:.9rem;color:var(--cream);margin:.25rem 0;}
 
-.cta{margin-top:2rem;text-align:center;}
-.btn{display:inline-block;background:var(--burgundy);color:#fff;padding:.8rem 2rem;border-radius:6px;font-weight:500;transition:background .2s;}
-.btn:hover{background:var(--burgundy-deep);text-decoration:none;}
+/* SUCCESS STATE */
+.success-state{text-align:center;padding:2rem;}
+.success-state h3{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:.5rem;}
+.success-state p{color:var(--copper-soft);font-size:.95rem;}
 
-.note{margin-top:2rem;padding:1rem;background:#fff8e6;border-radius:8px;font-size:.9rem;color:#856404;}
-
+/* ERROR STATE */
 .error-state{text-align:center;padding:3rem;}
-.error-state h2{color:var(--burgundy);margin-bottom:1rem;}
+.error-state h2{font-family:'Playfair Display',serif;color:var(--copper);margin-bottom:1rem;}
 
-footer{text-align:center;padding:2rem;font-size:.85rem;color:#888;}
+/* CTA */
+.cta{text-align:center;margin-top:2rem;}
+
+/* FOOTER */
+footer{text-align:center;padding:2rem;font-size:.8rem;color:rgba(255,255,255,.4);border-top:1px solid rgba(216,154,85,.1);}
+
+@media(max-width:600px){
+  .nav{padding:.8rem 1rem;}
+  .nav-links{display:none;}
+  .container{padding:1.5rem 1rem 3rem;}
+  .card{padding:1.5rem;}
+  .page-header h1{font-size:1.8rem;}
+  .book-row{gap:.75rem;}
+  .book-cover{width:45px;height:65px;}
+}
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <a href="/" class="nav-logo">The Book <em>Vault</em> PH</a>
-  <a href="/">Home</a>
-  <a href="/browse.html">Browse</a>
-  <a href="/contact.html">Contact</a>
+  <a href="/" class="brand">
+    <span class="brand-word">The Book <em>Vault</em> PH</span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/browse.html">Browse</a>
+    <a href="/coming-soon.html">Coming Soon</a>
+    <a href="/contact.html">Contact</a>
+  </div>
 </nav>
 
 <div class="container">
-  <div class="card" id="content">
-    <div style="text-align:center;padding:2rem;">Loading order...</div>
+  <div id="content">
+    <div style="text-align:center;padding:3rem;color:var(--copper-soft);">Loading order...</div>
   </div>
 </div>
 
@@ -133,64 +197,109 @@ BVPH.init().then(() => {
   }).join('');
   
   const isWithinSC = order.withinSC;
+  const isPaid = order.status === 'paid';
   
   const paymentHtml = isWithinSC ? `
-    <div class="payment-method">
-      <h3>🎉 Free delivery within San Carlos City!</h3>
-      <p>We'll meet up or hand-deliver your book. Pay via bank transfer or InstaPay.</p>
-    </div>
-    <div class="bank-details">
-      <strong>BPI</strong><br>
-      Account Name: Karen Pearl Ong<br>
-      Account Number: 1234 5678 90
-    </div>
-    <p style="font-size:.9rem;color:#666;">Or scan QR code via GCash/Maya/InstaPay</p>
-    <div class="note">
-      <strong>📱 After payment:</strong> Send a screenshot of your payment to our Facebook or Instagram, along with your order ID. We'll confirm and arrange delivery!
+    <div class="card">
+      <div class="card-header">Scan to <em>pay</em></div>
+      <div class="card-sub">BPI / InstaPay / GCash / Maya</div>
+      
+      <div class="qr-section">
+        <div class="qr-wrap">
+          <img src="/bpi-qr.png" alt="BPI QR Code">
+        </div>
+        <div class="qr-label">TBV SALES · Transfer fees may apply</div>
+      </div>
+      
+      <div class="note-box">
+        <strong>📱 After payment:</strong>
+        <p>Take a screenshot of your payment confirmation and send it to our Facebook or Instagram along with your order ID.</p>
+      </div>
+      
+      ${isPaid ? `
+        <div class="success-state">
+          <h3>✓ Payment confirmed!</h3>
+          <p>We'll arrange delivery soon.</p>
+        </div>
+      ` : `
+        <div class="cta">
+          <button class="btn btn-primary" id="paidBtn">I've sent my payment</button>
+        </div>
+      `}
     </div>
   ` : `
-    <div class="payment-method">
-      <h3>📦 Cash on Delivery (COD)</h3>
-      <p>Your book will be shipped via J&T or LBC. Pay when it arrives!</p>
-    </div>
-    <p style="font-size:.9rem;color:#555;margin:1rem 0;">
-      Shipping fee will be calculated based on your location and added to your total. 
-      We'll message you to confirm before shipping.
-    </p>
-    <div class="note">
-      <strong>📱 What's next:</strong> We'll reach out via the contact info you provided to confirm your order and shipping details.
+    <div class="card">
+      <div class="card-header">Cash on <em>Delivery</em></div>
+      <div class="card-sub">Pay when your book arrives</div>
+      
+      <p style="margin-bottom:1.5rem;color:var(--copper-soft);">Your book will be shipped via J&T or LBC. Shipping fee will be added to your total.</p>
+      
+      <table class="shipping-table">
+        <tr><th>Destination</th><th class="price">Shipping Fee</th></tr>
+        <tr><td>Within Visayas</td><td class="price">₱100 – ₱150</td></tr>
+        <tr><td>Luzon</td><td class="price">₱150 – ₱200</td></tr>
+        <tr><td>Mindanao</td><td class="price">₱150 – ₱200</td></tr>
+      </table>
+      
+      <div class="note-box">
+        <strong>📦 What's next:</strong>
+        <p>We'll message you to confirm your order, final shipping fee, and estimated delivery date before we ship.</p>
+      </div>
+      
+      <p style="font-size:.85rem;color:var(--copper-soft);margin-top:1rem;">
+        Questions about shipping? <a href="/contact.html">Contact us</a>
+      </p>
     </div>
   `;
   
   $('#content').innerHTML = `
-    <h1>Order <em>confirmed!</em></h1>
-    <p class="sub">Thank you for your order. Here's what happens next.</p>
-    
-    <div class="order-id">Order ID: ${esc(order.id)}</div>
-    
-    ${booksHtml}
-    
-    <div class="total-row">
-      <span>Total</span>
-      <span>₱${total}</span>
+    <div class="page-header">
+      <div class="checkmark">✓</div>
+      <h1>Order <em>placed!</em></h1>
+      <div class="sub">Thank you for your order</div>
     </div>
     
-    <div class="customer-info">
-      <h3>Delivery to</h3>
-      <p><strong>${esc(order.customerName)}</strong></p>
-      ${order.address ? `<p>${esc(order.address)}</p>` : '<p><em>San Carlos City (free delivery)</em></p>'}
-      ${order.notes ? `<p style="color:#666;font-size:.9rem;margin-top:.5rem;">Note: ${esc(order.notes)}</p>` : ''}
+    <div class="card">
+      <div class="card-header">Order <em>summary</em></div>
+      <div class="order-id">${esc(order.id)}</div>
+      
+      ${booksHtml}
+      
+      <div class="total-row">
+        <span>Total</span>
+        <span>₱${total}${!isWithinSC ? ' + shipping' : ''}</span>
+      </div>
+      
+      <div class="customer-box">
+        <h4>Delivering to</h4>
+        <p><strong>${esc(order.customerName)}</strong></p>
+        ${order.address ? `<p>${esc(order.address)}</p>` : '<p><em>San Carlos City (free delivery)</em></p>'}
+        ${order.notes ? `<p class="note">Note: ${esc(order.notes)}</p>` : ''}
+      </div>
     </div>
     
-    <div class="payment-section">
-      <h2>Payment</h2>
-      ${paymentHtml}
-    </div>
+    ${paymentHtml}
     
     <div class="cta">
-      <a href="/" class="btn">Continue browsing →</a>
+      <a href="/" class="btn btn-secondary">← Continue browsing</a>
     </div>
   `;
+  
+  // Handle "I've sent my payment" button
+  const paidBtn = $('#paidBtn');
+  if (paidBtn) {
+    paidBtn.onclick = () => {
+      BVPH.markOrderPaid(orderId);
+      paidBtn.disabled = true;
+      paidBtn.textContent = 'Payment marked ✓';
+      paidBtn.parentElement.innerHTML = `
+        <div class="success-state">
+          <h3>✓ Payment marked!</h3>
+          <p>We'll confirm and arrange delivery soon.</p>
+        </div>
+      `;
+    };
+  }
 });
 </script>
 </body>

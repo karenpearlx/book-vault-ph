@@ -756,6 +756,7 @@
       <button class="sub-tab-btn" data-subtab="reservations">reservations <span id="reservedBadge" class="tab-badge">0</span></button>
       <button class="sub-tab-btn" data-subtab="on-credit">on credit <span id="creditBadge" class="tab-badge">0</span></button>
       <button class="sub-tab-btn" data-subtab="sold">sold <span id="soldBadge" class="tab-badge">0</span></button>
+      <button class="sub-tab-btn" data-subtab="orders">orders <span id="ordersBadge" class="tab-badge">0</span></button>
     </div>
 
     <!-- SUB-TAB: ALL BOOKS -->
@@ -844,6 +845,23 @@
       <div id="soldEmpty" class="empty" style="padding:24px;font-size:.9rem;">no sold books yet</div>
     </div>
     </div><!-- end subtab-sold -->
+
+    <!-- SUB-TAB: ORDERS -->
+    <div class="sub-tab-content" id="subtab-orders">
+    <div class="panel">
+      <h2>customer <span class="accent">orders</span> <span id="ordersCount" style="opacity:.6;font-weight:normal;font-size:1rem;">(0)</span></h2>
+      <div class="sub">— track incoming orders and payment confirmations</div>
+      
+      <div style="display:flex;gap:12px;margin:20px 0;flex-wrap:wrap;">
+        <button class="sub-tab-btn active" data-orderfilter="all" onclick="filterOrders('all')">all</button>
+        <button class="sub-tab-btn" data-orderfilter="pending" onclick="filterOrders('pending')">pending</button>
+        <button class="sub-tab-btn" data-orderfilter="paid" onclick="filterOrders('paid')">paid ✓</button>
+      </div>
+      
+      <div id="ordersList" class="status-list" style="margin-top:20px;"></div>
+      <div id="ordersEmpty" class="empty" style="padding:24px;font-size:.9rem;">no orders yet</div>
+    </div>
+    </div><!-- end subtab-orders -->
 
     </div><!-- end tab-catalogue -->
 

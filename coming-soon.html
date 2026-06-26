@@ -54,10 +54,6 @@ body::before{
   display:flex;align-items:center;justify-content:center;gap:32px;
 }
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--cream);flex-shrink:0;}
-.brand-mark{width:36px;height:36px;border-radius:50%;background:var(--copper);
-  display:grid;place-items:center;color:var(--burgundy-deep);font-family:"Playfair Display",serif;
-  font-style:italic;font-weight:600;font-size:1.15rem;line-height:1;
-  box-shadow:0 4px 14px -4px rgba(216,154,85,.5);}
 .brand-word{font-family:"Playfair Display",serif;font-weight:500;font-size:1.15rem;letter-spacing:.01em;color:var(--cream);white-space:nowrap;}
 .brand-word em{font-style:italic;color:var(--copper-soft);font-weight:500;}
 .nav-links{display:flex;align-items:center;gap:24px;}
@@ -422,7 +418,7 @@ body::before{
 <nav class="nav">
   <div class="nav-inner">
     <a class="brand" href="/">
-      <span class="brand-mark">V</span>
+      
       <span class="brand-word">The Book <em>Vault</em> PH</span>
     </a>
     <button class="nav-burger" aria-label="Menu" aria-expanded="false" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
