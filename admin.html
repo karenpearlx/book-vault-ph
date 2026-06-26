@@ -4983,6 +4983,63 @@ Rules: no em dashes, mention "The Book Vault PH, an online preloved bookshop in 
   btn.style.marginLeft = '6px';
   label.appendChild(btn);
 
+  // Table insert button
+  const tableBtn = document.createElement('button');
+  tableBtn.type = 'button';
+  tableBtn.className = 'ai-suggest-btn';
+  tableBtn.textContent = '📊 table';
+  tableBtn.style.marginLeft = '6px';
+  label.appendChild(tableBtn);
+  tableBtn.addEventListener('click', () => {
+    const template = `| Column 1 | Column 2 | Column 3 |
+|----------|----------|----------|
+| Row 1    | Data     | Data     |
+| Row 2    | Data     | Data     |
+| Row 3    | Data     | Data     |`;
+    if (window._bvphBlogState) window._bvphBlogState.insertContent(template);
+  });
+
+  // HTML embed button
+  const embedBtn = document.createElement('button');
+  embedBtn.type = 'button';
+  embedBtn.className = 'ai-suggest-btn';
+  embedBtn.textContent = '🧩 embed';
+  embedBtn.style.marginLeft = '6px';
+  label.appendChild(embedBtn);
+  embedBtn.addEventListener('click', () => {
+    const html = prompt('Paste HTML embed code (iframe, script, etc):');
+    if (html && html.trim()) {
+      const wrapped = `\n\n<div class="embed-container">\n${html.trim()}\n</div>\n\n`;
+      if (window._bvphBlogState) window._bvphBlogState.insertContent(wrapped);
+    }
+  });
+
+  // Paste image handler
+  contentField.addEventListener('paste', async (e) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        if (!file) return;
+        const sb = BVPH.supabase && BVPH.supabase();
+        if (!sb) { alert('Supabase not ready'); return; }
+        const ext = file.type.split('/')[1] || 'png';
+        const filename = `blog-${Date.now()}.${ext}`;
+        const { data, error } = await sb.storage.from('blog-images').upload(filename, file, { upsert: true });
+        if (error) { alert('Upload failed: ' + error.message); return; }
+        const { data: urlData } = sb.storage.from('blog-images').getPublicUrl(filename);
+        const url = urlData?.publicUrl;
+        if (url) {
+          const md = `![image](${url})`;
+          if (window._bvphBlogState) window._bvphBlogState.insertContent(md);
+        }
+        break;
+      }
+    }
+  });
+
   // reuse the ai modal
   btn.addEventListener('click', async () => {
     const sb = BVPH.supabase && BVPH.supabase();
