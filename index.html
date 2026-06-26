@@ -1281,11 +1281,12 @@ body::before{
     for (const id of ids) {
       const coverUrl = covers[id];
       if (!coverUrl) continue;
-      const el = document.querySelector(`[data-cover-id="${id}"]`);
-      if (el) {
+      // Use querySelectorAll to update ALL elements with this cover ID
+      const els = document.querySelectorAll(`[data-cover-id="${id}"]`);
+      els.forEach(el => {
         el.style.backgroundImage = `url('${coverUrl}')`;
         el.classList.add('has-img');
-      }
+      });
     }
   }
 
