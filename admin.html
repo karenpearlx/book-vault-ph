@@ -1694,7 +1694,7 @@
 
   // ===== FEATURED =====
   const refreshFeatured = () => {
-    const books = BVPH.getBooks().filter(b=>!b.demo && b.status === 'on_hand');
+    const books = BVPH.getBooks().filter(b=>!b.demo && (b.status === 'on_hand' || b.status === 'available'));
     const feat = BVPH.getFeatured();
     
     // Get unique authors
@@ -1734,7 +1734,7 @@
   });
   
   const updateFeaturedBooks = () => {
-    const books = BVPH.getBooks().filter(b=>!b.demo && b.status === 'on_hand');
+    const books = BVPH.getBooks().filter(b=>!b.demo && (b.status === 'on_hand' || b.status === 'available'));
     const feat = BVPH.getFeatured();
     const selectedAuthor = $('#featAuthorSelect').value;
     const bookSel = $('#featBookSelect');

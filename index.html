@@ -1432,23 +1432,29 @@ body::before{
 
   function renderFeatured(){
     const all = BVPH.getBooks();
-    const feat = all.find(b => b.featured && b.status !== 'coming_soon');
-    const sec = $('#featured');
-    if (!feat) { sec.style.display = 'none'; return; }
-    sec.style.display = '';
     const featured = BVPH.getFeatured();
+    const sec = $('#featured');
+    
+    // Find the featured book by ID from featured settings
+    const feat = featured.bookId ? all.find(b => b.id === featured.bookId) : null;
+    
+    if (!feat || !featured.authorName) { sec.style.display = 'none'; return; }
+    sec.style.display = '';
+    
     const rawDesc = featured.bookDescription || feat.summary || 'A staff pick worth your evening.';
     const desc = rawDesc.length > 200 ? rawDesc.substring(0, 200).trim() + '...' : rawDesc;
+    const authorPhoto = featured.authorPhoto || '';
+    
     $('#featuredBlock').innerHTML = `
       <div onclick="bv.openDetail('${feat.id}')">${coverHTML(feat, 'feat-cover')}</div>
       <div class="feat-info">
-        
+        ${authorPhoto ? `<div class="author-photo" style="width:60px;height:60px;border-radius:50%;background-image:url('${authorPhoto}');background-size:cover;background-position:center;margin-bottom:12px;"></div>` : ''}
         <h3>${esc(feat.title)}</h3>
-        <p class="by">by ${esc(feat.author||'Unknown')}</p>
+        <p class="by">by ${esc(featured.authorName)}</p>
         <p class="desc">${esc(desc)}</p>
         <div class="row">
           <div class="btn-row">
-            <a class="btn-primary" href="/order.html?book=${encodeURIComponent(feat.id)}">Order this book →</a>
+            <a class="btn-primary" href="/order.html?book=${encodeURIComponent(feat.id)}">Order this book</a>
             <button class="btn-ghost" onclick="bv.openDetail('${feat.id}')">More details</button>
           </div>
         </div>
