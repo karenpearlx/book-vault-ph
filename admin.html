@@ -1481,6 +1481,12 @@
                 </div>
               </div>
               <input type="text" id="bf_image" placeholder="…or paste image URL" style="margin-top:8px;font-size:.8rem;">
+              <div style="margin-top:10px;">
+                <label style="font-size:.75rem;color:var(--ink-soft);display:flex;align-items:center;gap:6px;">image prompt <button type="button" class="ai-suggest-btn" id="bf_imgPromptSuggest" style="font-size:.65rem;padding:2px 6px;">✨ suggest</button></label>
+                <textarea id="bf_imgPrompt" rows="2" placeholder="Describe the image you want to generate..." style="margin-top:4px;font-size:.85rem;"></textarea>
+                <button type="button" class="btn-sm" id="bf_generateImg" style="margin-top:6px;">🎨 generate image</button>
+                <small id="bf_imgGenStatus" style="margin-left:8px;color:var(--ink-soft);font-size:.7rem;"></small>
+              </div>
             </div>
 
             <div class="field">
