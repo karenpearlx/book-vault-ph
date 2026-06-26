@@ -830,9 +830,21 @@ body::before{
     remindBookId = bookId;
     remindBookTitle = title;
     document.getElementById('remindBookTitle').textContent = title;
-    document.getElementById('remindEmail').value = '';
-    document.getElementById('remindPhone').value = '';
-    document.getElementById('remindSource').value = '';
+    // Reset form HTML in case it was replaced by success message
+    document.getElementById('remindForm').innerHTML = `
+      <input type="email" id="remindEmail" placeholder="Your email" required>
+      <input type="tel" id="remindPhone" placeholder="Phone number (optional)">
+      <select id="remindSource" required>
+        <option value="">How did you hear about us?</option>
+        <option value="facebook">Facebook</option>
+        <option value="instagram">Instagram</option>
+        <option value="tiktok">TikTok</option>
+        <option value="friend">Friend / Word of mouth</option>
+        <option value="google">Google search</option>
+        <option value="other">Other</option>
+      </select>
+      <button type="submit" id="remindSubmit">Notify me</button>
+    `;
     document.getElementById('remindBg').classList.add('show');
     document.body.style.overflow = 'hidden';
   }
