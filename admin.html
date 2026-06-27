@@ -464,16 +464,16 @@
 
 /* Tab Navigation */
 .tab-nav {
-  display:flex; gap:4px; padding:0 32px; background:var(--burgundy);
-  border-bottom:1px solid rgba(255,255,255,.1);
+  display:flex; gap:4px; padding:0 32px; background:var(--cream-warm);
+  border-bottom:1px solid rgba(74,28,42,.1);
 }
 .tab-btn {
   padding:14px 20px; background:transparent; border:none;
-  color:var(--cream-warm); opacity:.5; font-family:'Inter',sans-serif; font-size:.9rem; font-weight:500;
+  color:var(--burgundy); opacity:.5; font-family:'Inter',sans-serif; font-size:.9rem; font-weight:500;
   cursor:pointer; transition:all .15s; position:relative;
 }
 .tab-btn:hover { opacity:.8; }
-.tab-btn.active { opacity:1; color:var(--cream-warm); }
+.tab-btn.active { opacity:1; color:var(--burgundy); }
 .tab-btn.active::after {
   content:''; position:absolute; bottom:-1px; left:50%; transform:translateX(-50%);
   width:24px; height:3px; background:var(--copper); border-radius:3px 3px 0 0;
