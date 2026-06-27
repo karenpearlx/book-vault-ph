@@ -1487,51 +1487,113 @@
                 <span><span id="bf_wordCount">0</span> words</span>
                 <span>~<span id="bf_readingTime">0</span> min read</span>
               </small>
-            </div>
+              </div>
+              </div><!-- end blog-editor-left -->
 
-            <div class="field">
-              <label>tags <small style="color:var(--ink-soft);">(comma-separated)</small> <button type="button" class="ai-suggest-btn" data-suggest="tags">✨ suggest</button></label>
-              <input type="text" id="bf_tags" placeholder="thriller, freida mcfadden, recommendation">
-              <div id="bf_tagChips" style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;"></div>
-            </div>
-
-            <details style="margin-top:18px;border:1px solid var(--border);border-radius:6px;padding:12px 16px;background:rgba(0,0,0,.15);">
-              <summary style="cursor:pointer;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-bright);">SEO &amp; sharing</summary>
-
-              <div class="row" style="margin-top:14px;">
+              <!-- RIGHT: Settings Sidebar -->
+              <aside class="blog-editor-right">
                 <div class="field">
-                  <label>meta title <button type="button" class="ai-suggest-btn" data-suggest="metaTitle">✨ suggest</button></label>
-                  <input type="text" id="bf_metaTitle" placeholder="defaults to post title">
+                  <label>title * <button type="button" class="ai-suggest-btn" data-suggest="title" title="AI suggest">✨</button></label>
+                  <input type="text" id="bf_title" required placeholder="The art of getting lost in a good thriller">
                 </div>
-              </div>
-              <div class="field">
-                <label>meta description <small style="color:var(--ink-soft);">(<span id="bf_metaDescCount">0</span>/160)</small> <button type="button" class="ai-suggest-btn" data-suggest="metaDesc">✨ suggest</button></label>
-                <textarea id="bf_metaDesc" rows="2" maxlength="160" placeholder="defaults to excerpt"></textarea>
-              </div>
-              <div class="field">
-                <label>OG image URL</label>
-                <input type="text" id="bf_ogImage" placeholder="defaults to featured image">
-              </div>
-            </details>
 
-            <details style="margin-top:14px;border:1px solid var(--border);border-radius:6px;padding:12px 16px;background:rgba(0,0,0,.15);">
-              <summary style="cursor:pointer;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-bright);">schedule for later</summary>
-              <div class="row" style="margin-top:14px;">
                 <div class="field">
-                  <label>publish date &amp; time</label>
-                  <input type="datetime-local" id="bf_scheduledAt">
-                  <small style="color:var(--ink-soft);font-size:.7rem;">leave empty to publish now or save as draft</small>
+                  <label>slug *</label>
+                  <input type="text" id="bf_slug" required placeholder="art-of-getting-lost">
+                  <small style="color:var(--burgundy);opacity:.5;font-size:.7rem;">/blog/<span id="bf_slugPreview">your-slug</span></small>
                 </div>
-              </div>
-            </details>
 
-            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:24px;border-top:1px solid var(--border);padding-top:18px;">
-              <button type="button" class="btn-sm" id="bf_saveDraft">💾 save draft</button>
-              <button type="button" class="btn-sm" id="bf_schedule">⏰ schedule</button>
-              <button type="button" class="btn-sm fill" id="bf_publish">✓ publish now</button>
-            </div>
+                <div class="field">
+                  <label>primary keyword</label>
+                  <select id="bf_primaryKeyword"><option value="">-- select --</option></select>
+                </div>
 
-            <div id="bf_msg" style="margin-top:12px;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;"></div>
+                <div class="field">
+                  <label>category</label>
+                  <select id="bf_category">
+                    <option value="">— pick one —</option>
+                    <option value="guides">Guides</option>
+                    <option value="lists">Lists</option>
+                    <option value="reviews">Reviews</option>
+                    <option value="local">Local</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label>excerpt <small style="color:var(--burgundy);opacity:.5;">(<span id="bf_excerptCount">0</span>/180)</small> <button type="button" class="ai-suggest-btn" data-suggest="excerpt">✨</button></label>
+                  <textarea id="bf_excerpt" rows="2" maxlength="180" placeholder="Short hook for previews"></textarea>
+                </div>
+
+                <div class="field">
+                  <label>featured image</label>
+                  <div class="upload-zone" id="blogImgZone" style="padding:16px;border:1px dashed rgba(74,28,42,.2);border-radius:10px;background:rgba(74,28,42,.03);text-align:center;">
+                    <input type="file" id="bf_imageFile" accept="image/*" style="display:none;">
+                    <div class="upload-placeholder" id="blogImgPlaceholder">
+                      <p style="margin:0;font-size:.85rem;color:var(--burgundy);opacity:.6;">drag or click to upload</p>
+                    </div>
+                    <div id="blogImgPreview" style="display:none;">
+                      <img id="bf_imagePreview" src="" style="max-width:100%;max-height:140px;border-radius:6px;">
+                      <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;">
+                        <button type="button" class="btn-sm" id="bf_imageReplace" style="padding:6px 12px;font-size:.75rem;">replace</button>
+                        <button type="button" class="btn-sm" id="bf_imageRemove" style="padding:6px 12px;font-size:.75rem;color:#c44;">remove</button>
+                      </div>
+                    </div>
+                  </div>
+                  <input type="text" id="bf_image" placeholder="…or paste URL" style="margin-top:6px;font-size:.8rem;">
+                </div>
+
+                <div class="field">
+                  <label>tags <button type="button" class="ai-suggest-btn" data-suggest="tags">✨</button></label>
+                  <input type="text" id="bf_tags" placeholder="thriller, romance">
+                  <div id="bf_tagChips" style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px;"></div>
+                </div>
+
+                <details style="border:1px solid rgba(74,28,42,.12);border-radius:8px;padding:10px 14px;background:rgba(74,28,42,.03);">
+                  <summary style="cursor:pointer;font-size:.75rem;font-weight:600;color:var(--burgundy);">SEO &amp; sharing</summary>
+                  <div class="field" style="margin-top:12px;">
+                    <label>meta title <button type="button" class="ai-suggest-btn" data-suggest="metaTitle">✨</button></label>
+                    <input type="text" id="bf_metaTitle" placeholder="defaults to title">
+                  </div>
+                  <div class="field">
+                    <label>meta desc <small style="color:var(--burgundy);opacity:.5;">(<span id="bf_metaDescCount">0</span>/160)</small></label>
+                    <textarea id="bf_metaDesc" rows="2" maxlength="160" placeholder="defaults to excerpt"></textarea>
+                  </div>
+                  <div class="field">
+                    <label>OG image</label>
+                    <input type="text" id="bf_ogImage" placeholder="defaults to featured">
+                  </div>
+                </details>
+
+                <details style="border:1px solid rgba(74,28,42,.12);border-radius:8px;padding:10px 14px;background:rgba(74,28,42,.03);margin-top:8px;">
+                  <summary style="cursor:pointer;font-size:.75rem;font-weight:600;color:var(--burgundy);">schedule</summary>
+                  <div class="field" style="margin-top:12px;">
+                    <input type="datetime-local" id="bf_scheduledAt">
+                    <small style="color:var(--burgundy);opacity:.5;font-size:.7rem;">leave empty to publish now</small>
+                  </div>
+                </details>
+
+                <details style="border:1px solid rgba(74,28,42,.12);border-radius:8px;padding:10px 14px;background:rgba(74,28,42,.03);margin-top:8px;">
+                  <summary style="cursor:pointer;font-size:.75rem;font-weight:600;color:var(--burgundy);">AI settings</summary>
+                  <div class="field" style="margin-top:12px;">
+                    <button type="button" class="btn-sm" id="bf_aiSettings" style="width:100%;">⚙ set OpenAI key</button>
+                  </div>
+                  <div class="field">
+                    <label>image prompt</label>
+                    <textarea id="bf_imgPrompt" rows="2" placeholder="Describe image to generate..." style="font-size:.85rem;"></textarea>
+                    <button type="button" class="btn-sm" id="bf_generateImg" style="margin-top:6px;width:100%;">🎨 generate</button>
+                    <small id="bf_imgGenStatus" style="color:var(--burgundy);opacity:.5;font-size:.7rem;"></small>
+                  </div>
+                </details>
+
+                <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(74,28,42,.1);">
+                  <button type="button" class="btn-sm" id="bf_saveDraft" style="width:100%;">💾 save draft</button>
+                  <button type="button" class="btn-sm" id="bf_schedule" style="width:100%;">⏰ schedule</button>
+                  <button type="button" class="btn-sm fill" id="bf_publish" style="width:100%;">✓ publish now</button>
+                </div>
+
+                <div id="bf_msg" style="margin-top:10px;font-size:.7rem;text-align:center;color:var(--burgundy);"></div>
+              </aside><!-- end blog-editor-right -->
+            </div><!-- end blog-editor-grid -->
           </form>
         </div>
       </div>
