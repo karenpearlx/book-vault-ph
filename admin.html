@@ -182,13 +182,13 @@
     padding:0 14px 6px;
   }
   .booktable td{
-    padding:12px 14px;background:var(--burgundy);vertical-align:middle;
-    border-top:1px solid rgba(74,28,42,.2);border-bottom:1px solid rgba(74,28,42,.2);
-    color:var(--cream-warm);
+    padding:12px 14px;background:#E6D5D8;vertical-align:middle;
+    border-top:1px solid rgba(74,28,42,.1);border-bottom:1px solid rgba(74,28,42,.1);
+    color:var(--burgundy);
   }
-  .booktable td:first-child{border-left:1px solid rgba(74,28,42,.15);border-radius:4px 0 0 4px;}
-  .booktable td:last-child{border-right:1px solid rgba(74,28,42,.15);border-radius:0 4px 4px 0;}
-  .booktable tr.featured td{background:#3d1623;}
+  .booktable td:first-child{border-left:1px solid rgba(74,28,42,.08);border-radius:4px 0 0 4px;}
+  .booktable td:last-child{border-right:1px solid rgba(74,28,42,.08);border-radius:0 4px 4px 0;}
+  .booktable tr.featured td{background:#D8C5C9;}
   .booktable tr.sold-row td{opacity:.6;}
   .booktable .cover-cell, .booktable .title-cell{cursor:pointer;}
   .booktable .cover-cell:hover .mini, .booktable .title-cell:hover{opacity:.8;}
@@ -608,8 +608,8 @@
   .kw-row .kw-actions { width:100%; }
 }
 
-.blog-editor-grid { display:grid; grid-template-columns:1fr 340px; gap:24px; align-items:start; }
-.blog-editor-left { min-width:0; }
+.blog-editor-grid { display:grid; grid-template-columns:1fr 340px; gap:24px; align-items:stretch; }
+.blog-editor-left { min-width:0; display:flex; flex-direction:column; }
 .blog-editor-right { position:sticky; top:100px; display:flex; flex-direction:column; gap:16px; }
 .blog-editor-right .field { margin-bottom:0; }
 @media(max-width:900px){ .blog-editor-grid { grid-template-columns:1fr; } .blog-editor-right { position:static; } }
@@ -1490,8 +1490,8 @@
                 <button type="button" class="view-tab active" data-view="content">Content</button>
                 <button type="button" class="view-tab" data-view="raw">Raw</button>
               </div>
-              <div id="bf_preview" contenteditable="true" style="min-height:350px;padding:28px 32px;background:var(--cream-warm);color:var(--ink);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;line-height:1.75;overflow-y:auto;outline:none;cursor:text;"></div>
-              <textarea id="bf_content" rows="14" required placeholder="Write your post here..." style="border-radius:0 0 8px 8px;border-top:none;display:none;"></textarea>
+              <div id="bf_preview" contenteditable="true" style="flex:1;min-height:500px;padding:28px 32px;background:var(--cream-warm);color:var(--ink);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;line-height:1.75;overflow-y:auto;outline:none;cursor:text;"></div>
+              <textarea id="bf_content" rows="14" required placeholder="Write your post here..." style="flex:1;min-height:500px;border-radius:0 0 8px 8px;border-top:none;display:none;"></textarea>
               <small style="color:var(--ink-soft);font-size:.7rem;display:flex;gap:14px;flex-wrap:wrap;">
                 <span><span id="bf_wordCount">0</span> words</span>
                 <span>~<span id="bf_readingTime">0</span> min read</span>
