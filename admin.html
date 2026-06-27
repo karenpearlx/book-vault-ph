@@ -143,10 +143,11 @@
   @media (max-width:680px){ .row, .row.thirds{grid-template-columns:1fr;} }
   .field label{display:block;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.01em;color:var(--ink);margin-bottom:8px;}
   .field input, .field select, .field textarea{
-    width:100%;padding:12px 14px;background:#EBD6DD;border:1px solid rgba(74,28,42,.15);
-    border-radius:10px;color:var(--ink);transition:all .15s;font-family:'Inter',sans-serif;font-size:.9rem;
+    width:100%;padding:12px 14px;background:var(--burgundy);border:1px solid rgba(74,28,42,.3);
+    border-radius:10px;color:var(--cream-warm);transition:all .15s;font-family:'Inter',sans-serif;font-size:.9rem;
   }
-  .field input:focus, .field select:focus, .field textarea:focus{outline:none;border-color:var(--burgundy);background:#F5E8EC;box-shadow:0 0 0 3px rgba(74,28,42,.1);}
+  .field input::placeholder, .field textarea::placeholder{color:var(--cream-warm);opacity:.5;}
+  .field input:focus, .field select:focus, .field textarea:focus{outline:none;border-color:var(--copper);background:#3d1623;box-shadow:0 0 0 3px rgba(74,28,42,.2);}
   .field textarea{min-height:80px;resize:vertical;line-height:1.6;}
   .field .hint{font-size:.8rem;color:var(--ink-soft);margin-top:6px;}
   .checkrow{display:flex;align-items:center;gap:10px;padding:11px 0;}
@@ -621,11 +622,12 @@
 }
 .blog-row:hover { border-color:var(--burgundy); transform:translateY(-2px); }
 .blog-row .thumb {
-  width:100%; height:160px; flex-shrink:0; overflow:hidden;
+  width:100%; height:180px; flex-shrink:0; overflow:hidden;
   background:linear-gradient(135deg,rgba(74,28,42,.15) 0%,rgba(74,28,42,.08) 100%);
   display:flex; align-items:center; justify-content:center; color:var(--burgundy); font-size:2.5rem; opacity:.5;
+  border-radius:12px 12px 0 0;
 }
-.blog-row .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+.blog-row .thumb img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; }
 .blog-row .meta { flex:1; min-width:0; padding:18px; background:var(--burgundy); }
 .blog-row .meta h4 {
   margin:0 0 10px; font-family:'Playfair Display',serif;
@@ -650,14 +652,14 @@
 .blog-row .meta .info .pill.draft { background:rgba(255,255,255,.1); color:var(--cream-warm); opacity:.7; }
 .blog-row .row-actions { display:flex; gap:6px; flex-wrap:wrap; padding:12px 18px 18px; margin-top:auto; background:var(--burgundy); }
 .blog-row .row-actions .icon-btn {
-  padding:8px 12px; font-size:.75rem;
-  border-radius:8px; border:1px solid rgba(74,28,42,.2);
-  font-family:'Inter',sans-serif; font-weight:500; cursor:pointer; background:var(--burgundy);
-  color:var(--cream-warm); transition:all .15s;
+  padding:8px 14px; font-size:.75rem;
+  border-radius:8px; border:none;
+  font-family:'Inter',sans-serif; font-weight:600; cursor:pointer; background:var(--cream-warm);
+  color:var(--burgundy); transition:all .15s;
 }
-.blog-row .row-actions .icon-btn:hover { background:#3d1623; transform:translateY(-1px); }
-.blog-row .row-actions .icon-btn.edit { background:var(--burgundy); color:var(--cream-warm); }
-.blog-row .row-actions .icon-btn.edit:hover { background:#3d1623; }
+.blog-row .row-actions .icon-btn:hover { background:var(--copper); color:var(--burgundy); transform:translateY(-1px); }
+.blog-row .row-actions .icon-btn.edit { background:var(--cream-warm); color:var(--burgundy); }
+.blog-row .row-actions .icon-btn.edit:hover { background:var(--copper); }
 .blog-row .row-actions .icon-btn.view { color:#3b82f6; }
 .blog-row .row-actions .icon-btn.view:hover { background:rgba(59,130,246,.08); }
 .blog-row .row-actions .icon-btn.del { color:#dc2626; }
@@ -1533,10 +1535,10 @@
 
                 <div class="field">
                   <label>featured image</label>
-                  <div class="upload-zone" id="blogImgZone" style="padding:16px;border:1px dashed rgba(74,28,42,.2);border-radius:10px;background:rgba(74,28,42,.03);text-align:center;">
+                  <div class="upload-zone" id="blogImgZone" style="padding:16px;border:1px dashed rgba(255,255,255,.3);border-radius:10px;background:var(--burgundy);text-align:center;">
                     <input type="file" id="bf_imageFile" accept="image/*" style="display:none;">
                     <div class="upload-placeholder" id="blogImgPlaceholder">
-                      <p style="margin:0;font-size:.85rem;color:var(--burgundy);opacity:.6;">drag or click to upload</p>
+                      <p style="margin:0;font-size:.85rem;color:var(--cream-warm);opacity:.6;">drag or click to upload</p>
                     </div>
                     <div id="blogImgPreview" style="display:none;">
                       <img id="bf_imagePreview" src="" style="max-width:100%;max-height:140px;border-radius:6px;">
@@ -1555,8 +1557,8 @@
                   <div id="bf_tagChips" style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px;"></div>
                 </div>
 
-                <details style="border:1px solid rgba(74,28,42,.12);border-radius:8px;padding:10px 14px;background:rgba(74,28,42,.03);">
-                  <summary style="cursor:pointer;font-size:.75rem;font-weight:600;color:var(--burgundy);">SEO &amp; sharing</summary>
+                <details style="border:1px solid rgba(74,28,42,.3);border-radius:8px;padding:10px 14px;background:var(--burgundy);">
+                  <summary style="cursor:pointer;font-size:.75rem;font-weight:600;color:var(--cream-warm);">SEO &amp; sharing</summary>
                   <div class="field" style="margin-top:12px;">
                     <label>meta title <button type="button" class="ai-suggest-btn" data-suggest="metaTitle">✨</button></label>
                     <input type="text" id="bf_metaTitle" placeholder="defaults to title">
