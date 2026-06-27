@@ -798,6 +798,9 @@
 .watermark-preview-grid .preview-item .remove-btn { position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:rgba(0,0,0,.6); color:#fff; border:none; cursor:pointer; font-size:.8rem; line-height:1; }
 .gen-image-container { background:var(--cream-soft); border-radius:8px; padding:12px; border:1px solid var(--border); }
 .template-section { margin-bottom:16px; }
+.view-tab{background:var(--surface);border:none;padding:8px 16px;cursor:pointer;color:var(--ink-soft);font-size:.85rem;transition:all .15s;}
+.view-tab:hover{background:rgba(255,255,255,.05);color:var(--cream);}
+.view-tab.active{background:var(--cream-warm);color:var(--ink);font-weight:500;}
 #bf_preview h1,#bf_preview h2,#bf_preview h3{font-family:"Playfair Display",serif;color:var(--burgundy);margin:1em 0 .5em;}
 #bf_preview h1{font-size:1.8rem;}#bf_preview h2{font-size:1.5rem;}#bf_preview h3{font-size:1.25rem;}
 #bf_preview p{margin:0 0 1em;}#bf_preview a{color:var(--copper);}
@@ -1528,11 +1531,13 @@
                 <button type="button" class="tb-btn" data-md="quote" title="Blockquote">❝</button>
                 <button type="button" class="tb-btn" data-md="table" title="Table">▦</button>
                 <button type="button" class="tb-btn" data-md="hr" title="Horizontal Rule">―</button>
-                <span style="flex:1;"></span>
-                <button type="button" class="tb-btn" id="bf_togglePreview" title="Toggle Preview" style="background:rgba(216,154,85,.2);">👁 Preview</button>
               </div>
-              <textarea id="bf_content" rows="14" required placeholder="Write your post here..." style="border-radius:0 0 8px 8px;border-top:none;"></textarea>
-              <div id="bf_preview" style="display:none;min-height:300px;padding:20px;background:var(--cream-warm);color:var(--ink);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;line-height:1.7;overflow-y:auto;"></div>
+              <div id="bf_viewTabs" style="display:flex;gap:0;border:1px solid var(--border);border-top:none;border-bottom:none;">
+                <button type="button" class="view-tab active" data-view="content">Content</button>
+                <button type="button" class="view-tab" data-view="raw">Raw</button>
+              </div>
+              <div id="bf_preview" style="min-height:300px;padding:20px;background:var(--cream-warm);color:var(--ink);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;line-height:1.7;overflow-y:auto;"></div>
+              <textarea id="bf_content" rows="14" required placeholder="Write your post here..." style="border-radius:0 0 8px 8px;border-top:none;display:none;"></textarea>
               <small style="color:var(--ink-soft);font-size:.7rem;display:flex;gap:14px;flex-wrap:wrap;">
                 <span><span id="bf_wordCount">0</span> words</span>
                 <span>~<span id="bf_readingTime">0</span> min read</span>
@@ -5055,11 +5060,26 @@ Rules: no em dashes, mention "The Book Vault PH, an online preloved bookshop in 
     }
   });
 
+  // Helper to switch to Raw view
+  const switchToRaw = () => {
+    const tabs = document.getElementById('bf_viewTabs');
+    if (tabs) {
+      tabs.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+      const rawTab = tabs.querySelector('[data-view="raw"]');
+      if (rawTab) rawTab.classList.add('active');
+    }
+    const prev = document.getElementById('bf_preview');
+    if (prev) prev.style.display = 'none';
+    contentField.style.display = '';
+    contentField.focus();
+  };
+
   // Toolbar buttons
   const toolbar = document.getElementById('bf_toolbar');
   if (toolbar) {
     toolbar.querySelectorAll('.tb-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
+        switchToRaw();
         const md = btn.dataset.md;
         const ta = contentField;
         const start = ta.selectionStart;
@@ -5119,36 +5139,37 @@ Rules: no em dashes, mention "The Book Vault PH, an online preloved bookshop in 
     });
   }
 
-  // Preview toggle
-  const previewBtn = document.getElementById('bf_togglePreview');
+  // View tabs (Content/Raw)
+  const viewTabs = document.getElementById('bf_viewTabs');
   const previewDiv = document.getElementById('bf_preview');
-  if (previewBtn && previewDiv) {
-    let isPreview = false;
-    previewBtn.addEventListener('click', () => {
-      isPreview = !isPreview;
-      if (isPreview) {
-        // Render markdown to HTML
-        const md = contentField.value;
-        if (typeof marked !== 'undefined') {
-          marked.setOptions({ breaks: true, gfm: true });
-          previewDiv.innerHTML = marked.parse(md);
-        } else {
-          // Basic fallback if marked.js not loaded
-          previewDiv.innerHTML = md
-            .replace(/\n/g, '<br>')
-            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\*(.+?)\*/g, '<em>$1</em>');
-        }
-        contentField.style.display = 'none';
-        previewDiv.style.display = 'block';
-        previewBtn.innerHTML = '✏️ Edit';
-        previewBtn.style.background = 'rgba(100,200,100,.2)';
-      } else {
-        contentField.style.display = '';
-        previewDiv.style.display = 'none';
-        previewBtn.innerHTML = '👁 Preview';
-        previewBtn.style.background = 'rgba(216,154,85,.2)';
+  if (viewTabs && previewDiv) {
+    const updatePreview = () => {
+      const md = contentField.value;
+      if (typeof marked !== 'undefined') {
+        marked.setOptions({ breaks: true, gfm: true });
+        previewDiv.innerHTML = marked.parse(md) || '<p style="color:#999;font-style:italic;">Start writing to see preview...</p>';
       }
+    };
+    // Initial render
+    updatePreview();
+    // Update preview when content changes
+    contentField.addEventListener('input', updatePreview);
+    
+    viewTabs.querySelectorAll('.view-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        viewTabs.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const view = tab.dataset.view;
+        if (view === 'content') {
+          updatePreview();
+          previewDiv.style.display = 'block';
+          contentField.style.display = 'none';
+        } else {
+          previewDiv.style.display = 'none';
+          contentField.style.display = '';
+          contentField.focus();
+        }
+      });
     });
   }
 
