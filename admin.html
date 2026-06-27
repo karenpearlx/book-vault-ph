@@ -487,7 +487,7 @@
 
 /* Sub-Tab Navigation */
 .sub-tab-nav {
-  display:flex; gap:8px; padding:16px 24px; margin-bottom:8px;
+  display:flex; gap:8px; padding:16px 36px; margin-bottom:8px;
   border-bottom:1px solid rgba(74,28,42,.15);
 }
 .sub-tab-btn {
@@ -502,7 +502,7 @@
   border-radius:6px; font-size:.7rem; font-family:'Inter',sans-serif; font-weight:600;
 }
 .sub-tab-btn.active .tab-badge { background:rgba(74,28,42,.2); color:var(--burgundy); }
-.sub-tab-content { display:none; padding:0 24px; }
+.sub-tab-content { display:none; padding:0 36px; }
 .sub-tab-content.active { display:block; }
 .msg-tab-content { display:none; }
 .msg-tab-content.active { display:block; }
@@ -609,13 +609,13 @@
   .kw-row .kw-actions { width:100%; }
 }
 
-.blog-editor-grid { display:grid; grid-template-columns:1fr 340px; gap:24px; align-items:stretch; padding:0 24px; }
+.blog-editor-grid { display:grid; grid-template-columns:1fr 340px; gap:24px; align-items:stretch; padding:0 36px; }
 .blog-editor-left { min-width:0; display:flex; flex-direction:column; }
 .blog-editor-right { position:sticky; top:100px; display:flex; flex-direction:column; gap:16px; }
 .blog-editor-right .field { margin-bottom:0; }
 @media(max-width:900px){ .blog-editor-grid { grid-template-columns:1fr; } .blog-editor-right { position:static; } }
 
-.blog-admin-list { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 340px)); gap:20px; justify-content:center; padding:0 24px; }
+.blog-admin-list { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 340px)); gap:20px; justify-content:center; padding:0 36px; }
 .blog-row {
   display:flex; flex-direction:column; padding:0;
   background:var(--cream-warm); border:1px solid rgba(74,28,42,.1); border-radius:16px;
@@ -678,7 +678,7 @@
   .blog-row .row-actions { width:100%; justify-content:flex-start; }
 }
 @media(max-width:680px){
-  .sub-tab-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:12px 16px;gap:6px;}
+  .sub-tab-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:12px 24px;gap:6px;}
   .sub-tab-btn{white-space:nowrap;flex-shrink:0;padding:10px 14px;font-size:.85rem;}
 }
 
