@@ -169,9 +169,9 @@ body::before{
 .nav-burger{display:none;background:none;border:0;color:var(--cream);font-size:1.5rem;line-height:1;padding:4px 8px;}
 
 @media (max-width:960px){
-  .nav-inner{flex-wrap:wrap;gap:16px;}
+  .nav-inner{flex-wrap:wrap;gap:16px;justify-content:flex-start;}
   .nav-links{display:none;}
-  .nav-burger{display:block;justify-self:end;}
+  .nav-burger{display:block;}
   .nav-search{grid-column:1/-1;max-width:none;justify-self:stretch;order:3;}
   .nav-links.open{display:flex;flex-direction:column;align-items:flex-start;gap:0;
     grid-column:1/-1;order:4;width:100%;
