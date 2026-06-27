@@ -2286,7 +2286,7 @@
     const rows = books.map(b => {
       const ratingCell = b.rating 
         ? (b.goodreads_url 
-          ? `<a href="${esc(b.goodreads_url)}" target="_blank" style="color:var(--copper-bright);text-decoration:none;">${b.rating.toFixed(2)} ⭐</a>` 
+          ? `<a href="${escapeHtml(b.goodreads_url)}" target="_blank" style="color:var(--copper-bright);text-decoration:none;">${b.rating.toFixed(2)} ⭐</a>` 
           : `${b.rating.toFixed(2)} ⭐`)
         : '—';
       const saleStatus = b.sale_status || 'available';
@@ -2304,7 +2304,7 @@
       return `
       <tr class="${saleStatus==='sold'||saleStatus==='credit'||saleStatus==='reserved'?'sold-row':''}">
         <td class="cover-cell" onclick="openBookDetail('${b.id}')"><div class="mini" style="${b.cover?`background-image:url('${b.cover}')`:''}"></div></td>
-        <td class="title-cell" onclick="openBookDetail('${b.id}')">${esc(b.title)}${b.demo?' <span class="badge">demo</span>':''}${b.status==='coming_soon'?' <span class="badge" style="background:rgba(216,154,85,.3);border-color:var(--copper);">coming soon</span>':''}<span class="a">${esc(b.author)}</span></td>
+        <td class="title-cell" onclick="openBookDetail('${b.id}')">${escapeHtml(b.title)}${b.demo?' <span class="badge">demo</span>':''}${b.status==='coming_soon'?' <span class="badge" style="background:rgba(216,154,85,.3);border-color:var(--copper);">coming soon</span>':''}<span class="a">${escapeHtml(b.author)}</span></td>
         <td><span class="badge">${b.genre}</span></td>
         <td><span class="badge">${b.condition}</span></td>
         <td>${b.costPrice?'₱'+b.costPrice:'—'}</td>
@@ -2505,7 +2505,7 @@
   function uniqSessions(events){ return new Set(events.map(e=>e.session_id).filter(Boolean)).size; }
   function renderRank(rows, max=1){
     if (!rows.length) return '<div class="empty" style="padding:18px;">nothing here yet.</div>';
-    return rows.map(([name,n]) => `<div class="traffic-row"><div class="traffic-name">${esc(name)}</div><div class="traffic-num">${n}</div><div class="traffic-bar"><span style="width:${Math.max(6, pct(n,max))}%"></span></div></div>`).join('');
+    return rows.map(([name,n]) => `<div class="traffic-row"><div class="traffic-name">${escapeHtml(name)}</div><div class="traffic-num">${n}</div><div class="traffic-bar"><span style="width:${Math.max(6, pct(n,max))}%"></span></div></div>`).join('');
   }
   async function resetAnalytics(){
     if (!confirm('Reset all traffic data? This cannot be undone.')) return;
@@ -2565,7 +2565,7 @@
         const when = new Date(e.created_at).toLocaleString('en-PH', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
         const book = e.book_id ? ` · ${bookMap.get(e.book_id) || 'book'}` : '';
         const el = e.element ? ` · ${e.element}` : '';
-        return `<div class="activity-item"><div class="activity-time">${esc(when)}</div><div class="activity-text">${esc(eventLabel(e.event_type))} ${esc(pageLabel(e.page))}${esc(book)}${esc(el)}</div></div>`;
+        return `<div class="activity-item"><div class="activity-time">${escapeHtml(when)}</div><div class="activity-text">${escapeHtml(eventLabel(e.event_type))} ${escapeHtml(pageLabel(e.page))}${escapeHtml(book)}${escapeHtml(el)}</div></div>`;
       }).join('');
       box.innerHTML = `
         <div class="traffic-grid">
@@ -2615,11 +2615,11 @@
         <div class="status-card">
           <img class="cover" src="${b.cover || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22/>'}" alt="">
           <div class="info">
-            <div class="title">${esc(b.title)}</div>
-            <div class="author">${esc(b.author)}</div>
+            <div class="title">${escapeHtml(b.title)}</div>
+            <div class="author">${escapeHtml(b.author)}</div>
             <div class="meta">
-              ${customerName ? `<span>👤 ${esc(customerName)}</span>` : ''}
-              ${customerPhone ? `<span>📱 ${esc(customerPhone)}</span>` : ''}
+              ${customerName ? `<span>👤 ${escapeHtml(customerName)}</span>` : ''}
+              ${customerPhone ? `<span>📱 ${escapeHtml(customerPhone)}</span>` : ''}
               ${paidBadge}
             </div>
           </div>
@@ -2889,11 +2889,11 @@
         ${recent.map(r => `
           <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(0,0,0,.2);border-radius:6px;flex-wrap:wrap;gap:8px;">
             <div>
-              <span style="color:var(--copper);font-weight:500;">${esc(r.email)}</span>
+              <span style="color:var(--copper);font-weight:500;">${escapeHtml(r.email)}</span>
               <span style="font-size:.8rem;color:var(--ink-soft);margin-left:8px;">${labels[r.source] || r.source || ''}</span>
             </div>
             <div style="font-size:.75rem;color:var(--ink-soft);">
-              📖 ${esc(r.bookTitle || '')} · ${formatDate(r.createdAt)}
+              📖 ${escapeHtml(r.bookTitle || '')} · ${formatDate(r.createdAt)}
             </div>
           </div>
         `).join('')}
@@ -2965,16 +2965,16 @@
       <div class="notify-group">
         <div class="notify-header">
           <div>
-            <div class="notify-email">${esc(g.email)}</div>
-            ${g.phone ? `<div class="notify-phone">📱 ${esc(g.phone)}</div>` : ''}
+            <div class="notify-email">${escapeHtml(g.email)}</div>
+            ${g.phone ? `<div class="notify-phone">📱 ${escapeHtml(g.phone)}</div>` : ''}
           </div>
-          ${g.source ? `<span class="notify-source">${esc(g.source)}</span>` : ''}
+          ${g.source ? `<span class="notify-source">${escapeHtml(g.source)}</span>` : ''}
         </div>
         <div class="notify-books">
           ${g.books.map(b => `
             <div class="notify-book" style="flex-wrap:wrap;gap:8px;">
               <div style="display:flex;align-items:center;gap:8px;flex:1;">
-                <span class="notify-book-title">📖 ${esc(b.title)}</span>
+                <span class="notify-book-title">📖 ${escapeHtml(b.title)}</span>
                 ${b.isAvailable 
                   ? `<span class="avail-badge available">✓ available</span>` 
                   : `<span class="avail-badge not-available">not yet</span>`}
@@ -2991,7 +2991,7 @@
           `).join('')}
         </div>
         <div class="notify-actions">
-          ${g.books.map(b => `<button class="btn-delete" onclick="deleteNotifyReq('${b.id}')">✕ ${esc(b.title).substring(0,20)}</button>`).join('')}
+          ${g.books.map(b => `<button class="btn-delete" onclick="deleteNotifyReq('${b.id}')">✕ ${escapeHtml(b.title).substring(0,20)}</button>`).join('')}
         </div>
       </div>
     `).join('');
@@ -3081,7 +3081,7 @@
       <div class="status-card">
         <div class="expense-batch-col" style="background:${color.bg}; color:${color.text};">${e.batch ? escapeHtml(e.batch) : '—'}</div>
         <div class="info" style="flex:1;">
-          <div class="title">${esc(e.description)}</div>
+          <div class="title">${escapeHtml(e.description)}</div>
           <div class="meta">
             <span class="expense-cat" data-cat="${e.category}">${e.category}</span>
             <span>${e.date}</span>
@@ -3097,7 +3097,7 @@
     
     // Populate batch datalist for autocomplete
     const batches = [...new Set(getExpenses().map(e => e.batch).filter(Boolean))];
-    $('#batchList').innerHTML = batches.map(b => `<option value="${esc(b)}">`).join('');
+    $('#batchList').innerHTML = batches.map(b => `<option value="${escapeHtml(b)}">`).join('');
 
     // Attach edit handlers
     $$('[data-editexpense]').forEach(btn => {
@@ -3260,13 +3260,13 @@
         <div class="message-card ${m.read ? 'read' : 'unread'}">
           <div class="message-header">
             <div class="message-from">
-              <strong>${esc(m.name)}</strong>
-              <span class="message-email">${esc(m.email)}</span>
+              <strong>${escapeHtml(m.name)}</strong>
+              <span class="message-email">${escapeHtml(m.email)}</span>
             </div>
             <div class="message-date">${new Date(m.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</div>
           </div>
-          ${m.subject ? `<div class="message-subject">${esc(m.subject)}</div>` : ''}
-          <div class="message-body">${esc(m.message)}</div>
+          ${m.subject ? `<div class="message-subject">${escapeHtml(m.subject)}</div>` : ''}
+          <div class="message-body">${escapeHtml(m.message)}</div>
           <div class="message-actions">
             ${!m.read ? `<button class="btn-mark" data-markread="${m.id}">mark read</button>` : ''}
             <button class="btn-undo" data-delmsg="${m.id}">delete</button>
@@ -3332,7 +3332,7 @@
     sel.innerHTML = `<option value="">${emptyLabel}</option>` +
       books.map(b=>{
         const rt = b.rating ? ` · ⭐ ${b.rating}` : '';
-        return `<option value="${b.id}">${esc(b.title)} · ${esc(b.author)}${rt}</option>`;
+        return `<option value="${b.id}">${escapeHtml(b.title)} · ${escapeHtml(b.author)}${rt}</option>`;
       }).join('');
     if (keep && books.find(b=>b.id===keep)) sel.value = keep;
     renderOnHandGrid();
@@ -3381,7 +3381,7 @@
         <label class="onhand-item ${sel}" data-id="${b.id}">
           <input type="checkbox" ${checked} data-id="${b.id}">
           <div class="oh-cover" style="${coverStyle}"></div>
-          <div class="oh-meta"><b>${esc(b.title)}</b><span>${esc(b.author)} · ₱${b.sellPrice||0}</span></div>
+          <div class="oh-meta"><b>${escapeHtml(b.title)}</b><span>${escapeHtml(b.author)} · ₱${b.sellPrice||0}</span></div>
         </label>`;
     }).join('') || `<div style="padding:20px;color:#8B7A66;font-style:italic;font-family:'Cormorant Garamond',serif;">no available books yet</div>`;
     grid.querySelectorAll('input[type="checkbox"]').forEach(cb => {
@@ -3868,10 +3868,10 @@ function openBookDetail(id) {
   cover.className = 'bd-cover' + (hasImg ? ' has-img' : '');
   cover.style.backgroundImage = hasImg ? `url('${b.cover}')` : '';
   cover.innerHTML = `
-    <div class="pub">${esc(padNo(b.title))}</div>
+    <div class="pub">${escapeHtml(padNo(b.title))}</div>
     <div>
-      <div class="ttl">${esc(b.title)}</div>
-      <div class="auth">${esc(b.author||'')}</div>
+      <div class="ttl">${escapeHtml(b.title)}</div>
+      <div class="auth">${escapeHtml(b.author||'')}</div>
     </div>
     <div class="auth">BVPH</div>`;
 
@@ -3879,28 +3879,28 @@ function openBookDetail(id) {
   const stars = rating ? '★'.repeat(Math.round(rating)) + '☆'.repeat(5-Math.round(rating)) : '';
 
   const summary = b.summary
-    ? `<p class="summary">${esc(b.summary)}</p>`
+    ? `<p class="summary">${escapeHtml(b.summary)}</p>`
     : `<p class="summary empty">No summary added yet.</p>`;
 
   const grRow = (rating || b.goodreads_url) ? `<div class="gr-row">
     ${rating ? `<span class="gr-rating"><span class="stars">${stars}</span> ${rating.toFixed(1)}/5</span>` : ''}
-    ${b.goodreads_url ? `<a class="gr-link" href="${esc(b.goodreads_url)}" target="_blank" rel="noopener">Goodreads ↗</a>` : ''}
+    ${b.goodreads_url ? `<a class="gr-link" href="${escapeHtml(b.goodreads_url)}" target="_blank" rel="noopener">Goodreads ↗</a>` : ''}
   </div>` : '';
 
   document.getElementById('bdInfo').innerHTML = `
     <div class="meta-row">
-      <span>${esc(b.genre||'Other')}</span>
+      <span>${escapeHtml(b.genre||'Other')}</span>
       <span>·</span>
-      <span>${esc(b.condition||'Good')}</span>
+      <span>${escapeHtml(b.condition||'Good')}</span>
       ${b.status === 'coming_soon' ? '<span>·</span><span>Coming Soon</span>' : ''}
     </div>
-    <h3>${esc(b.title)}</h3>
-    <p class="by">by ${esc(b.author||'Unknown')}</p>
+    <h3>${escapeHtml(b.title)}</h3>
+    <p class="by">by ${escapeHtml(b.author||'Unknown')}</p>
     ${grRow}
     ${summary}
     <div class="pricerow">
       <span class="price">${peso(b.sellPrice)}</span>
-      <span class="cond-badge">${esc(b.condition||'Good')}</span>
+      <span class="cond-badge">${escapeHtml(b.condition||'Good')}</span>
       ${(b.quantity && b.quantity > 1) ? `<span class="cond-badge">${b.quantity} in stock</span>` : ''}
     </div>`;
   
@@ -4266,7 +4266,7 @@ $('#downloadAllWatermarked')?.addEventListener('click', () => {
 
   function renderTagChips(tags){
     $b('#bf_tagChips').innerHTML = tags.filter(Boolean)
-      .map(t => `<span class="chip">${esc(t)}</span>`).join('');
+      .map(t => `<span class="chip">${escapeHtml(t)}</span>`).join('');
   }
 
   function collectForm(){
@@ -4337,10 +4337,10 @@ $('#downloadAllWatermarked')?.addEventListener('click', () => {
   // ---------- rendering lists ----------
   function postCard(p){
     const cover = p.featured_image
-      ? `<img src="${esc(p.featured_image)}" alt="">`
+      ? `<img src="${escapeHtml(p.featured_image)}" alt="">`
       : '📖';
     const pills = [];
-    if (p.category) pills.push(`<span class="pill">${esc(p.category)}</span>`);
+    if (p.category) pills.push(`<span class="pill">${escapeHtml(p.category)}</span>`);
     if (p.status === 'scheduled' && p.scheduled_at) pills.push(`<span class="pill scheduled">⏰ ${fmtDate(p.scheduled_at)}</span>`);
     if (p.status === 'draft') pills.push(`<span class="pill draft">draft</span>`);
     if (p.status === 'published' && p.published_at) pills.push(`<span>published ${fmtDate(p.published_at)}</span>`);
@@ -4349,9 +4349,9 @@ $('#downloadAllWatermarked')?.addEventListener('click', () => {
       <div class="blog-row" data-id="${p.id}">
         <div class="thumb">${cover}</div>
         <div class="meta">
-          <h4>${esc(p.title || '(untitled)')}</h4>
+          <h4>${escapeHtml(p.title || '(untitled)')}</h4>
           <div class="info">
-            <span>/blog/${esc(p.slug || '')}</span>
+            <span>/blog/${escapeHtml(p.slug || '')}</span>
             ${pills.join('')}
           </div>
         </div>
@@ -5341,8 +5341,8 @@ Rules: no em dashes, mention "The Book Vault PH, an online preloved bookshop in 
           ? `/book/${encodeURIComponent(x.slug||'')}`
           : `/blog/${encodeURIComponent(x.slug||'')}`;
         const md = `[${(x.title||'').replace(/[\[\]]/g,'')}](${href})`;
-        const sub = activeTab === 'books' && x.author ? ` <span style="color:var(--ink-soft);font-size:.82rem;">by ${esc(x.author)}</span>` : '';
-        return `<div class="ai-suggestion" data-md="${esc(md)}"><strong>${esc(x.title||'(no title)')}</strong>${sub}<br><code style="background:rgba(0,0,0,.3);padding:2px 6px;border-radius:3px;font-size:.75rem;color:var(--copper-bright);">${esc(href)}</code></div>`;
+        const sub = activeTab === 'books' && x.author ? ` <span style="color:var(--ink-soft);font-size:.82rem;">by ${escapeHtml(x.author)}</span>` : '';
+        return `<div class="ai-suggestion" data-md="${escapeHtml(md)}"><strong>${escapeHtml(x.title||'(no title)')}</strong>${sub}<br><code style="background:rgba(0,0,0,.3);padding:2px 6px;border-radius:3px;font-size:.75rem;color:var(--copper-bright);">${escapeHtml(href)}</code></div>`;
       }).join('');
       list.querySelectorAll('.ai-suggestion').forEach(el => {
         el.addEventListener('click', () => {
@@ -5468,22 +5468,22 @@ function showSocialModal(post) {
     const sel = $('#kw_post');
     const cur = sel.value;
     sel.innerHTML = '<option value="">— none —</option>' + posts.map(p =>
-      `<option value="${p.id}">${esc(p.title || '(untitled)')} · ${esc(p.status)}</option>`
+      `<option value="${p.id}">${escapeHtml(p.title || '(untitled)')} · ${escapeHtml(p.status)}</option>`
     ).join('');
     if (cur) sel.value = cur;
   }
 
   function rowHtml(k, postsById){
     const linked = k.blog_post_id && postsById[k.blog_post_id];
-    const link = linked ? `<a href="${linked.status === 'published' ? '/blog/' + encodeURIComponent(linked.slug) : '#'}" target="_blank">↗ ${esc(linked.title || 'post')}</a>` : '<span style="opacity:.6;">no post linked</span>';
+    const link = linked ? `<a href="${linked.status === 'published' ? '/blog/' + encodeURIComponent(linked.slug) : '#'}" target="_blank">↗ ${escapeHtml(linked.title || 'post')}</a>` : '<span style="opacity:.6;">no post linked</span>';
     return `
       <div class="kw-row" data-id="${k.id}">
         <div class="kw-text">
-          <div class="kw-name">${esc(k.keyword)}</div>
+          <div class="kw-name">${escapeHtml(k.keyword)}</div>
           <div class="kw-meta">
-            <span class="kw-status ${k.status}">${esc(STATUS_LABEL[k.status] || k.status)}</span>
+            <span class="kw-status ${k.status}">${escapeHtml(STATUS_LABEL[k.status] || k.status)}</span>
             ${link}
-            ${k.notes ? `<span style="opacity:.7;">${esc(k.notes.slice(0,80))}</span>` : ''}
+            ${k.notes ? `<span style="opacity:.7;">${escapeHtml(k.notes.slice(0,80))}</span>` : ''}
           </div>
         </div>
         <div class="kw-actions">
