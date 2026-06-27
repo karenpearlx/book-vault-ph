@@ -1449,73 +1449,12 @@
           <form id="blogForm" style="margin-top:20px;">
             <input type="hidden" id="bf_id">
 
-            <div class="field">
-              <label>title * <button type="button" class="ai-suggest-btn" data-suggest="title" title="AI suggest">✨ suggest</button></label>
-              <input type="text" id="bf_title" required placeholder="The art of getting lost in a good thriller">
-            </div>
-
-            <div class="row">
-              <div class="field">
-                <label>primary keyword <small style="color:var(--ink-soft);">(SEO target)</small></label>
-                <select id="bf_primaryKeyword"><option value="">-- select keyword --</option></select>
-              </div>
-              <div class="field">
-                <label>category</label>
-                <select id="bf_category">
-                  <option value="">— pick one —</option>
-                  <option value="guides">Guides (how-to, buying guides)</option>
-                  <option value="lists">Lists (listicles, recommendations)</option>
-                  <option value="reviews">Reviews (single-book reviews)</option>
-                  <option value="local">Local (San Carlos, Pangasinan, COD)</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="field">
-                <label>slug *</label>
-                <input type="text" id="bf_slug" required placeholder="art-of-getting-lost">
-                <small style="color:var(--ink-soft);font-size:.7rem;">/blog/<span id="bf_slugPreview">your-slug</span></small>
-              </div>
-              <div class="field">
-                <label>&nbsp;</label>
-                <button type="button" class="btn-sm" id="bf_aiSettings" style="align-self:flex-start;">⚙ AI key (optional)</button>
-              </div>
-            </div>
-
-            <div class="field">
-              <label>excerpt / summary <small style="color:var(--ink-soft);">(<span id="bf_excerptCount">0</span>/180)</small> <button type="button" class="ai-suggest-btn" data-suggest="excerpt">✨ suggest</button></label>
-              <textarea id="bf_excerpt" rows="2" maxlength="180" placeholder="A short hook that shows in previews and link cards"></textarea>
-            </div>
-
-            <div class="field">
-              <label>featured image</label>
-              <div class="upload-zone" id="blogImgZone">
-                <input type="file" id="bf_imageFile" accept="image/*" style="display:none;">
-                <div class="upload-placeholder" id="blogImgPlaceholder">
-                  <p>drag image or click to upload</p>
-                  <small class="hint">stored in supabase · jpg/png/webp</small>
-                </div>
-                <div id="blogImgPreview" style="display:none;">
-                  <img id="bf_imagePreview" src="" style="max-width:100%;max-height:240px;border-radius:6px;border:1px solid var(--border);">
-                  <div style="margin-top:8px;display:flex;gap:8px;justify-content:center;">
-                    <button type="button" class="btn-sm" id="bf_imageReplace">replace</button>
-                    <button type="button" class="btn-sm" id="bf_imageRemove" style="color:#e87a7a;">remove</button>
-                  </div>
-                </div>
-              </div>
-              <input type="text" id="bf_image" placeholder="…or paste image URL" style="margin-top:8px;font-size:.8rem;">
-              <div style="margin-top:10px;">
-                <label style="font-size:.75rem;color:var(--ink-soft);display:flex;align-items:center;gap:6px;">image prompt <button type="button" class="ai-suggest-btn" id="bf_imgPromptSuggest" style="font-size:.65rem;padding:2px 6px;">✨ suggest</button></label>
-                <textarea id="bf_imgPrompt" rows="2" placeholder="Describe the image you want to generate..." style="margin-top:4px;font-size:.85rem;"></textarea>
-                <button type="button" class="btn-sm" id="bf_generateImg" style="margin-top:6px;">🎨 generate image</button>
-                <small id="bf_imgGenStatus" style="margin-left:8px;color:var(--ink-soft);font-size:.7rem;"></small>
-              </div>
-            </div>
-
-            <div class="field">
-              <label>content (markdown supported) * <button type="button" class="ai-suggest-btn" data-suggest="content">✨ generate full post</button></label>
-              <div id="bf_toolbar" style="display:flex;gap:4px;flex-wrap:wrap;padding:10px 12px;background:#f8f6f3;border:1px solid #e5e2dd;border-bottom:none;border-radius:12px 12px 0 0;margin-top:8px;">
+            <div class="blog-editor-grid">
+              <!-- LEFT: Content Editor -->
+              <div class="blog-editor-left">
+                <div class="field">
+                  <label>content (markdown) * <button type="button" class="ai-suggest-btn" data-suggest="content">✨ generate full post</button></label>
+                  <div id="bf_toolbar" style="display:flex;gap:4px;flex-wrap:wrap;padding:10px 12px;background:rgba(74,28,42,.04);border:1px solid rgba(74,28,42,.1);border-bottom:none;border-radius:12px 12px 0 0;margin-top:8px;">
                 <button type="button" class="tb-btn" data-md="bold" title="Bold">𝐁</button>
                 <button type="button" class="tb-btn" data-md="italic" title="Italic">𝐼</button>
                 <button type="button" class="tb-btn" data-md="strike" title="Strikethrough">S̶</button>
