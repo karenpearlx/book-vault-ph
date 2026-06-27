@@ -141,17 +141,17 @@
   .row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
   .row.thirds{grid-template-columns:1fr 1fr 1fr;}
   @media (max-width:680px){ .row, .row.thirds{grid-template-columns:1fr;} }
-  .field label{display:block;font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-bright);margin-bottom:6px;font-weight:500;}
+  .field label{display:block;font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);margin-bottom:6px;font-weight:500;}
   .field input, .field select, .field textarea{
-    width:100%;padding:11px 13px;background:rgba(0,0,0,.3);border:1px solid rgba(216,154,85,.25);
-    border-radius:4px;color:var(--cream);transition:border-color .15s;
+    width:100%;padding:11px 13px;background:#fff;border:1px solid rgba(74,28,42,.2);
+    border-radius:4px;color:var(--ink);transition:border-color .15s;
   }
-  .field input:focus, .field select:focus, .field textarea:focus{outline:none;border-color:var(--copper-bright);}
+  .field input:focus, .field select:focus, .field textarea:focus{outline:none;border-color:var(--copper);}
   .field textarea{min-height:80px;resize:vertical;font-family:"Cormorant Garamond",serif;line-height:1.5;}
-  .field .hint{font-size:.8rem;color:#B8A898;margin-top:4px;font-style:italic;}
+  .field .hint{font-size:.8rem;color:var(--ink-soft);margin-top:4px;font-style:italic;}
   .checkrow{display:flex;align-items:center;gap:10px;padding:11px 0;}
-  .checkrow input{width:18px;height:18px;accent-color:var(--copper-bright);}
-  .checkrow label{font-family:"Cormorant Garamond",serif;text-transform:none;letter-spacing:0;font-size:1rem;color:var(--cream);margin:0;}
+  .checkrow input{width:18px;height:18px;accent-color:var(--copper);}
+  .checkrow label{font-family:"Cormorant Garamond",serif;text-transform:none;letter-spacing:0;font-size:1rem;color:var(--ink);margin:0;}
 
   .btn{
     display:inline-flex;align-items:center;gap:8px;
@@ -490,17 +490,18 @@
   border-bottom:1px solid rgba(216,154,85,.1);
 }
 .sub-tab-btn {
-  padding:12px 22px; background:rgba(253,248,243,.08); border:2px solid rgba(253,248,243,.2);
-  border-radius:10px; color:var(--cream); font-family:'Cormorant Garamond',serif; font-size:1.05rem;
+  padding:12px 22px; background:#fff; border:2px solid rgba(74,28,42,.15);
+  border-radius:10px; color:var(--ink); font-family:'Cormorant Garamond',serif; font-size:1.05rem;
   font-weight:500; cursor:pointer; transition:all .2s; display:flex; align-items:center; gap:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,.04);
 }
-.sub-tab-btn:hover { border-color:var(--copper); background:rgba(216,154,85,.12); color:#fff; }
-.sub-tab-btn.active { background:var(--copper); border-color:var(--copper); color:#1A0810; font-weight:600; }
+.sub-tab-btn:hover { border-color:var(--copper); background:rgba(216,154,85,.08); }
+.sub-tab-btn.active { background:var(--burgundy); border-color:var(--burgundy); color:#fff; font-weight:600; }
 .tab-badge {
-  background:rgba(26,8,16,.3); color:var(--cream); padding:3px 10px;
+  background:rgba(74,28,42,.1); color:var(--burgundy); padding:3px 10px;
   border-radius:12px; font-size:.75rem; font-family:'DM Mono',monospace; font-weight:500;
 }
-.sub-tab-btn.active .tab-badge { background:rgba(26,8,16,.25); color:#1A0810; }
+.sub-tab-btn.active .tab-badge { background:rgba(255,255,255,.25); color:#fff; }
 .sub-tab-content { display:none; }
 .sub-tab-content.active { display:block; }
 .msg-tab-content { display:none; }
@@ -523,11 +524,11 @@
 .ai-suggest-btn:disabled { opacity:.5; cursor:wait; }
 
 .tb-btn {
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:4px;padding:4px 8px;cursor:pointer;
-  font-size:.85rem;color:var(--cream);min-width:28px;transition:all .15s;
+  background:rgba(74,28,42,.08);border:1px solid rgba(74,28,42,.15);border-radius:4px;padding:4px 8px;cursor:pointer;
+  font-size:.85rem;color:var(--ink);min-width:28px;transition:all .15s;
 }
-.tb-btn:hover { background:rgba(216,154,85,.25);border-color:var(--copper);color:#fff; }
-.tb-btn:active { background:rgba(216,154,85,.35); }
+.tb-btn:hover { background:rgba(184,115,51,.15);border-color:var(--copper);color:var(--burgundy); }
+.tb-btn:active { background:rgba(184,115,51,.25); }
 
 .ai-modal-backdrop {
   position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;
@@ -796,9 +797,9 @@
 .watermark-preview-grid .preview-item .remove-btn { position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:rgba(0,0,0,.6); color:#fff; border:none; cursor:pointer; font-size:.8rem; line-height:1; }
 .gen-image-container { background:var(--cream-soft); border-radius:8px; padding:12px; border:1px solid var(--border); }
 .template-section { margin-bottom:16px; }
-.view-tab{background:var(--surface);border:none;padding:8px 16px;cursor:pointer;color:var(--ink-soft);font-size:.85rem;transition:all .15s;}
-.view-tab:hover{background:rgba(255,255,255,.05);color:var(--cream);}
-.view-tab.active{background:var(--cream-warm);color:var(--ink);font-weight:500;}
+.view-tab{background:rgba(74,28,42,.08);border:none;padding:8px 16px;cursor:pointer;color:var(--ink-soft);font-size:.85rem;transition:all .15s;}
+.view-tab:hover{background:rgba(74,28,42,.12);color:var(--ink);}
+.view-tab.active{background:var(--cream-warm);color:var(--burgundy);font-weight:500;}
 #bf_preview h1,#bf_preview h2,#bf_preview h3{font-family:"Playfair Display",serif;color:var(--burgundy);margin:1em 0 .5em;}
 #bf_preview h1{font-size:1.8rem;}#bf_preview h2{font-size:1.5rem;}#bf_preview h3{font-size:1.25rem;}
 #bf_preview p{margin:0 0 1em;}#bf_preview a{color:var(--copper);}
@@ -1511,7 +1512,7 @@
 
             <div class="field">
               <label>content (markdown supported) * <button type="button" class="ai-suggest-btn" data-suggest="content">✨ generate full post</button></label>
-              <div id="bf_toolbar" style="display:flex;gap:2px;flex-wrap:wrap;padding:8px 10px;background:var(--surface);border:1px solid var(--border);border-bottom:none;border-radius:8px 8px 0 0;margin-top:6px;">
+              <div id="bf_toolbar" style="display:flex;gap:2px;flex-wrap:wrap;padding:8px 10px;background:rgba(74,28,42,.06);border:1px solid rgba(74,28,42,.12);border-bottom:none;border-radius:8px 8px 0 0;margin-top:6px;">
                 <button type="button" class="tb-btn" data-md="bold" title="Bold">𝐁</button>
                 <button type="button" class="tb-btn" data-md="italic" title="Italic">𝐼</button>
                 <button type="button" class="tb-btn" data-md="strike" title="Strikethrough">S̶</button>
@@ -4353,6 +4354,7 @@ $('#downloadAllWatermarked')?.addEventListener('click', () => {
         </div>
         <div class="row-actions">
           ${p.status === 'published' ? `<a class="icon-btn view" target="_blank" href="/blog/${encodeURIComponent(p.slug)}">↗ view</a>` : ''}
+          ${p.status === 'published' ? `<button class="icon-btn" data-action="social" style="color:var(--copper);">📱 social</button>` : ''}
           <button class="icon-btn edit" data-action="edit">edit</button>
           ${p.status !== 'archived' ? `<button class="icon-btn" data-action="archive" style="color:#bdb5a8;">archive</button>` : `<button class="icon-btn edit" data-action="unarchive">unarchive</button>`}
           <button class="icon-btn del" data-action="delete">del</button>
@@ -4390,6 +4392,9 @@ $('#downloadAllWatermarked')?.addEventListener('click', () => {
             if (!confirm(`delete "${post.title}" permanently?`)) return;
             await deletePost(id);
             return refreshAll();
+          }
+          if (action === 'social') {
+            showSocialModal(post);
           }
         });
       });
@@ -5355,6 +5360,62 @@ Rules: no em dashes, mention "The Book Vault PH, an online preloved bookshop in 
     render();
   });
 })();
+
+// ============================================================
+// SOCIAL MEDIA SUMMARY MODAL
+// ============================================================
+function showSocialModal(post) {
+  const url = `https://thebookvaultph.com/blog/${encodeURIComponent(post.slug)}`;
+  const title = post.title || '';
+  const excerpt = post.excerpt || '';
+  
+  // Generate different social media formats
+  const fbPost = `📚 NEW BLOG POST!\n\n${title}\n\n${excerpt}\n\n👉 Read more: ${url}\n\n#TheBooKVaultPH #PrelovedBooks #BooksPH #BookLovers`;
+  
+  const igCaption = `📖 ${title}\n\n${excerpt}\n\n🔗 Link in bio!\n\n.\n.\n.\n#TheBooKVaultPH #PrelovedBooks #BooksPH #BookLovers #BookstagramPH #BookRecommendations #AffordableBooks #CODBooks`;
+  
+  const twitterPost = `📚 ${title}\n\n${excerpt.slice(0, 180)}${excerpt.length > 180 ? '...' : ''}\n\n${url}`;
+  
+  const tiktokCaption = `${title} 📖✨\n\n${excerpt}\n\n#BookTok #PrelovedBooks #BooksPH #TheBooKVaultPH #AffordableBooks #BookRecommendations`;
+
+  const modal = document.getElementById('aiModal');
+  const body = document.getElementById('aiModalBody');
+  
+  body.innerHTML = `
+    <h3 style="margin:0 0 18px;font-family:'Playfair Display',serif;color:var(--burgundy);">📱 Social Media Summaries</h3>
+    <p style="margin:0 0 18px;color:var(--ink-soft);font-size:.9rem;">${escapeHtml(title)}</p>
+    
+    <div style="margin-bottom:20px;">
+      <label style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--copper);display:block;margin-bottom:6px;">Facebook</label>
+      <textarea id="social_fb" rows="5" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:6px;font-size:.9rem;background:var(--cream-warm);color:var(--ink);">${escapeHtml(fbPost)}</textarea>
+      <button type="button" class="btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('social_fb').value);this.textContent='✓ copied!';setTimeout(()=>this.textContent='copy',1500);" style="margin-top:6px;">copy</button>
+    </div>
+    
+    <div style="margin-bottom:20px;">
+      <label style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--copper);display:block;margin-bottom:6px;">Instagram</label>
+      <textarea id="social_ig" rows="6" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:6px;font-size:.9rem;background:var(--cream-warm);color:var(--ink);">${escapeHtml(igCaption)}</textarea>
+      <button type="button" class="btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('social_ig').value);this.textContent='✓ copied!';setTimeout(()=>this.textContent='copy',1500);" style="margin-top:6px;">copy</button>
+    </div>
+    
+    <div style="margin-bottom:20px;">
+      <label style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--copper);display:block;margin-bottom:6px;">Twitter/X</label>
+      <textarea id="social_tw" rows="4" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:6px;font-size:.9rem;background:var(--cream-warm);color:var(--ink);">${escapeHtml(twitterPost)}</textarea>
+      <button type="button" class="btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('social_tw').value);this.textContent='✓ copied!';setTimeout(()=>this.textContent='copy',1500);" style="margin-top:6px;">copy</button>
+    </div>
+    
+    <div style="margin-bottom:20px;">
+      <label style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--copper);display:block;margin-bottom:6px;">TikTok</label>
+      <textarea id="social_tt" rows="4" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:6px;font-size:.9rem;background:var(--cream-warm);color:var(--ink);">${escapeHtml(tiktokCaption)}</textarea>
+      <button type="button" class="btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('social_tt').value);this.textContent='✓ copied!';setTimeout(()=>this.textContent='copy',1500);" style="margin-top:6px;">copy</button>
+    </div>
+    
+    <div style="text-align:right;margin-top:24px;padding-top:18px;border-top:1px solid var(--border);">
+      <button type="button" class="btn-sm" onclick="document.getElementById('aiModal').style.display='none';">close</button>
+    </div>
+  `;
+  
+  modal.style.display = 'flex';
+}
 
 // ============================================================
 // KEYWORDS SUBTAB
