@@ -537,7 +537,7 @@ const BVPH = (() => {
   };
 
   // ---------- AUTH ----------
-  const SESSION_MS = 30 * 60 * 1000;
+  const SESSION_MS = 60 * 60 * 1000;
   const _readAuth = () => { try { const raw = localStorage.getItem(K_AUTH); if (!raw || raw === '1') return null; const o = JSON.parse(raw); return o?.at ? o : null; } catch(e){ return null; } };
   const _writeAuth = (user) => {
     const email = (user?.email || '').toLowerCase();
