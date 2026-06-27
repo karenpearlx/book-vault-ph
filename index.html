@@ -173,10 +173,10 @@ body::before{
   .nav-links{display:none;}
   .nav-burger{display:block;justify-self:end;}
   .nav-search{grid-column:1/-1;max-width:none;justify-self:stretch;order:3;}
-  .nav-links.open{display:flex;flex-direction:column;align-items:stretch;gap:0;
-    grid-column:1/-1;order:4;
-    padding:6px 0 0;border-top:1px solid rgba(184,115,51,.18);margin-top:4px;}
-  .nav-links.open a{padding:14px 0;border-bottom:1px solid rgba(184,115,51,.12);}
+  .nav-links.open{display:flex;flex-direction:column;align-items:flex-start;gap:0;
+    grid-column:1/-1;order:4;width:100%;
+    padding:16px 0;border-top:1px solid rgba(184,115,51,.18);margin-top:8px;}
+  .nav-links.open a{padding:14px 0;border-bottom:1px solid rgba(184,115,51,.12);width:100%;text-align:left;}
 }
 @media (max-width:520px){
   .nav-inner{padding:12px 20px;}
