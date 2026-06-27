@@ -801,9 +801,9 @@
 
 /* AI Image Gen Styles */
 .template-grid { display:flex; flex-wrap:wrap; gap:8px; }
-.template-btn { padding:10px 16px; border-radius:6px; border:1px solid var(--border); background:var(--cream-soft); color:var(--ink); font-size:.8rem; cursor:pointer; transition:all .2s; }
-.template-btn:hover { border-color:var(--copper); background:rgba(216,154,85,.1); }
-.template-btn.active { border-color:var(--copper); background:rgba(216,154,85,.2); color:var(--copper-bright); }
+.template-btn { padding:10px 16px; border-radius:6px; border:none; background:var(--burgundy); color:var(--cream-warm); font-size:.8rem; cursor:pointer; transition:all .2s; }
+.template-btn:hover { background:#3d1623; }
+.template-btn.active { background:var(--copper); color:var(--burgundy); }
 .upload-zone { border:2px dashed var(--border); border-radius:8px; padding:30px; text-align:center; cursor:pointer; transition:all .2s; background:var(--cream-soft); }
 .upload-zone:hover, .upload-zone.dragover { border-color:var(--copper); background:rgba(216,154,85,.08); }
 .upload-zone .upload-placeholder p { margin:8px 0 0; color:var(--ink-soft); font-size:.85rem; }
@@ -1374,7 +1374,7 @@
         
         <!-- Coming Soon Templates -->
         <div id="comingSoonTemplates" class="template-section">
-          <label style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-bright);display:block;margin-bottom:10px;">template style</label>
+          <label style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--burgundy);display:block;margin-bottom:10px;">template style</label>
           <div class="template-grid">
             <button class="template-btn active" data-template="rainy_cozy">🌧 rainy window cozy</button>
             <button class="template-btn" data-template="dark_moody">🌙 dark & moody</button>
@@ -1388,7 +1388,7 @@
 
         <!-- Featured Book Templates -->
         <div id="featuredTemplates" class="template-section" style="display:none;">
-          <label style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-bright);display:block;margin-bottom:10px;">template style</label>
+          <label style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--burgundy);display:block;margin-bottom:10px;">template style</label>
           <div class="template-grid">
             <button class="template-btn active" data-template="spotlight">⭐ spotlight feature</button>
             <button class="template-btn" data-template="book_of_day">📖 book of the day</button>
