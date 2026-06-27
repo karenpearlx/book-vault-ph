@@ -477,8 +477,11 @@
 
 /* Tab Navigation */
 .tab-nav {
-  display:flex; gap:4px; padding:0 32px; background:var(--cream-warm);
-  border-bottom:1px solid rgba(74,28,42,.1);
+  display:flex; gap:4px; padding:0 32px;
+  background:rgba(244,233,216,.85);
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(74,28,42,.08);
+  box-shadow:0 2px 16px rgba(74,28,42,.06);
 }
 .tab-btn {
   padding:14px 20px; background:transparent; border:none;
@@ -504,12 +507,14 @@
   border-bottom:1px solid rgba(74,28,42,.15);
 }
 .sub-tab-btn {
-  padding:10px 18px; background:var(--cream-warm); border:none;
+  padding:10px 18px; background:rgba(244,233,216,.75); border:1px solid rgba(255,255,255,.3);
   border-radius:10px; color:var(--burgundy); font-family:'Inter',sans-serif; font-size:.85rem;
   font-weight:500; cursor:pointer; transition:all .15s; display:flex; align-items:center; gap:8px;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  box-shadow:0 2px 8px rgba(74,28,42,.08);
 }
-.sub-tab-btn:hover { background:#F0E5E8; }
-.sub-tab-btn.active { background:var(--copper); color:var(--burgundy); }
+.sub-tab-btn:hover { background:rgba(244,233,216,.9); }
+.sub-tab-btn.active { background:var(--copper); color:var(--burgundy); border-color:transparent; backdrop-filter:none; }
 .tab-badge {
   background:rgba(74,28,42,.15); color:var(--burgundy); padding:2px 8px;
   border-radius:6px; font-size:.7rem; font-family:'Inter',sans-serif; font-weight:600;
