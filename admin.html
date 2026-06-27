@@ -26,10 +26,8 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{min-height:100vh;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
   body{
-    font-family:"Cormorant Garamond",Georgia,serif;font-size:17px;color:var(--cream);
-    background:
-      radial-gradient(ellipse at 20% 10%, rgba(216,154,85,.1), transparent 55%),
-      linear-gradient(160deg, #1A0810, #2E0F1A 60%, #3A1422);
+    font-family:"Cormorant Garamond",Georgia,serif;font-size:17px;color:var(--ink);
+    background:var(--cream-warm);
     min-height:100vh;
   }
   .mono{font-family:"DM Mono",ui-monospace,monospace;letter-spacing:.18em;text-transform:uppercase;font-size:.7rem;}
@@ -101,12 +99,12 @@
   @media (max-width:560px){ .topbar .brand svg{width:28px;height:28px;} }
 
   .panel{
-    background:rgba(26,8,16,.55);border:1px solid rgba(216,154,85,.18);border-radius:8px;
-    padding:32px;margin-bottom:30px;
+    background:#fff;border:1px solid rgba(74,28,42,.12);border-radius:10px;
+    padding:32px;margin-bottom:30px;box-shadow:0 2px 12px rgba(0,0,0,.06);
   }
   @media(max-width:560px){.panel{padding:20px 16px;border-radius:6px;} .panel h2{font-size:1.4rem;}}
-  .panel h2{font-family:"Playfair Display",serif;font-style:italic;font-weight:500;font-size:1.7rem;color:var(--cream);margin-bottom:6px;}
-  .panel h2 .accent{color:var(--copper-bright);font-style:normal;font-weight:900;}
+  .panel h2{font-family:"Playfair Display",serif;font-style:italic;font-weight:500;font-size:1.7rem;color:var(--burgundy);margin-bottom:6px;}
+  .panel h2 .accent{color:var(--copper);font-style:normal;font-weight:900;}
   .panel .sub{font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--copper);margin-bottom:24px;}
 
 
@@ -114,21 +112,21 @@
   .traffic-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:18px 0 24px;}
   @media(max-width:980px){.traffic-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
   @media(max-width:560px){.traffic-grid{grid-template-columns:1fr;}}
-  .metric-card{background:rgba(0,0,0,.28);border:1px solid rgba(216,154,85,.18);border-radius:8px;padding:18px;position:relative;overflow:hidden;}
-  .metric-card::after{content:"";position:absolute;right:-24px;top:-24px;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle,rgba(255,155,0,.16),transparent 70%);}
+  .metric-card{background:#fff;border:1px solid rgba(74,28,42,.1);border-radius:8px;padding:18px;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+  .metric-card::after{content:"";position:absolute;right:-24px;top:-24px;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle,rgba(184,115,51,.12),transparent 70%);}
   .metric-label{font-family:"DM Mono",monospace;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);margin-bottom:8px;}
-  .metric-value{font-family:"Playfair Display",serif;font-size:2rem;font-weight:700;color:var(--cream);line-height:1;}
-  .metric-note{margin-top:8px;color:#B8A898;font-size:.9rem;font-style:italic;}
+  .metric-value{font-family:"Playfair Display",serif;font-size:2rem;font-weight:700;color:var(--burgundy);line-height:1;}
+  .metric-note{margin-top:8px;color:var(--ink-soft);font-size:.9rem;font-style:italic;}
   .traffic-columns{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
   @media(max-width:980px){.traffic-columns{grid-template-columns:1fr;}}
-  .traffic-box{background:rgba(0,0,0,.22);border:1px solid rgba(216,154,85,.15);border-radius:8px;padding:18px;}
-  .traffic-box h4{font-family:"DM Mono",monospace;font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:var(--copper-bright);margin-bottom:14px;}
-  .traffic-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(216,154,85,.1);}
+  .traffic-box{background:#fff;border:1px solid rgba(74,28,42,.1);border-radius:8px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+  .traffic-box h4{font-family:"DM Mono",monospace;font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:var(--copper);margin-bottom:14px;}
+  .traffic-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(74,28,42,.08);}
   .traffic-row:last-child{border-bottom:0;}
-  .traffic-name{color:#F5EEE6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .traffic-num{font-family:"DM Mono",monospace;font-size:.72rem;color:var(--copper-bright);}
-  .traffic-bar{grid-column:1/-1;height:4px;border-radius:999px;background:rgba(216,154,85,.12);overflow:hidden;margin-top:-5px;}
-  .traffic-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--copper),var(--copper-bright));border-radius:999px;}
+  .traffic-name{color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .traffic-num{font-family:"DM Mono",monospace;font-size:.72rem;color:var(--copper);}
+  .traffic-bar{grid-column:1/-1;height:4px;border-radius:999px;background:rgba(74,28,42,.08);overflow:hidden;margin-top:-5px;}
+  .traffic-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--copper),var(--burgundy));border-radius:999px;}
   .funnel{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
   @media(max-width:480px){.funnel{grid-template-columns:1fr;} .funnel-step{padding:10px;} .funnel-step .n{font-size:1.4rem;}}
   .funnel-step{padding:14px;background:rgba(216,154,85,.08);border:1px solid rgba(216,154,85,.16);border-radius:6px;text-align:center;}
@@ -492,17 +490,17 @@
   border-bottom:1px solid rgba(216,154,85,.1);
 }
 .sub-tab-btn {
-  padding:10px 18px; background:rgba(0,0,0,.2); border:1px solid rgba(216,154,85,.15);
-  border-radius:8px; color:#8B7A66; font-family:'Cormorant Garamond',serif; font-size:.95rem;
-  cursor:pointer; transition:all .2s; display:flex; align-items:center; gap:8px;
+  padding:12px 22px; background:rgba(253,248,243,.08); border:2px solid rgba(253,248,243,.2);
+  border-radius:10px; color:var(--cream); font-family:'Cormorant Garamond',serif; font-size:1.05rem;
+  font-weight:500; cursor:pointer; transition:all .2s; display:flex; align-items:center; gap:10px;
 }
-.sub-tab-btn:hover { border-color:rgba(216,154,85,.3); color:var(--cream); }
-.sub-tab-btn.active { background:rgba(216,154,85,.15); border-color:var(--copper); color:var(--copper); }
+.sub-tab-btn:hover { border-color:var(--copper); background:rgba(216,154,85,.12); color:#fff; }
+.sub-tab-btn.active { background:var(--copper); border-color:var(--copper); color:#1A0810; font-weight:600; }
 .tab-badge {
-  background:rgba(216,154,85,.25); color:var(--copper); padding:2px 8px;
-  border-radius:10px; font-size:.7rem; font-family:'DM Mono',monospace;
+  background:rgba(26,8,16,.3); color:var(--cream); padding:3px 10px;
+  border-radius:12px; font-size:.75rem; font-family:'DM Mono',monospace; font-weight:500;
 }
-.sub-tab-btn.active .tab-badge { background:rgba(216,154,85,.4); }
+.sub-tab-btn.active .tab-badge { background:rgba(26,8,16,.25); color:#1A0810; }
 .sub-tab-content { display:none; }
 .sub-tab-content.active { display:block; }
 .msg-tab-content { display:none; }
@@ -661,7 +659,7 @@
 }
 @media(max-width:680px){
   .sub-tab-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:12px 0;gap:6px;}
-  .sub-tab-btn{white-space:nowrap;flex-shrink:0;padding:8px 12px;font-size:.6rem;}
+  .sub-tab-btn{white-space:nowrap;flex-shrink:0;padding:10px 14px;font-size:.85rem;}
 }
 
 /* Expense category badges with colors */
@@ -1536,7 +1534,7 @@
                 <button type="button" class="view-tab active" data-view="content">Content</button>
                 <button type="button" class="view-tab" data-view="raw">Raw</button>
               </div>
-              <div id="bf_preview" style="min-height:300px;padding:20px;background:var(--cream-warm);color:var(--ink);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;line-height:1.7;overflow-y:auto;"></div>
+              <div id="bf_preview" contenteditable="true" style="min-height:350px;padding:28px 32px;background:var(--cream-warm);color:var(--ink);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;line-height:1.75;overflow-y:auto;outline:none;cursor:text;"></div>
               <textarea id="bf_content" rows="14" required placeholder="Write your post here..." style="border-radius:0 0 8px 8px;border-top:none;display:none;"></textarea>
               <small style="color:var(--ink-soft);font-size:.7rem;display:flex;gap:14px;flex-wrap:wrap;">
                 <span><span id="bf_wordCount">0</span> words</span>
@@ -5143,17 +5141,70 @@ Rules: no em dashes, mention "The Book Vault PH, an online preloved bookshop in 
   const viewTabs = document.getElementById('bf_viewTabs');
   const previewDiv = document.getElementById('bf_preview');
   if (viewTabs && previewDiv) {
+    let contentEditedInPreview = false;
+    
+    // HTML to Markdown converter
+    const htmlToMd = (html) => {
+      const el = document.createElement('div');
+      el.innerHTML = html;
+      const convert = (node) => {
+        if (node.nodeType === 3) return node.textContent;
+        if (node.nodeType !== 1) return '';
+        const tag = node.tagName.toLowerCase();
+        const kids = Array.from(node.childNodes).map(convert).join('');
+        switch(tag) {
+          case 'h1': return `\n# ${kids}\n`;
+          case 'h2': return `\n## ${kids}\n`;
+          case 'h3': return `\n### ${kids}\n`;
+          case 'strong': case 'b': return `**${kids}**`;
+          case 'em': case 'i': return `*${kids}*`;
+          case 'del': case 's': return `~~${kids}~~`;
+          case 'a': return `[${kids}](${node.href || ''})`;
+          case 'img': return `![${node.alt || 'image'}](${node.src || ''})`;
+          case 'code': return node.parentElement?.tagName === 'PRE' ? kids : `\`${kids}\``;
+          case 'pre': return `\n\`\`\`\n${kids}\n\`\`\`\n`;
+          case 'blockquote': return `\n> ${kids.replace(/\n/g, '\n> ')}\n`;
+          case 'ul': return '\n' + Array.from(node.children).map(li => `- ${convert(li).trim()}`).join('\n') + '\n';
+          case 'ol': return '\n' + Array.from(node.children).map((li,i) => `${i+1}. ${convert(li).trim()}`).join('\n') + '\n';
+          case 'li': return kids;
+          case 'p': return `\n${kids}\n`;
+          case 'br': return '\n';
+          case 'hr': return '\n---\n';
+          case 'table': return '\n' + kids + '\n';
+          case 'thead': case 'tbody': return kids;
+          case 'tr': 
+            const cells = Array.from(node.children).map(convert);
+            return '| ' + cells.join(' | ') + ' |\n' + (node.parentElement?.tagName === 'THEAD' ? '| ' + cells.map(() => '---').join(' | ') + ' |\n' : '');
+          case 'th': case 'td': return kids.trim();
+          case 'div': return kids + '\n';
+          default: return kids;
+        }
+      };
+      return convert(el).replace(/\n{3,}/g, '\n\n').trim();
+    };
+
     const updatePreview = () => {
       const md = contentField.value;
       if (typeof marked !== 'undefined') {
         marked.setOptions({ breaks: true, gfm: true });
-        previewDiv.innerHTML = marked.parse(md) || '<p style="color:#999;font-style:italic;">Start writing to see preview...</p>';
+        previewDiv.innerHTML = marked.parse(md) || '<p style="color:#999;font-style:italic;">Start writing here...</p>';
       }
+      contentEditedInPreview = false;
     };
+    
     // Initial render
     updatePreview();
-    // Update preview when content changes
+    
+    // Update preview when textarea changes
     contentField.addEventListener('input', updatePreview);
+    
+    // Track edits in preview
+    previewDiv.addEventListener('input', () => {
+      contentEditedInPreview = true;
+      // Also update textarea live
+      contentField.value = htmlToMd(previewDiv.innerHTML);
+      contentField.dispatchEvent(new Event('input', { bubbles: false }));
+    });
     
     viewTabs.querySelectorAll('.view-tab').forEach(tab => {
       tab.addEventListener('click', () => {
@@ -5161,7 +5212,7 @@ Rules: no em dashes, mention "The Book Vault PH, an online preloved bookshop in 
         tab.classList.add('active');
         const view = tab.dataset.view;
         if (view === 'content') {
-          updatePreview();
+          if (!contentEditedInPreview) updatePreview();
           previewDiv.style.display = 'block';
           contentField.style.display = 'none';
         } else {
