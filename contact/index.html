@@ -51,12 +51,14 @@ body{margin:0;font-family:"Cormorant Garamond",Georgia,serif;background:var(--cr
 .nav-burger{display:none;background:none;border:none;color:var(--cream);font-size:1.5rem;cursor:pointer;padding:4px 8px;}
 @media (max-width:680px){
   .nav-burger{display:block;}
+  .nav-inner{justify-content:flex-start;}
   .nav-links{
     display:none;position:absolute;top:100%;left:0;right:0;
-    background:var(--burgundy-deep);flex-direction:column;padding:20px 28px;gap:16px;
+    background:var(--burgundy-deep);flex-direction:column;padding:20px 28px;gap:0;
     border-top:1px solid rgba(253,248,243,.1);
   }
-  .nav-links.open{display:flex;}
+  .nav-links.open{display:flex;align-items:flex-start;}
+  .nav-links.open a{padding:14px 0;border-bottom:1px solid rgba(184,115,51,.12);width:100%;text-align:left;}
   .brand-word{display:none;}
 }
 

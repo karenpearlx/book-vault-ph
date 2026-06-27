@@ -656,7 +656,14 @@ const BVPH = (() => {
       return book ? { ...book, qty: item.qty || 1 } : null;
     }).filter(Boolean);
   };
-  const getCartTotal = () => getCartBooks().reduce((sum, b) => sum + (Number(b.sellPrice) || 0) * (b.qty || 1), 0);
+  const getCartSubtotal = () => getCartBooks().reduce((sum, b) => sum + (Number(b.sellPrice) || 0) * (b.qty || 1), 0);
+  const getCartItemCount = () => getCartBooks().reduce((sum, b) => sum + (b.qty || 1), 0);
+  const getCartDiscount = () => getCartItemCount() >= 3 ? 0.10 : 0;
+  const getCartTotal = () => {
+    const subtotal = getCartSubtotal();
+    const discount = getCartDiscount();
+    return Math.round(subtotal * (1 - discount));
+  };
 
   return {
     GENRES, CONDITIONS, USE_SUPABASE,
@@ -669,7 +676,7 @@ const BVPH = (() => {
     isAuthed, getSession, login, logout, enforceSession, sessionMsLeft, SESSION_MS,
     getWishlist, isInWishlist, addToWishlist, removeFromWishlist, toggleWishlist,
     onWishlistChange, getWishlistBooks,
-    getCart, getCartCount, isInCart, addToCart, updateCartQty, removeFromCart, clearCart, onCartChange, getCartBooks, getCartTotal,
+    getCart, getCartCount, isInCart, addToCart, updateCartQty, removeFromCart, clearCart, onCartChange, getCartBooks, getCartTotal, getCartSubtotal, getCartDiscount, getCartItemCount,
     track, trackPageView, trackClick, getAnalytics,
     supabase: () => sb,
   };
