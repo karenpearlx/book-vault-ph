@@ -147,12 +147,11 @@
   .metric-note{margin-top:6px;color:var(--cream-warm);opacity:.6;font-size:.8rem;}
   .traffic-columns{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
   @media(max-width:980px){.traffic-columns{grid-template-columns:1fr;}}
-  .traffic-box{background:var(--burgundy);
-  }
+  .traffic-box{background:var(--burgundy);border:none;border-radius:14px;padding:20px;color:var(--cream-warm);overflow:hidden;}
   body::before {
     content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
     background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04;border:none;border-radius:14px;padding:20px;color:var(--cream-warm);}
+    opacity:.04;}
   .traffic-box h4{font-family:'Inter',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--copper);margin-bottom:14px;}
   .traffic-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.1);}
   .traffic-row:last-child{border-bottom:0;}
@@ -1203,7 +1202,13 @@
     <!-- SUB-TAB: SOLD -->
     <div class="sub-tab-content" id="subtab-sold">
     <div class="panel">
-      <h2><span class="accent">sold</span> orders <span id="soldOrdersCount" style="opacity:.6;font-weight:normal;font-size:1rem;">(0)</span></h2>
+      <h2><span class="accent">sold</span> books <span id="soldCount" style="opacity:.6;font-weight:normal;font-size:1rem;">(0)</span></h2>
+      <div class="sub">— books marked as sold</div>
+      <div id="soldList" class="status-list" style="margin-top:20px;"></div>
+      <div id="soldEmpty" class="empty" style="padding:24px;font-size:.9rem;">no sold books yet</div>
+    </div>
+    <div class="panel" style="margin-top:20px;">
+      <h2>sold <span class="accent">orders</span> <span id="soldOrdersCount" style="opacity:.6;font-weight:normal;font-size:1rem;">(0)</span></h2>
       <div class="sub">— completed customer orders</div>
       <div id="soldOrdersList" class="status-list" style="margin-top:20px;"></div>
       <div id="soldOrdersEmpty" class="empty" style="padding:24px;font-size:.9rem;">no sold orders yet</div>
@@ -2613,7 +2618,19 @@
 
 
   // ===== TRAFFIC DASHBOARD =====
-  const pageLabel = (p) => ({'homepage':'Homepage','index.html':'Homepage','browse':'Browse','browse.html':'Browse','coming soon':'Coming Soon','coming-soon.html':'Coming Soon','contact':'Contact','contact.html':'Contact','order':'Order','order.html':'Order','payment':'Payment','payment.html':'Payment'}[p] || p || 'Unknown');
+  const pageLabel = (p) => {
+    if (!p) return 'Unknown';
+    // Handle JSON page objects like {"page":"book","bookId":"...","slug":"lie-beside-me"}
+    if (typeof p === 'string' && p.startsWith('{')) {
+      try {
+        const obj = JSON.parse(p);
+        if (obj.slug) return obj.slug.replace(/-/g, ' ');
+        if (obj.page) return obj.page;
+      } catch(e) {}
+    }
+    const labels = {'homepage':'Homepage','index.html':'Homepage','browse':'Browse','browse.html':'Browse','coming soon':'Coming Soon','coming-soon.html':'Coming Soon','contact':'Contact','contact.html':'Contact','order':'Order','order.html':'Order','payment':'Payment','payment.html':'Payment','book':'Book'};
+    return labels[p] || p;
+  };
   const eventLabel = (e) => ({page_view:'viewed',book_click:'opened book',wishlist_add:'wishlisted',buy_now_click:'clicked buy',order_start:'started order',order_submit:'submitted details',payment_view:'reached payment',nav_click:'clicked nav',contact_click:'clicked contact'}[e] || e);
   const pct = (a,b) => b ? Math.round((a/b)*100) : 0;
   function countBy(arr, fn){ const m = new Map(); arr.forEach(x => { const k = fn(x); if (!k) return; m.set(k, (m.get(k)||0)+1); }); return [...m.entries()].sort((a,b)=>b[1]-a[1]); }
