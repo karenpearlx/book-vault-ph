@@ -125,7 +125,6 @@ const BVPH = (() => {
       price_bought: Number(b.costPrice) || 0,
       price_sell: Number(b.sellPrice) || 0,
       summary: b.summary || '',
-      cover_url: b.cover || '',
       rating: b.rating ? Number(b.rating) : null,
       goodreads_url: b.goodreads_url || null,
       is_featured: !!b.featured,
@@ -143,6 +142,8 @@ const BVPH = (() => {
       reserver_paid: b.reserver_paid || false,
     };
     if (includeId && b.id) row.id = b.id;
+    // Only include cover_url if explicitly set (prevents wiping existing covers)
+    if (b.cover) row.cover_url = b.cover;
     return row;
   };
 
