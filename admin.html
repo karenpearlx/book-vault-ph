@@ -1092,7 +1092,12 @@
     <div class="traffic-tab-content active" id="traffictab-analytics">
     <div class="panel">
       <h2>traffic <span class="accent">watch</span></h2>
-      <button onclick="resetAnalytics()" style="margin-bottom:16px;padding:8px 16px;background:rgba(200,80,80,.2);border:1px solid rgba(200,80,80,.4);color:#e87a7a;border-radius:6px;font-size:.75rem;cursor:pointer;">reset all data</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+        <button onclick="setTrafficRange(7)" id="range7" class="range-btn active" style="padding:8px 16px;background:var(--copper);border:none;color:var(--burgundy);border-radius:6px;font-size:.75rem;cursor:pointer;font-weight:600;">7 days</button>
+        <button onclick="setTrafficRange(30)" id="range30" class="range-btn" style="padding:8px 16px;background:rgba(184,115,51,.2);border:1px solid var(--copper);color:var(--copper);border-radius:6px;font-size:.75rem;cursor:pointer;">30 days</button>
+        <button onclick="setTrafficRange(0)" id="range0" class="range-btn" style="padding:8px 16px;background:rgba(184,115,51,.2);border:1px solid var(--copper);color:var(--copper);border-radius:6px;font-size:.75rem;cursor:pointer;">all time</button>
+        <button onclick="resetAnalytics()" style="margin-left:auto;padding:8px 16px;background:rgba(200,80,80,.2);border:1px solid rgba(200,80,80,.4);color:#e87a7a;border-radius:6px;font-size:.75rem;cursor:pointer;">reset all data</button>
+      </div>
       <div class="sub">— homepage visits, clicks, wishlists, and order funnel</div>
       <div id="trafficDashboard">
         <div class="empty">v5</div>
@@ -2654,12 +2659,25 @@
     }
   }
 
+  let currentTrafficRange = 7;
+  function setTrafficRange(days) {
+    currentTrafficRange = days;
+    document.querySelectorAll('.range-btn').forEach(btn => {
+      const isActive = btn.id === 'range' + days;
+      btn.classList.toggle('active', isActive);
+      btn.style.background = isActive ? 'var(--copper)' : 'rgba(184,115,51,.2)';
+      btn.style.color = isActive ? 'var(--burgundy)' : 'var(--copper)';
+      btn.style.border = isActive ? 'none' : '1px solid var(--copper)';
+      btn.style.fontWeight = isActive ? '600' : 'normal';
+    });
+    renderTraffic();
+  }
+
   function renderTraffic(){
     const box = document.getElementById('trafficDashboard');
     if (!box) return;
-    box.innerHTML = '<div class="empty">traffic function ran OK</div>';
+    box.innerHTML = '<div class="empty">loading...</div>';
     BVPH.getAnalytics().then(result => {
-      box.innerHTML = '<div class="empty">events: ' + (result?.events?.length || 0) + '</div>';
       if (!result) {
         box.innerHTML = '<div class="empty">no analytics data returned. check Supabase connection.</div>';
         return;
@@ -2673,9 +2691,11 @@
       const bookMap = new Map(books.map(b => [b.id, `${b.title} · ${b.author || 'Unknown'}`]));
       const now = new Date();
       const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-      const startWeek = now.getTime() - 7*24*60*60*1000;
+      const days = currentTrafficRange;
+      const startRange = days > 0 ? now.getTime() - days*24*60*60*1000 : 0;
+      const rangeLabel = days === 0 ? 'all time' : `last ${days} days`;
       const today = events.filter(e => new Date(e.created_at).getTime() >= startToday);
-      const week = events.filter(e => new Date(e.created_at).getTime() >= startWeek);
+      const week = days > 0 ? events.filter(e => new Date(e.created_at).getTime() >= startRange) : events;
       const pageViewsToday = today.filter(e => e.event_type === 'page_view');
       const pageViewsWeek = week.filter(e => e.event_type === 'page_view');
       const visitorsToday = uniqSessions(today);
@@ -2702,16 +2722,16 @@
       box.innerHTML = `
         <div class="traffic-grid">
           <div class="metric-card"><div class="metric-label">visitors today</div><div class="metric-value">${visitorsToday}</div><div class="metric-note">${homeToday} homepage visit${homeToday===1?'':'s'}</div></div>
-          <div class="metric-card"><div class="metric-label">visitors this week</div><div class="metric-value">${visitorsWeek}</div><div class="metric-note">unique anonymous sessions</div></div>
+          <div class="metric-card"><div class="metric-label">visitors · ${rangeLabel}</div><div class="metric-value">${visitorsWeek}</div><div class="metric-note">unique anonymous sessions</div></div>
           <div class="metric-card"><div class="metric-label">book click-through</div><div class="metric-value">${ctr}%</div><div class="metric-note">${buyClicksTotal} buy clicks from ${bookClicksTotal} book opens</div></div>
           <div class="metric-card"><div class="metric-label">payment reach</div><div class="metric-value">${pct(payments, starts)}%</div><div class="metric-note">${payments} reached payment from ${starts} starts</div></div>
         </div>
         <div class="traffic-columns">
-          <div class="traffic-box"><h4>page breakdown · last 7 days</h4>${renderRank(pageRows, maxPage)}</div>
-          <div class="traffic-box"><h4>order funnel · last 7 days</h4><div class="funnel"><div class="funnel-step"><div class="n">${starts}</div><div class="t">order page</div></div><div class="funnel-step"><div class="n">${submits}</div><div class="t">details sent</div></div><div class="funnel-step"><div class="n">${payments}</div><div class="t">payment page</div></div></div><div class="metric-note" style="margin-top:12px;">drop-off: ${Math.max(0, starts-payments)} session${Math.max(0, starts-payments)===1?'':'s'} started but did not reach payment.</div></div>
-          <div class="traffic-box"><h4>top viewed books · last 7 days</h4>${renderRank(bookViews, maxBook)}</div>
-          <div class="traffic-box"><h4>most wishlisted books · last 7 days</h4>${renderRank(wishlisted, maxBook)}</div>
-          <div class="traffic-box"><h4>buy clicks by book · last 7 days</h4>${renderRank(buyClicks.slice(0,10), maxBook)}</div>
+          <div class="traffic-box"><h4>page breakdown · ${rangeLabel}</h4>${renderRank(pageRows, maxPage)}</div>
+          <div class="traffic-box"><h4>order funnel · ${rangeLabel}</h4><div class="funnel"><div class="funnel-step"><div class="n">${starts}</div><div class="t">order page</div></div><div class="funnel-step"><div class="n">${submits}</div><div class="t">details sent</div></div><div class="funnel-step"><div class="n">${payments}</div><div class="t">payment page</div></div></div><div class="metric-note" style="margin-top:12px;">drop-off: ${Math.max(0, starts-payments)} session${Math.max(0, starts-payments)===1?'':'s'} started but did not reach payment.</div></div>
+          <div class="traffic-box"><h4>top viewed books · ${rangeLabel}</h4>${renderRank(bookViews, maxBook)}</div>
+          <div class="traffic-box"><h4>most wishlisted books · ${rangeLabel}</h4>${renderRank(wishlisted, maxBook)}</div>
+          <div class="traffic-box"><h4>buy clicks by book · ${rangeLabel}</h4>${renderRank(buyClicks.slice(0,10), maxBook)}</div>
           <div class="traffic-box"><h4>recent activity</h4><div class="activity-feed">${activity || '<div class="empty" style="padding:18px;">no activity logged yet.</div>'}</div></div>
         </div>`;
     }).catch(e => {
