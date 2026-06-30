@@ -1094,9 +1094,9 @@
       <h2>traffic <span class="accent">watch</span></h2>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
         <button onclick="setTrafficRange(7)" id="range7" class="range-btn active" style="padding:8px 16px;background:var(--copper);border:none;color:var(--burgundy);border-radius:6px;font-size:.75rem;cursor:pointer;font-weight:600;">7 days</button>
-        <button onclick="setTrafficRange(30)" id="range30" class="range-btn" style="padding:8px 16px;background:rgba(184,115,51,.2);border:1px solid var(--copper);color:var(--copper);border-radius:6px;font-size:.75rem;cursor:pointer;">30 days</button>
-        <button onclick="setTrafficRange(0)" id="range0" class="range-btn" style="padding:8px 16px;background:rgba(184,115,51,.2);border:1px solid var(--copper);color:var(--copper);border-radius:6px;font-size:.75rem;cursor:pointer;">all time</button>
-        <button onclick="resetAnalytics()" style="margin-left:auto;padding:8px 16px;background:rgba(200,80,80,.2);border:1px solid rgba(200,80,80,.4);color:#e87a7a;border-radius:6px;font-size:.75rem;cursor:pointer;">reset all data</button>
+        <button onclick="setTrafficRange(30)" id="range30" class="range-btn" style="padding:8px 16px;background:rgba(255,255,255,.08);border:none;color:var(--copper);border-radius:6px;font-size:.75rem;cursor:pointer;">30 days</button>
+        <button onclick="setTrafficRange(0)" id="range0" class="range-btn" style="padding:8px 16px;background:rgba(255,255,255,.08);border:none;color:var(--copper);border-radius:6px;font-size:.75rem;cursor:pointer;">all time</button>
+        <button onclick="resetAnalytics()" style="margin-left:auto;padding:8px 16px;background:rgba(255,255,255,.05);border:none;color:rgba(232,122,122,.8);border-radius:6px;font-size:.75rem;cursor:pointer;">reset all data</button>
       </div>
       <div class="sub">— homepage visits, clicks, wishlists, and order funnel</div>
       <div id="trafficDashboard">
@@ -2638,6 +2638,7 @@
   };
   const eventLabel = (e) => ({page_view:'viewed',book_click:'opened book',wishlist_add:'wishlisted',buy_now_click:'clicked buy',order_start:'started order',order_submit:'submitted details',payment_view:'reached payment',nav_click:'clicked nav',contact_click:'clicked contact'}[e] || e);
   const pct = (a,b) => b ? Math.round((a/b)*100) : 0;
+  const pctCapped = (a,b) => Math.min(100, pct(a,b));
   function countBy(arr, fn){ const m = new Map(); arr.forEach(x => { const k = fn(x); if (!k) return; m.set(k, (m.get(k)||0)+1); }); return [...m.entries()].sort((a,b)=>b[1]-a[1]); }
   function uniqSessions(events){ return new Set(events.map(e=>e.session_id).filter(Boolean)).size; }
   function renderRank(rows, max=1){
@@ -2665,9 +2666,8 @@
     document.querySelectorAll('.range-btn').forEach(btn => {
       const isActive = btn.id === 'range' + days;
       btn.classList.toggle('active', isActive);
-      btn.style.background = isActive ? 'var(--copper)' : 'rgba(184,115,51,.2)';
+      btn.style.background = isActive ? 'var(--copper)' : 'rgba(255,255,255,.08)';
       btn.style.color = isActive ? 'var(--burgundy)' : 'var(--copper)';
-      btn.style.border = isActive ? 'none' : '1px solid var(--copper)';
       btn.style.fontWeight = isActive ? '600' : 'normal';
     });
     renderTraffic();
@@ -2713,18 +2713,21 @@
       const bookClicksTotal = week.filter(e => e.event_type === 'book_click').length;
       const buyClicksTotal = week.filter(e => e.event_type === 'buy_now_click').length;
       const ctr = pct(buyClicksTotal, bookClicksTotal);
-      const activity = events.slice(0,20).map(e => {
+      const activityEvents = week.slice(0, 100);
+      const activity = activityEvents.map(e => {
         const when = new Date(e.created_at).toLocaleString('en-PH', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
         const book = e.book_id ? ` · ${bookMap.get(e.book_id) || 'book'}` : '';
         const el = e.element ? ` · ${e.element}` : '';
         return `<div class="activity-item"><div class="activity-time">${escapeHtml(when)}</div><div class="activity-text">${escapeHtml(eventLabel(e.event_type))} ${escapeHtml(pageLabel(e.page))}${escapeHtml(book)}${escapeHtml(el)}</div></div>`;
       }).join('');
+      const activityCount = week.length;
+      const showingCount = Math.min(100, activityCount);
       box.innerHTML = `
         <div class="traffic-grid">
           <div class="metric-card"><div class="metric-label">visitors today</div><div class="metric-value">${visitorsToday}</div><div class="metric-note">${homeToday} homepage visit${homeToday===1?'':'s'}</div></div>
           <div class="metric-card"><div class="metric-label">visitors · ${rangeLabel}</div><div class="metric-value">${visitorsWeek}</div><div class="metric-note">unique anonymous sessions</div></div>
           <div class="metric-card"><div class="metric-label">book click-through</div><div class="metric-value">${ctr}%</div><div class="metric-note">${buyClicksTotal} buy clicks from ${bookClicksTotal} book opens</div></div>
-          <div class="metric-card"><div class="metric-label">payment reach</div><div class="metric-value">${pct(payments, starts)}%</div><div class="metric-note">${payments} reached payment from ${starts} starts</div></div>
+          <div class="metric-card"><div class="metric-label">payment reach</div><div class="metric-value">${pctCapped(payments, starts)}%</div><div class="metric-note">${payments} payment views from ${starts} order starts</div></div>
         </div>
         <div class="traffic-columns">
           <div class="traffic-box"><h4>page breakdown · ${rangeLabel}</h4>${renderRank(pageRows, maxPage)}</div>
