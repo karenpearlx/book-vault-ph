@@ -446,11 +446,11 @@ const BVPH = (() => {
     const cached = sessionStorage.getItem('bvph_geo');
     if (cached) { _geoCache = JSON.parse(cached); return _geoCache; }
     if (_geoPromise) return _geoPromise;
-    _geoPromise = fetch('https://ip-api.com/json/?fields=status,city,regionName,country,countryCode')
+    _geoPromise = fetch('https://ipapi.co/json/')
       .then(r => r.json())
       .then(d => {
-        if (d.status === 'success') {
-          _geoCache = { city: d.city, region: d.regionName, country: d.country, country_code: d.countryCode };
+        if (d.city && d.country_code) {
+          _geoCache = { city: d.city, region: d.region, country: d.country_name, country_code: d.country_code };
           sessionStorage.setItem('bvph_geo', JSON.stringify(_geoCache));
           return _geoCache;
         }
