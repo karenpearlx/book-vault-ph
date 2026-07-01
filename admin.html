@@ -168,6 +168,7 @@
   .activity-item{display:grid;grid-template-columns:88px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.1);}
   .activity-time{font-family:"DM Mono",monospace;font-size:.58rem;color:var(--cream-warm);opacity:.5;text-transform:uppercase;}
   .activity-text{font-size:.92rem;color:var(--cream-warm);line-height:1.25;}
+  .activity-loc{color:var(--copper);font-size:.85rem;}
   .see-more-wrap{text-align:center;padding:12px 0 4px;}
   .see-more-btn{background:var(--copper);color:var(--burgundy);border:none;border-radius:6px;padding:8px 18px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .15s;}
   .see-more-btn:hover{background:var(--gold);}
@@ -2681,7 +2682,8 @@
       const when = new Date(e.created_at).toLocaleString('en-PH', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
       const book = e.book_id ? ` · ${bookMap.get(e.book_id) || 'book'}` : '';
       const el = e.element ? ` · ${e.element}` : '';
-      return `<div class="activity-item"><div class="activity-time">${escapeHtml(when)}</div><div class="activity-text">${escapeHtml(eventLabel(e.event_type))} ${escapeHtml(pageLabel(e.page))}${escapeHtml(book)}${escapeHtml(el)}</div></div>`;
+      const loc = e.city && e.country_code ? ` · <span class="activity-loc">${e.city}, ${e.country_code}</span>` : (e.country ? ` · <span class="activity-loc">${e.country}</span>` : '');
+      return `<div class="activity-item"><div class="activity-time">${escapeHtml(when)}</div><div class="activity-text">${escapeHtml(eventLabel(e.event_type))} ${escapeHtml(pageLabel(e.page))}${escapeHtml(book)}${escapeHtml(el)}${loc}</div></div>`;
     }).join('');
   }
 

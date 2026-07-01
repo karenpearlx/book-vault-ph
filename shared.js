@@ -437,9 +437,33 @@ const BVPH = (() => {
       return path === '/' ? 'index.html' : path.replace(/^\//,'');
     } catch(e) { return 'unknown'; }
   };
-  function track(eventType, opts = {}) {
-    if (!USE_SUPABASE || !ANALYTICS_EVENTS.has(eventType)) return Promise.resolve(false);
-    if (localStorage.getItem('bvph_admin')) return Promise.resolve(false); // exclude admin visits
+
+  // Location from IP (cached per session)
+  let _geoCache = null;
+  let _geoPromise = null;
+  async function getGeoLocation() {
+    if (_geoCache) return _geoCache;
+    const cached = sessionStorage.getItem('bvph_geo');
+    if (cached) { _geoCache = JSON.parse(cached); return _geoCache; }
+    if (_geoPromise) return _geoPromise;
+    _geoPromise = fetch('https://ip-api.com/json/?fields=status,city,regionName,country,countryCode')
+      .then(r => r.json())
+      .then(d => {
+        if (d.status === 'success') {
+          _geoCache = { city: d.city, region: d.regionName, country: d.country, country_code: d.countryCode };
+          sessionStorage.setItem('bvph_geo', JSON.stringify(_geoCache));
+          return _geoCache;
+        }
+        return null;
+      })
+      .catch(() => null);
+    return _geoPromise;
+  }
+
+  async function track(eventType, opts = {}) {
+    if (!USE_SUPABASE || !ANALYTICS_EVENTS.has(eventType)) return false;
+    if (localStorage.getItem('bvph_admin')) return false; // exclude admin visits
+    const geo = await getGeoLocation();
     const payload = {
       event_type: eventType,
       page: opts.page || currentPage(),
@@ -449,6 +473,12 @@ const BVPH = (() => {
     };
     if (opts.element) payload.element = opts.element;
     if (opts.target) payload.target = opts.target;
+    if (geo) {
+      payload.city = geo.city;
+      payload.region = geo.region;
+      payload.country = geo.country;
+      payload.country_code = geo.country_code;
+    }
     const send = () => sb.from('analytics').insert(payload).then(({ error }) => {
       if (error) console.warn('[BVPH] analytics error:', error.message || error);
       return !error;
