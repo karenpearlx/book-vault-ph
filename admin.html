@@ -2902,9 +2902,9 @@
           <span class="order-date">${formatDate(o.createdAt)}</span>
         </div>
         <div class="order-actions">
-          ${o.status === 'payment_sent' ? `<button class="btn btn-sm btn-pending" onclick="markOrderPending('${o.id}')">Mark pending</button>` : ''}
-          ${o.status === 'pending' ? `<button class="btn btn-sm btn-sold" onclick="markOrderSold('${o.id}')">Mark as sold</button>` : ''}
-          <button class="btn btn-sm btn-delete" onclick="deleteOrder('${o.id}')">Delete</button>
+          ${o.status === 'payment_sent' ? `<button class="btn btn-sm btn-pending" data-action="pending" data-order-id="${o.id}">Mark pending</button>` : ''}
+          ${o.status === 'pending' ? `<button class="btn btn-sm btn-sold" data-action="sold" data-order-id="${o.id}">Mark as sold</button>` : ''}
+          <button class="btn btn-sm btn-delete" data-action="delete" data-order-id="${o.id}">Delete</button>
         </div>
       </div>`;
     }).join('');
@@ -2941,9 +2941,25 @@
     toast('order marked as sold ✦');
   };
   
+  // Event delegation for order actions (more reliable on mobile)
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    const orderId = btn.dataset.orderId;
+    if (!orderId) return;
+    
+    if (action === 'delete') {
+      await window.deleteOrder(orderId);
+    } else if (action === 'pending') {
+      window.markOrderPending(orderId);
+    } else if (action === 'sold') {
+      await window.markOrderSold(orderId);
+    }
+  });
+
   window.deleteOrder = async (id) => {
     console.log('deleteOrder called with id:', id);
-    alert('Deleting order: ' + id);
     if (!confirm('Delete this order?')) return;
     const order = BVPH.getOrders().find(o => o.id === id);
     if (order) {
@@ -3002,7 +3018,7 @@
           <span class="order-date">${formatDate(o.soldAt || o.createdAt)}</span>
         </div>
         <div class="order-actions">
-          <button class="btn btn-sm btn-delete" onclick="deleteOrder('${o.id}')">Delete</button>
+          <button class="btn btn-sm btn-delete" data-action="delete" data-order-id="${o.id}">Delete</button>
         </div>
       </div>`;
     }).join('');
