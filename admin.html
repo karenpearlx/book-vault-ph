@@ -2944,47 +2944,56 @@
   // Event delegation for order actions (more reliable on mobile)
   document.addEventListener('click', async (e) => {
     const btn = e.target.closest('[data-action]');
-    if (!btn) {
-      // Check if they clicked a delete button directly
-      if (e.target.classList.contains('btn-delete')) {
-        alert('Clicked delete but no data-action found. Target: ' + e.target.outerHTML.substring(0,100));
-      }
-      return;
-    }
-    alert('Action: ' + btn.dataset.action + ', OrderId: ' + btn.dataset.orderId);
+    if (!btn) return;
     const action = btn.dataset.action;
     const orderId = btn.dataset.orderId;
-    if (!orderId) {
-      alert('No orderId found!');
-      return;
-    }
+    if (!orderId) return;
     
-    if (action === 'delete') {
-      await window.deleteOrder(orderId);
-    } else if (action === 'pending') {
-      window.markOrderPending(orderId);
-    } else if (action === 'sold') {
-      await window.markOrderSold(orderId);
+    try {
+      if (action === 'delete') {
+        await window.deleteOrder(orderId);
+      } else if (action === 'pending') {
+        window.markOrderPending(orderId);
+      } else if (action === 'sold') {
+        await window.markOrderSold(orderId);
+      }
+    } catch (err) {
+      console.error('Action error:', err);
+      alert('Error: ' + err.message);
     }
   });
 
   window.deleteOrder = async (id) => {
-    if (!confirm('Delete this order?')) return;
-    const order = BVPH.getOrders().find(o => o.id === id);
-    if (order) {
-      // Unreserve books if order wasn't completed
-      if (order.status !== 'sold') {
-        const bookIds = (order.books || []).map(b => b.bookId || b.id).filter(Boolean);
-        if (bookIds.length && BVPH.unreserveBooks) {
-          await BVPH.unreserveBooks(bookIds);
+    try {
+      alert('deleteOrder called with: ' + id);
+      if (!confirm('Delete this order?')) {
+        alert('User cancelled');
+        return;
+      }
+      alert('User confirmed, proceeding...');
+      const order = BVPH.getOrders().find(o => o.id === id);
+      alert('Found order: ' + JSON.stringify(order ? order.id : 'null'));
+      if (order) {
+        if (order.status !== 'sold') {
+          const bookIds = (order.books || []).map(b => b.bookId || b.id).filter(Boolean);
+          alert('BookIds to unreserve: ' + JSON.stringify(bookIds));
+          if (bookIds.length && BVPH.unreserveBooks) {
+            await BVPH.unreserveBooks(bookIds);
+            alert('Unreserved books');
+          }
         }
       }
+      alert('Calling BVPH.deleteOrder...');
+      await BVPH.deleteOrder(id);
+      alert('Deleted! Re-rendering...');
+      renderOrders();
+      renderSoldOrders();
+      renderNotifyRequests();
+      toast('order deleted');
+    } catch (err) {
+      alert('ERROR: ' + err.message);
+      console.error(err);
     }
-    await BVPH.deleteOrder(id);
-    renderOrders();
-    renderSoldOrders();
-    renderNotifyRequests();
-    toast('order deleted');
   };
   
   const renderSoldOrders = () => {
