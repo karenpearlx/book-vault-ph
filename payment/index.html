@@ -215,9 +215,7 @@ BVPH.init().then(async () => {
     cover: order.bookCover 
   }];
   
-  const total = order.isCart 
-    ? books.reduce((sum, b) => sum + (Number(b.price) || 0), 0)
-    : Number(order.bookPrice) || 0;
+  const total = books.reduce((sum, b) => sum + (Number(b.price) || 0), 0) || Number(order.total) || 0;
   
   const booksHtml = books.map(b => {
     const coverStyle = b.cover ? `background-image:url('${esc(b.cover)}');` : '';

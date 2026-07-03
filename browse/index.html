@@ -788,8 +788,12 @@ body::before{
 
   function renderGenrePills(books){
     const counts = { All: books.length };
-    books.forEach(b => { const g = b.genre || 'Other'; counts[g] = (counts[g]||0)+1; });
-    const order = ['All', ...(BVPH.GENRES||[]).filter(g => counts[g])];
+    // Count books that contain each predefined genre
+    (BVPH.GENRES||[]).forEach(genre => {
+      const gl = genre.toLowerCase();
+      counts[genre] = books.filter(b => (b.genre||'').toLowerCase().includes(gl)).length;
+    });
+    const order = ['All', ...(BVPH.GENRES||[]).filter(g => counts[g] > 0)];
     document.getElementById('genrePills').innerHTML = order.map(g => `
       <button class="chip ${activeGenre===g?'active':''}" onclick="setGenre('${esc(g)}')">${esc(g)}<span class="count">${counts[g]||0}</span></button>
     `).join('');
@@ -846,7 +850,7 @@ body::before{
 
     let filtered = browseBooks;
     if(activeGenre && activeGenre !== 'All'){
-      filtered = filtered.filter(b => (b.genre||'Other') === activeGenre);
+      filtered = filtered.filter(b => (b.genre||'Other').toLowerCase().includes(activeGenre.toLowerCase()));
     }
 
     if(searchTerm){
