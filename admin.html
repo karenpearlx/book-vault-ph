@@ -96,6 +96,7 @@
     display:flex;align-items:center;justify-content:space-between;
     padding:16px 32px;border-bottom:1px solid rgba(74,28,42,.15);
     background:var(--burgundy);
+    position:fixed; top:0; left:0; right:0; z-index:101;
   }
   body::before {
     content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
@@ -110,14 +111,15 @@
   .topbar a:hover, .topbar button:hover{background:rgba(255,255,255,.1);opacity:1;}
   .topbar button.logout:hover{background:rgba(255,100,100,.2);color:#ffaaaa;}
 
-  .container{max-width:100%;margin:0 auto;padding:70px 24px 60px;}
+  .container{max-width:100%;margin:0 auto;padding:130px 24px 60px;}
   @media (max-width:780px){ 
-  .container{padding:30px 16px 60px;} 
+  .container{padding:160px 16px 60px;} 
   .topbar{padding:14px 16px;flex-wrap:wrap;gap:12px;} 
   .topbar .brand{font-size:.95rem;} 
   .topbar .tag{display:none;} 
   .topbar .actions{width:100%;justify-content:center;gap:8px;} 
   .topbar a, .topbar button{padding:6px 10px;font-size:.55rem;}
+  .tab-nav{top:95px;}
 }
   @media (max-width:560px){ .topbar .brand svg{width:28px;height:28px;} }
 
@@ -505,7 +507,7 @@
   backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
   border-bottom:1px solid rgba(74,28,42,.08);
   box-shadow:0 2px 16px rgba(74,28,42,.06);
-  position:fixed; top:0; left:0; right:0; z-index:100;
+  position:fixed; top:65px; left:0; right:0; z-index:100;
 }
 .tab-btn {
   padding:14px 20px; background:transparent; border:none;
