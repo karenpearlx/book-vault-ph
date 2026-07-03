@@ -894,3 +894,20 @@ BVPH.markBooksSold = async function(bookIds) {
     await BVPH.updateBook(id, { sale_status: 'sold', quantity: 0 });
   }
 };
+
+BVPH.unreserveBooks = async function(bookIds) {
+  for (const id of bookIds) {
+    await BVPH.updateBook(id, { sale_status: 'available', quantity: 1 });
+  }
+};
+
+BVPH.deleteOrder = async function(orderId) {
+  const sb = getSupabase();
+  if (sb) {
+    const { error } = await sb.from('orders').delete().eq('id', orderId);
+    if (error) console.error('Delete order error:', error);
+  }
+  // Also remove from local
+  const orders = BVPH.getOrders().filter(o => o.id !== orderId);
+  BVPH.saveOrders(orders);
+};

@@ -2923,31 +2923,37 @@
   };
   
   window.markOrderSold = async (id) => {
-    const orders = BVPH.getOrders();
-    const order = orders.find(o => o.id === id);
+    const order = BVPH.getOrders().find(o => o.id === id);
     if (order) {
-      order.status = 'sold';
-      order.soldAt = Date.now();
-      BVPH.saveOrders(orders);
+      // Update order status in Supabase
+      await BVPH.updateOrderStatus(id, 'sold');
       
       // Also mark the books as sold
-      const bookIds = order.isCart 
-        ? (order.books || []).map(b => b.id).filter(Boolean)
-        : [order.bookId].filter(Boolean);
+      const bookIds = (order.books || []).map(b => b.bookId || b.id).filter(Boolean);
       if (bookIds.length && BVPH.markBooksSold) {
         await BVPH.markBooksSold(bookIds);
       }
     }
+    await BVPH.loadOrders();
     renderOrders();
     renderSoldOrders();
     renderNotifyRequests();
     toast('order marked as sold ✦');
   };
   
-  window.deleteOrder = (id) => {
+  window.deleteOrder = async (id) => {
     if (!confirm('Delete this order?')) return;
-    const orders = BVPH.getOrders().filter(o => o.id !== id);
-    BVPH.saveOrders(orders);
+    const order = BVPH.getOrders().find(o => o.id === id);
+    if (order) {
+      // Unreserve books if order wasn't completed
+      if (order.status !== 'sold') {
+        const bookIds = (order.books || []).map(b => b.bookId || b.id).filter(Boolean);
+        if (bookIds.length && BVPH.unreserveBooks) {
+          await BVPH.unreserveBooks(bookIds);
+        }
+      }
+    }
+    await BVPH.deleteOrder(id);
     renderOrders();
     renderSoldOrders();
     renderNotifyRequests();
