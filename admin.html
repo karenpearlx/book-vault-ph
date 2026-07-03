@@ -2048,7 +2048,7 @@
     $('#pwInput').value='';
     showLogin();
     if (reason === 'timeout') {
-      $('#loginErr').textContent = 'session expired after 30 minutes. please log in again.';
+      $('#loginErr').textContent = 'session expired after 1 hour. please log in again.';
     }
   };
 
@@ -2100,7 +2100,7 @@
     $(`#subtab-${savedSubtab}`).classList.add('active');
   }
 
-  // ===== SESSION TIMEOUT (30 min absolute) =====
+  // ===== SESSION TIMEOUT (1 hour absolute) =====
   let sessionTimerId = null;
   const startSessionWatcher = () => {
     if (sessionTimerId) clearInterval(sessionTimerId);
