@@ -2887,6 +2887,7 @@
         </div>
         <div class="order-customer">
           <strong>${o.customerName || 'Unknown'}</strong>
+          ${o.customerContact ? `<span style="color:var(--copper);font-size:.85rem;">📧 ${o.customerContact}</span>` : ''}
           ${o.withinSC ? '<span class="loc-badge sc">San Carlos</span>' : '<span class="loc-badge outside">Outside SC</span>'}
         </div>
         ${o.address ? `<div class="order-address">${o.address}</div>` : ''}
@@ -2918,13 +2919,21 @@
     toast('order marked as pending ⏳');
   };
   
-  window.markOrderSold = (id) => {
+  window.markOrderSold = async (id) => {
     const orders = BVPH.getOrders();
     const order = orders.find(o => o.id === id);
     if (order) {
       order.status = 'sold';
       order.soldAt = Date.now();
       BVPH.saveOrders(orders);
+      
+      // Also mark the books as sold
+      const bookIds = order.isCart 
+        ? (order.books || []).map(b => b.id).filter(Boolean)
+        : [order.bookId].filter(Boolean);
+      if (bookIds.length && BVPH.markBooksSold) {
+        await BVPH.markBooksSold(bookIds);
+      }
     }
     renderOrders();
     renderSoldOrders();
@@ -2970,6 +2979,7 @@
         </div>
         <div class="order-customer">
           <strong>${o.customerName || 'Unknown'}</strong>
+          ${o.customerContact ? `<span style="color:var(--copper);font-size:.85rem;">📧 ${o.customerContact}</span>` : ''}
           ${o.withinSC ? '<span class="loc-badge sc">San Carlos</span>' : '<span class="loc-badge outside">Outside SC</span>'}
         </div>
         ${o.address ? `<div class="order-address">${o.address}</div>` : ''}

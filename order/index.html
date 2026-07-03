@@ -297,6 +297,11 @@
               <input type="text" id="f_name" required placeholder="Your full name" autofocus>
             </div>
 
+            <div class="field">
+              <label>email or phone <span class="req">*</span></label>
+              <input type="text" id="f_contact" required placeholder="So we can contact you about your order">
+            </div>
+
             <div class="check-wrap" id="scWrap">
               <label class="check-row">
                 <input type="checkbox" id="f_withinSC">
@@ -371,11 +376,13 @@
     $('#orderForm').addEventListener('submit', async e => {
       e.preventDefault();
       const name = $('#f_name').value.trim();
+      const contact = $('#f_contact').value.trim();
       const withinSC = chk.checked;
       const address = withinSC ? '' : addrInput.value.trim();
       const notes = $('#f_notes').value.trim();
 
       if (!name) { $('#f_name').focus(); return; }
+      if (!contact) { $('#f_contact').focus(); return; }
       if (!withinSC && !address) { addrInput.focus(); return; }
 
       const btn = $('#submitBtn');
@@ -390,6 +397,7 @@
           bookPrice: book.sellPrice || 0,
           bookCover: book.cover || '',
           customerName: name,
+          customerContact: contact,
           withinSC,
           address,
           notes,
@@ -440,6 +448,11 @@
             <div class="field">
               <label>your name <span class="req">*</span></label>
               <input type="text" id="f_name" required placeholder="Your full name" autofocus>
+            </div>
+
+            <div class="field">
+              <label>email or phone <span class="req">*</span></label>
+              <input type="text" id="f_contact" required placeholder="So we can contact you about your order">
             </div>
 
             <div class="check-wrap" id="scWrap">
@@ -509,11 +522,13 @@
     $('#orderForm').addEventListener('submit', async e => {
       e.preventDefault();
       const name = $('#f_name').value.trim();
+      const contact = $('#f_contact').value.trim();
       const withinSC = chk.checked;
       const address = withinSC ? '' : addrInput.value.trim();
       const notes = $('#f_notes').value.trim();
 
       if (!name) { $('#f_name').focus(); return; }
+      if (!contact) { $('#f_contact').focus(); return; }
       if (!withinSC && !address) { addrInput.focus(); return; }
 
       const btn = $('#submitBtn');
@@ -532,6 +547,7 @@
           })),
           totalPrice: total,
           customerName: name,
+          customerContact: contact,
           withinSC,
           address,
           notes,
