@@ -29,7 +29,7 @@
     --danger:#a14040;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{min-height:100vh;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+  html,body{min-height:100vh;overflow-x:hidden;overscroll-behavior:none;}
   body{
     font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;font-size:15px;color:var(--ink);
     background:var(--burgundy-deep);
@@ -102,6 +102,7 @@
     padding:16px 32px;border-bottom:1px solid rgba(74,28,42,.15);
     background:var(--burgundy);
     position:fixed; top:0; left:0; right:0; z-index:101;
+    touch-action:none; -webkit-user-select:none; user-select:none;
   }
   body::before {
     content:''; position:fixed; inset:0; pointer-events:none; z-index:0;

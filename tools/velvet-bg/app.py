@@ -35,7 +35,9 @@ def process_image():
 
     file = request.files["image"]
     try:
-        original = Image.open(file.stream).convert("RGBA")
+        # Read file content into bytes first
+        file_bytes = io.BytesIO(file.read())
+        original = Image.open(file_bytes).convert("RGBA")
         max_side = 1800
         original.thumbnail((max_side, max_side), Image.LANCZOS)
 
