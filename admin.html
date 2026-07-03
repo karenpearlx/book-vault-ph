@@ -326,12 +326,7 @@
     border:1px solid rgba(74,28,42,.2);color:var(--burgundy);background:rgba(74,28,42,.06);
   }
   .btn-sm:hover{background:rgba(74,28,42,.12);border-color:var(--burgundy);}
-  .btn-sm.fill{background:var(--burgundy);
-  }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04;color:var(--cream-warm);border-color:var(--burgundy);}
+  .btn-sm.fill{background:var(--burgundy);color:var(--cream-warm);border-color:var(--burgundy);}
   .btn-sm.fill:hover{background:#3d1623;transform:translateY(-1px);}
   .btn-sm:disabled{opacity:.5;cursor:wait;}
 
@@ -344,12 +339,7 @@
     background:transparent;border:none;cursor:pointer;
   }
   .toggle-group button:hover{background:rgba(74,28,42,.1);}
-  .toggle-group button.active{background:var(--burgundy);
-  }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04;color:var(--cream-warm);}
+  .toggle-group button.active{background:var(--burgundy);color:var(--cream-warm);}
   /* mode tabs */
   .studio-modes{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
   .studio-modes button{
@@ -1099,7 +1089,8 @@
         <button onclick="setTrafficRange(7)" id="range7" class="range-btn active" style="padding:8px 16px;background:var(--copper);border:none;color:var(--burgundy);border-radius:6px;font-size:.75rem;cursor:pointer;font-weight:600;">7 days</button>
         <button onclick="setTrafficRange(30)" id="range30" class="range-btn" style="padding:8px 16px;background:rgba(255,255,255,.08);border:none;color:var(--copper);border-radius:6px;font-size:.75rem;cursor:pointer;">30 days</button>
         <button onclick="setTrafficRange(0)" id="range0" class="range-btn" style="padding:8px 16px;background:rgba(255,255,255,.08);border:none;color:var(--copper);border-radius:6px;font-size:.75rem;cursor:pointer;">all time</button>
-        <button onclick="resetAnalytics()" style="margin-left:auto;padding:8px 16px;background:rgba(255,255,255,.05);border:none;color:rgba(232,122,122,.8);border-radius:6px;font-size:.75rem;cursor:pointer;">reset all data</button>
+        <button onclick="renderTraffic()" style="margin-left:auto;padding:8px 16px;background:rgba(255,255,255,.1);border:none;color:var(--copper);border-radius:6px;font-size:.75rem;cursor:pointer;">↻ refresh</button>
+        <button onclick="resetAnalytics()" style="padding:8px 16px;background:rgba(255,255,255,.05);border:none;color:rgba(232,122,122,.8);border-radius:6px;font-size:.75rem;cursor:pointer;">reset all data</button>
       </div>
       <div class="sub">— homepage visits, clicks, wishlists, and order funnel</div>
       <div id="trafficDashboard">
