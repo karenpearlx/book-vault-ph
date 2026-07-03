@@ -383,7 +383,7 @@
 
       try {
         BVPH.track('order_submit', { bookId: book.id });
-        const order = BVPH.addOrder({
+        const order = await BVPH.addOrder({
           bookId: book.id,
           bookTitle: book.title,
           bookAuthor: book.author,
@@ -395,6 +395,8 @@
           notes,
           paymentMethod: withinSC ? 'qr' : 'cod',
         });
+        // Reserve the book (reduce stock)
+        await BVPH.reserveBooks([book.id]);
         location.href = '/payment?order=' + encodeURIComponent(order.id);
       } catch(err) {
         console.error(err);
@@ -519,7 +521,7 @@
 
       try {
         BVPH.track('order_submit', { bookIds: books.map(b=>b.id), mode: 'cart' });
-        const order = BVPH.addOrder({
+        const order = await BVPH.addOrder({
           isCart: true,
           books: books.map(b => ({
             id: b.id,
@@ -535,6 +537,8 @@
           notes,
           paymentMethod: withinSC ? 'qr' : 'cod',
         });
+        // Reserve all books in cart (reduce stock)
+        await BVPH.reserveBooks(books.map(b => b.id));
         BVPH.clearCart();
         location.href = '/payment?order=' + encodeURIComponent(order.id);
       } catch(err) {

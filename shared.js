@@ -199,7 +199,7 @@ const BVPH = (() => {
     }
     
     // Then fetch fresh data in background
-    await Promise.all([loadBooks(), loadFeatured()]);
+    await Promise.all([loadBooks(), loadFeatured(), loadOrders()]);
     _notify(); // Update with fresh data
     
     if (USE_SUPABASE) _setupRealtime();
@@ -214,6 +214,9 @@ const BVPH = (() => {
         })
         .on('postgres_changes', { event:'*', schema:'public', table:'settings' }, async () => {
           await loadFeatured(); _notify();
+        })
+        .on('postgres_changes', { event:'*', schema:'public', table:'orders' }, async () => {
+          await loadOrders(); _notify();
         })
         .subscribe();
     } catch(e) {
@@ -516,38 +519,199 @@ const BVPH = (() => {
     bookCount: _books?.length || 0,
   });
 
-  // ---------- ORDERS (localStorage) ----------
-  const getOrders = () => { try { const r = localStorage.getItem(K_ORDERS); return r ? JSON.parse(r) : []; } catch(e){ return []; } };
-  const saveOrders = (orders) => localStorage.setItem(K_ORDERS, JSON.stringify(orders));
-  const addOrder = (order) => {
-    const orders = getOrders();
+  // ---------- ORDERS (Supabase + localStorage fallback) ----------
+  let _orders = null;
+  const _ordersFromLocal = () => { try { const r = localStorage.getItem(K_ORDERS); return r ? JSON.parse(r) : []; } catch(e){ return []; } };
+  const _ordersToLocal = (orders) => { try { localStorage.setItem(K_ORDERS, JSON.stringify(orders)); } catch(e){} };
+  
+  const rowToOrder = (r) => ({
+    id: r.id,
+    customerName: r.customer_name,
+    customerContact: r.customer_contact,
+    address: r.address,
+    withinSC: r.within_sc,
+    notes: r.notes,
+    status: r.status || 'pending',
+    books: r.books || [],
+    total: Number(r.total) || 0,
+    isCart: Array.isArray(r.books) && r.books.length > 1,
+    createdAt: r.created_at ? new Date(r.created_at).getTime() : Date.now(),
+    paymentSentAt: r.payment_sent_at ? new Date(r.payment_sent_at).getTime() : null,
+    paidAt: r.paid_at ? new Date(r.paid_at).getTime() : null,
+    shippedAt: r.shipped_at ? new Date(r.shipped_at).getTime() : null,
+    deliveredAt: r.delivered_at ? new Date(r.delivered_at).getTime() : null,
+  });
+  
+  const orderToRow = (o) => ({
+    id: o.id,
+    customer_name: o.customerName,
+    customer_contact: o.customerContact || null,
+    address: o.address || null,
+    within_sc: !!o.withinSC,
+    notes: o.notes || null,
+    status: o.status || 'pending',
+    books: o.books || (o.bookTitle ? [{ title: o.bookTitle, author: o.bookAuthor, price: o.bookPrice, cover: o.bookCover, bookId: o.bookId }] : []),
+    total: Number(o.total) || (o.books ? o.books.reduce((s,b) => s + (Number(b.price)||0), 0) : Number(o.bookPrice) || 0),
+  });
+  
+  async function loadOrders() {
+    if (!USE_SUPABASE) {
+      _orders = _ordersFromLocal();
+      return _orders;
+    }
+    const { data, error } = await sb.from('orders').select('*').order('created_at', { ascending: false });
+    if (error) {
+      console.error('[BVPH] load orders error:', error);
+      if (_orders === null) _orders = _ordersFromLocal();
+      return _orders;
+    }
+    _orders = (data || []).map(rowToOrder);
+    _ordersToLocal(_orders);
+    return _orders;
+  }
+  
+  const getOrders = () => (_orders !== null ? _orders : _ordersFromLocal());
+  const saveOrders = (orders) => _ordersToLocal(orders); // legacy compat
+  
+  const addOrder = async (order) => {
     const id = 'o_' + Date.now().toString(36) + Math.random().toString(36).slice(2,5);
     const full = { id, status:'pending', createdAt: Date.now(), ...order };
-    orders.unshift(full);
-    saveOrders(orders);
-    return full;
-  };
-  const getOrder = (id) => getOrders().find(o => o.id === id);
-  const markOrderPaymentSent = (id) => {
-    const orders = getOrders();
-    const order = orders.find(o => o.id === id);
-    if (order) {
-      order.status = 'payment_sent';
-      order.paymentSentAt = Date.now();
-      saveOrders(orders);
+    
+    // Normalize books array
+    if (!full.books && full.bookTitle) {
+      full.books = [{ title: full.bookTitle, author: full.bookAuthor, price: full.bookPrice, cover: full.bookCover, bookId: full.bookId }];
     }
-    return order;
-  };
-  const markOrderPaid = (id) => {
-    const orders = getOrders();
-    const order = orders.find(o => o.id === id);
-    if (order) {
-      order.status = 'paid';
-      order.paidAt = Date.now();
-      saveOrders(orders);
+    full.total = full.books ? full.books.reduce((s,b) => s + (Number(b.price)||0), 0) : Number(full.bookPrice) || 0;
+    
+    if (!USE_SUPABASE) {
+      const orders = getOrders();
+      orders.unshift(full);
+      _ordersToLocal(orders);
+      _orders = orders;
+      return full;
     }
-    return order;
+    
+    const row = orderToRow(full);
+    const { data, error } = await sb.from('orders').insert(row).select().single();
+    if (error) {
+      console.error('[BVPH] add order error:', error);
+      // Fallback to local
+      const orders = getOrders();
+      orders.unshift(full);
+      _ordersToLocal(orders);
+      _orders = orders;
+      return full;
+    }
+    await loadOrders();
+    _notify();
+    return rowToOrder(data);
   };
+  
+  const getOrder = async (id) => {
+    if (!USE_SUPABASE) return getOrders().find(o => o.id === id);
+    
+    // Try cache first
+    const cached = (_orders || []).find(o => o.id === id);
+    if (cached) return cached;
+    
+    // Fetch from Supabase
+    const { data, error } = await sb.from('orders').select('*').eq('id', id).single();
+    if (error || !data) {
+      // Fallback to local
+      return _ordersFromLocal().find(o => o.id === id);
+    }
+    return rowToOrder(data);
+  };
+  
+  const markOrderPaymentSent = async (id) => {
+    if (!USE_SUPABASE) {
+      const orders = getOrders();
+      const order = orders.find(o => o.id === id);
+      if (order) {
+        order.status = 'payment_sent';
+        order.paymentSentAt = Date.now();
+        _ordersToLocal(orders);
+        _orders = orders;
+      }
+      return order;
+    }
+    
+    const { data, error } = await sb.from('orders')
+      .update({ status: 'payment_sent', payment_sent_at: new Date().toISOString() })
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('[BVPH] mark payment sent error:', error);
+      return null;
+    }
+    await loadOrders();
+    _notify();
+    return rowToOrder(data);
+  };
+  
+  const markOrderPaid = async (id) => {
+    if (!USE_SUPABASE) {
+      const orders = getOrders();
+      const order = orders.find(o => o.id === id);
+      if (order) {
+        order.status = 'paid';
+        order.paidAt = Date.now();
+        _ordersToLocal(orders);
+        _orders = orders;
+      }
+      return order;
+    }
+    
+    const { data, error } = await sb.from('orders')
+      .update({ status: 'paid', paid_at: new Date().toISOString() })
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('[BVPH] mark paid error:', error);
+      return null;
+    }
+    await loadOrders();
+    _notify();
+    return rowToOrder(data);
+  };
+  
+  const updateOrderStatus = async (id, status) => {
+    if (!USE_SUPABASE) {
+      const orders = getOrders();
+      const order = orders.find(o => o.id === id);
+      if (order) {
+        order.status = status;
+        if (status === 'shipped') order.shippedAt = Date.now();
+        if (status === 'delivered') order.deliveredAt = Date.now();
+        _ordersToLocal(orders);
+        _orders = orders;
+      }
+      return order;
+    }
+    
+    const updates = { status };
+    if (status === 'shipped') updates.shipped_at = new Date().toISOString();
+    if (status === 'delivered') updates.delivered_at = new Date().toISOString();
+    
+    const { data, error } = await sb.from('orders')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('[BVPH] update order status error:', error);
+      return null;
+    }
+    await loadOrders();
+    _notify();
+    return rowToOrder(data);
+  };
+  
   const getPaidOrders = () => getOrders().filter(o => o.status === 'paid');
   const getPendingOrders = () => getOrders().filter(o => o.status === 'payment_sent');
   
@@ -701,7 +865,7 @@ const BVPH = (() => {
     init, loadBooks, loadFeatured, onChange, status,
     getBooks, getBook, getFeatured, getCover, getCovers, slugify, getBookBySlug,
     saveBooks, addBook, updateBook, deleteBook, setFeaturedBook, saveFeatured,
-    getOrders, saveOrders, addOrder, getOrder, markOrderPaymentSent, markOrderPaid, getPaidOrders, getPendingOrders,
+    loadOrders, getOrders, saveOrders, addOrder, getOrder, markOrderPaymentSent, markOrderPaid, updateOrderStatus, getPaidOrders, getPendingOrders,
     getNotifyRequests, saveNotifyRequests, addNotifyRequest, deleteNotifyRequest,
     newId, fileToDataUrl,
     isAuthed, getSession, login, logout, enforceSession, sessionMsLeft, SESSION_MS,
@@ -712,3 +876,21 @@ const BVPH = (() => {
     supabase: () => sb,
   };
 })();
+
+// Injected at end - will refactor later
+BVPH.reserveBooks = async function(bookIds) {
+  for (const id of bookIds) {
+    const book = BVPH.getBook(id);
+    if (!book) continue;
+    const newQty = Math.max(0, (book.quantity || 1) - 1);
+    const updates = { quantity: newQty };
+    if (newQty === 0) updates.sale_status = 'reserved';
+    await BVPH.updateBook(id, updates);
+  }
+};
+
+BVPH.markBooksSold = async function(bookIds) {
+  for (const id of bookIds) {
+    await BVPH.updateBook(id, { sale_status: 'sold', quantity: 0 });
+  }
+};

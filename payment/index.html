@@ -195,8 +195,8 @@ document.getElementById('yr').textContent = new Date().getFullYear();
 const params = new URLSearchParams(location.search);
 const orderId = params.get('order');
 
-BVPH.init().then(() => {
-  const order = BVPH.getOrder(orderId);
+BVPH.init().then(async () => {
+  const order = await BVPH.getOrder(orderId);
   
   if (!order) {
     $('#content').innerHTML = `
@@ -334,9 +334,10 @@ BVPH.init().then(() => {
   // Handle "I've sent my payment" button
   const paidBtn = $('#paidBtn');
   if (paidBtn) {
-    paidBtn.onclick = () => {
-      BVPH.markOrderPaymentSent(orderId);
+    paidBtn.onclick = async () => {
       paidBtn.disabled = true;
+      paidBtn.textContent = 'Sending...';
+      await BVPH.markOrderPaymentSent(orderId);
       paidBtn.textContent = 'Payment marked ✓';
       paidBtn.parentElement.innerHTML = `
         <div class="success-state">
