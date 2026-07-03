@@ -321,6 +321,23 @@
     color:var(--burgundy);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;
   }
   .studio-card h4 .glyph{font-family:"Playfair Display",serif;font-style:italic;color:var(--burgundy);font-size:1.4rem;line-height:0;}
+
+  .velvet-card{
+    position:relative;overflow:hidden;background:linear-gradient(145deg,#E8D6D9 0%,#D7C0C6 100%);
+  }
+  .velvet-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 12%,rgba(184,115,51,.18),transparent 28%),radial-gradient(circle at 90% 10%,rgba(74,28,42,.16),transparent 32%);pointer-events:none;}
+  .velvet-card > *{position:relative;}
+  .velvet-workbench{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px;}
+  @media (max-width:760px){.velvet-workbench{grid-template-columns:1fr;}}
+  .velvet-drop{min-height:230px;border:1px dashed rgba(74,28,42,.28);border-radius:12px;background:rgba(253,248,243,.35);display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;cursor:pointer;transition:all .2s;}
+  .velvet-drop:hover{border-color:var(--copper-bright);background:rgba(253,248,243,.55);transform:translateY(-1px);}
+  .velvet-drop input{display:none;}
+  .velvet-drop strong{display:block;font-family:"Playfair Display",serif;font-style:italic;font-size:1.45rem;color:var(--burgundy);margin-bottom:6px;}
+  .velvet-drop span{font-family:"Cormorant Garamond",serif;font-size:1rem;color:#7F6B61;}
+  .velvet-preview{min-height:230px;border-radius:12px;background:#2E0F1A;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(253,248,243,.12),0 18px 35px rgba(74,28,42,.18);}
+  .velvet-preview.empty{background:linear-gradient(135deg,#4A1C2A,#2E0F1A);color:#C9B89A;font-family:"DM Mono",monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;}
+  .velvet-preview img{width:100%;height:100%;object-fit:contain;display:block;}
+  .velvet-status{font-family:"Cormorant Garamond",serif;font-style:italic;color:#7F6B61;margin-top:10px;min-height:20px;}
   .studio-textarea{
     width:100%;min-height:140px;padding:14px 16px;background:#E6D5D8;
     border:1px solid rgba(74,28,42,.12);border-radius:8px;color:var(--burgundy);
@@ -1470,6 +1487,36 @@
           <button class="btn-sm fill" id="downloadFeaturedBtn">⬇ download as PNG</button>
           <span class="hint" style="font-family:'Cormorant Garamond',serif;font-size:.9rem;color:#8B7A66;font-style:italic;align-self:center;">renders at full 1080px on download</span>
         </div>
+      </div>
+
+
+
+      <!-- VELVET BACKGROUND TOOL -->
+      <div class="studio-card velvet-card" style="margin-top:18px;" id="velvetBgCard">
+        <h4>velvet background remover <span class="glyph">✦</span></h4>
+        <div class="sub" style="margin-bottom:10px;">upload a book photo, remove the messy background, and place it on burgundy velvet.</div>
+        <label class="velvet-drop" id="velvetDropZone">
+          <input type="file" id="velvetFile" accept="image/*">
+          <div>
+            <strong>drop a book photo here</strong>
+            <span>or click to choose one from your device</span>
+          </div>
+        </label>
+        <div class="velvet-workbench">
+          <div>
+            <label style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--burgundy);display:block;margin:12px 0 8px;">original</label>
+            <div class="velvet-preview empty" id="velvetOriginalPreview">no photo yet</div>
+          </div>
+          <div>
+            <label style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--burgundy);display:block;margin:12px 0 8px;">velvet result</label>
+            <div class="velvet-preview empty" id="velvetResultPreview">waiting</div>
+          </div>
+        </div>
+        <div class="studio-btnrow" style="margin-top:16px;">
+          <button class="btn-sm fill" id="velvetProcessBtn" disabled>✦ remove background</button>
+          <button class="btn-sm" id="velvetDownloadBtn" disabled>⬇ download result</button>
+        </div>
+        <div class="velvet-status" id="velvetStatus"></div>
       </div>
 
       <!-- AI IMAGE GENERATION -->
@@ -4016,6 +4063,87 @@
     } finally {
       btn.disabled = false; btn.innerHTML = '⬇ download as PNG';
     }
+  });
+
+
+
+  // ----- velvet background remover -----
+  const VELVET_API_URL = window.BVPH_VELVET_API_URL || 'https://jocularly-cheerlessly-developed-lamprey.kitten.space';
+  let velvetOriginalFile = null;
+  let velvetResultUrl = '';
+
+  const setVelvetPreview = (el, url, emptyText) => {
+    if (!el) return;
+    if (!url) {
+      el.classList.add('empty');
+      el.innerHTML = emptyText;
+      return;
+    }
+    el.classList.remove('empty');
+    el.innerHTML = `<img src="${url}" alt="Book photo preview">`;
+  };
+
+  const setVelvetFile = (file) => {
+    if (!file || !file.type.startsWith('image/')) { toast('choose an image file'); return; }
+    velvetOriginalFile = file;
+    if (velvetResultUrl) URL.revokeObjectURL(velvetResultUrl);
+    velvetResultUrl = '';
+    setVelvetPreview($('#velvetOriginalPreview'), URL.createObjectURL(file), 'no photo yet');
+    setVelvetPreview($('#velvetResultPreview'), '', 'waiting');
+    $('#velvetProcessBtn').disabled = false;
+    $('#velvetDownloadBtn').disabled = true;
+    $('#velvetStatus').textContent = 'ready when you are';
+  };
+
+  $('#velvetFile')?.addEventListener('change', e => setVelvetFile(e.target.files?.[0]));
+  $('#velvetDropZone')?.addEventListener('dragover', e => { e.preventDefault(); e.currentTarget.style.borderColor = 'var(--copper-bright)'; });
+  $('#velvetDropZone')?.addEventListener('dragleave', e => { e.currentTarget.style.borderColor = ''; });
+  $('#velvetDropZone')?.addEventListener('drop', e => {
+    e.preventDefault();
+    e.currentTarget.style.borderColor = '';
+    setVelvetFile(e.dataTransfer.files?.[0]);
+  });
+
+  $('#velvetProcessBtn')?.addEventListener('click', async () => {
+    if (!velvetOriginalFile) { toast('upload a photo first'); return; }
+    const btn = $('#velvetProcessBtn');
+    const status = $('#velvetStatus');
+    btn.disabled = true;
+    btn.textContent = 'cutting out the background…';
+    status.textContent = 'this can take a little bit the first time';
+    try {
+      const form = new FormData();
+      form.append('image', velvetOriginalFile);
+      const res = await fetch(`${VELVET_API_URL}/process`, { method:'POST', body:form });
+      if (!res.ok) {
+        let msg = 'velvet service failed';
+        try { msg = (await res.json()).error || msg; } catch(e) {}
+        throw new Error(msg);
+      }
+      const blob = await res.blob();
+      if (velvetResultUrl) URL.revokeObjectURL(velvetResultUrl);
+      velvetResultUrl = URL.createObjectURL(blob);
+      setVelvetPreview($('#velvetResultPreview'), velvetResultUrl, 'waiting');
+      $('#velvetDownloadBtn').disabled = false;
+      status.textContent = 'done. very gothic little book moment.';
+      toast('velvet background ready ✦');
+    } catch (err) {
+      console.error(err);
+      status.textContent = `failed: ${err.message || err}`;
+      toast('background removal failed');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '✦ remove background';
+    }
+  });
+
+  $('#velvetDownloadBtn')?.addEventListener('click', () => {
+    if (!velvetResultUrl) return;
+    const link = document.createElement('a');
+    const base = (velvetOriginalFile?.name || 'book-photo').replace(/\.[^.]+$/, '').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase();
+    link.href = velvetResultUrl;
+    link.download = `${base || 'book-photo'}-burgundy-velvet.png`;
+    link.click();
   });
 
   // Download featured graphic
