@@ -208,7 +208,7 @@ BVPH.init().then(async () => {
     return;
   }
   
-  const books = order.isCart ? order.books : [{ 
+  const books = (order.books && order.books.length) ? order.books : [{ 
     title: order.bookTitle, 
     author: order.bookAuthor, 
     price: order.bookPrice,

@@ -2875,8 +2875,8 @@
     };
     
     $('#ordersList').innerHTML = orders.map(o => {
-      const books = o.isCart ? o.books : [{ title: o.bookTitle, author: o.bookAuthor, price: o.bookPrice }];
-      const total = o.isCart ? books.reduce((sum, b) => sum + (Number(b.price) || 0), 0) : Number(o.bookPrice) || 0;
+      const books = (o.books && o.books.length) ? o.books : [{ title: o.bookTitle, author: o.bookAuthor, price: o.bookPrice }];
+      const total = books.reduce((sum, b) => sum + (Number(b.price) || 0), 0) || Number(o.total) || 0;
       const statusClass = o.status === 'pending' ? 'processing' : 'new';
       const statusText = o.status === 'pending' ? '⏳ Processing' : '💸 Payment sent';
       
@@ -2969,8 +2969,8 @@
     };
     
     $('#soldOrdersList').innerHTML = soldOrders.map(o => {
-      const books = o.isCart ? o.books : [{ title: o.bookTitle, author: o.bookAuthor, price: o.bookPrice }];
-      const total = o.isCart ? books.reduce((sum, b) => sum + (Number(b.price) || 0), 0) : Number(o.bookPrice) || 0;
+      const books = (o.books && o.books.length) ? o.books : [{ title: o.bookTitle, author: o.bookAuthor, price: o.bookPrice }];
+      const total = books.reduce((sum, b) => sum + (Number(b.price) || 0), 0) || Number(o.total) || 0;
       
       return `<div class="order-card sold">
         <div class="order-header">
