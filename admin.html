@@ -2959,7 +2959,6 @@
   });
 
   window.deleteOrder = async (id) => {
-    console.log('deleteOrder called with id:', id);
     if (!confirm('Delete this order?')) return;
     const order = BVPH.getOrders().find(o => o.id === id);
     if (order) {
