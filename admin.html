@@ -2964,36 +2964,19 @@
   });
 
   window.deleteOrder = async (id) => {
-    try {
-      alert('deleteOrder called with: ' + id);
-      if (!confirm('Delete this order?')) {
-        alert('User cancelled');
-        return;
+    if (!confirm('Delete this order?')) return;
+    const order = BVPH.getOrders().find(o => o.id === id);
+    if (order && order.status !== 'sold') {
+      const bookIds = (order.books || []).map(b => b.bookId || b.id).filter(Boolean);
+      if (bookIds.length && BVPH.unreserveBooks) {
+        await BVPH.unreserveBooks(bookIds);
       }
-      alert('User confirmed, proceeding...');
-      const order = BVPH.getOrders().find(o => o.id === id);
-      alert('Found order: ' + JSON.stringify(order ? order.id : 'null'));
-      if (order) {
-        if (order.status !== 'sold') {
-          const bookIds = (order.books || []).map(b => b.bookId || b.id).filter(Boolean);
-          alert('BookIds to unreserve: ' + JSON.stringify(bookIds));
-          if (bookIds.length && BVPH.unreserveBooks) {
-            await BVPH.unreserveBooks(bookIds);
-            alert('Unreserved books');
-          }
-        }
-      }
-      alert('Calling BVPH.deleteOrder...');
-      await BVPH.deleteOrder(id);
-      alert('Deleted! Re-rendering...');
-      renderOrders();
-      renderSoldOrders();
-      renderNotifyRequests();
-      toast('order deleted');
-    } catch (err) {
-      alert('ERROR: ' + err.message);
-      console.error(err);
     }
+    await BVPH.deleteOrder(id);
+    renderOrders();
+    renderSoldOrders();
+    renderNotifyRequests();
+    toast('order deleted');
   };
   
   const renderSoldOrders = () => {

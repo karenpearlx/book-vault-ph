@@ -902,8 +902,7 @@ BVPH.unreserveBooks = async function(bookIds) {
 };
 
 BVPH.deleteOrder = async function(orderId) {
-  const sb = getSupabase();
-  if (sb) {
+  if (USE_SUPABASE && sb) {
     const { error } = await sb.from('orders').delete().eq('id', orderId);
     if (error) console.error('Delete order error:', error);
   }
