@@ -939,6 +939,10 @@
     content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
     background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
     opacity:.04;color:var(--cream);}
+/* Pull to refresh */
+  .ptr-indicator{position:fixed;top:0;left:50%;transform:translateX(-50%) translateY(-100%);z-index:9999;background:var(--burgundy);color:var(--cream-warm);padding:10px 20px;border-radius:0 0 12px 12px;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;transition:transform .2s ease-out;box-shadow:0 4px 12px rgba(74,28,42,.3);}
+  .ptr-indicator.visible{transform:translateX(-50%) translateY(0);}
+  .ptr-indicator.refreshing{background:var(--copper);}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
 </head>
@@ -5921,6 +5925,56 @@ function showSocialModal(post) {
     refresh();
   }
   setTimeout(boot, 600);
+})();
+</script>
+<script>
+// Pull to refresh for PWA
+(function(){
+  if (!navigator.standalone && !window.matchMedia('(display-mode: standalone)').matches) return;
+  
+  const indicator = document.createElement('div');
+  indicator.className = 'ptr-indicator';
+  indicator.textContent = '↓ pull to refresh';
+  document.body.appendChild(indicator);
+  
+  let startY = 0;
+  let pulling = false;
+  const threshold = 80;
+  
+  document.addEventListener('touchstart', e => {
+    if (window.scrollY === 0) {
+      startY = e.touches[0].clientY;
+      pulling = true;
+    }
+  }, {passive: true});
+  
+  document.addEventListener('touchmove', e => {
+    if (!pulling) return;
+    const y = e.touches[0].clientY;
+    const diff = y - startY;
+    if (diff > 20 && window.scrollY === 0) {
+      indicator.classList.add('visible');
+      if (diff > threshold) {
+        indicator.textContent = '↑ release to refresh';
+      } else {
+        indicator.textContent = '↓ pull to refresh';
+      }
+    }
+  }, {passive: true});
+  
+  document.addEventListener('touchend', e => {
+    if (!pulling) return;
+    const diff = e.changedTouches[0].clientY - startY;
+    if (diff > threshold && window.scrollY === 0) {
+      indicator.textContent = 'refreshing...';
+      indicator.classList.add('refreshing');
+      setTimeout(() => location.reload(), 300);
+    } else {
+      indicator.classList.remove('visible');
+    }
+    pulling = false;
+    startY = 0;
+  }, {passive: true});
 })();
 </script>
 </body>
