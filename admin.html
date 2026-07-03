@@ -110,7 +110,7 @@
   .topbar a:hover, .topbar button:hover{background:rgba(255,255,255,.1);opacity:1;}
   .topbar button.logout:hover{background:rgba(255,100,100,.2);color:#ffaaaa;}
 
-  .container{max-width:1200px;margin:0 auto;padding:24px 24px 60px;}
+  .container{max-width:100%;margin:0 auto;padding:24px 24px 60px;}
   @media (max-width:780px){ 
   .container{padding:30px 16px 60px;} 
   .topbar{padding:14px 16px;flex-wrap:wrap;gap:12px;} 
@@ -505,7 +505,7 @@
   backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
   border-bottom:1px solid rgba(74,28,42,.08);
   box-shadow:0 2px 16px rgba(74,28,42,.06);
-  position:sticky; top:0; z-index:100;
+  position:-webkit-sticky; position:sticky; top:0; z-index:100;
 }
 .tab-btn {
   padding:14px 20px; background:transparent; border:none;
@@ -518,7 +518,7 @@
   content:''; position:absolute; bottom:-1px; left:50%; transform:translateX(-50%);
   width:24px; height:3px; background:var(--copper); border-radius:3px 3px 0 0;
 }
-.tab-content { display:none; padding:0 36px; }
+.tab-content { display:none; padding:0 16px; }
 .tab-content.active { display:block; }
 @media(max-width:680px){
   .tab-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 16px;gap:0;}
@@ -966,7 +966,7 @@
     </div>
     <div class="actions">
       <span id="backendPill" title="data backend mode" style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:#8B7A66;padding:8px 12px;border:1px solid rgba(216,154,85,.18);border-radius:999px;">● connecting…</span>
-      <span id="sessionPill" title="auto-logs out 30 minutes after login" style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:#8B7A66;padding:8px 12px;border:1px solid rgba(216,154,85,.18);border-radius:999px;">session · —</span>
+      <span id="sessionPill" title="auto-logs out 1 hour after login" style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:#8B7A66;padding:8px 12px;border:1px solid rgba(216,154,85,.18);border-radius:999px;">session · —</span>
       <a href="/" target="_blank">view shop ↗</a>
       <button class="logout" id="logoutBtn">log out</button>
     </div>
