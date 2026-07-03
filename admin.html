@@ -525,7 +525,8 @@
 .tab-content { display:none; padding:0 16px; }
 .tab-content.active { display:block; }
 @media(max-width:680px){
-  .tab-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 12px;gap:0;}
+  .tab-nav{overflow-x:scroll;overscroll-behavior-x:contain;padding:0 12px;gap:0;scrollbar-width:none;-ms-overflow-style:none;}
+  .tab-nav::-webkit-scrollbar{display:none;}
   .tab-btn{padding:12px 14px;font-size:.8rem;white-space:nowrap;flex-shrink:0;}
 }
 
