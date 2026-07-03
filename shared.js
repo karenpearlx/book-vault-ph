@@ -715,6 +715,15 @@ const BVPH = (() => {
   const getPaidOrders = () => getOrders().filter(o => o.status === 'paid');
   const getPendingOrders = () => getOrders().filter(o => o.status === 'payment_sent');
   
+  const deleteOrder = async (orderId) => {
+    if (USE_SUPABASE && sb) {
+      const { error } = await sb.from('orders').delete().eq('id', orderId);
+      if (error) console.error('Delete order error:', error);
+    }
+    _orders = (_orders || []).filter(o => o.id !== orderId);
+    _ordersToLocal(_orders);
+  };
+  
   // Notify requests
   const getNotifyRequests = () => { try { const r = localStorage.getItem(K_NOTIFY); return r ? JSON.parse(r) : []; } catch(e){ return []; } };
   const saveNotifyRequests = (reqs) => localStorage.setItem(K_NOTIFY, JSON.stringify(reqs));
@@ -865,7 +874,7 @@ const BVPH = (() => {
     init, loadBooks, loadFeatured, onChange, status,
     getBooks, getBook, getFeatured, getCover, getCovers, slugify, getBookBySlug,
     saveBooks, addBook, updateBook, deleteBook, setFeaturedBook, saveFeatured,
-    loadOrders, getOrders, saveOrders, addOrder, getOrder, markOrderPaymentSent, markOrderPaid, updateOrderStatus, getPaidOrders, getPendingOrders,
+    loadOrders, getOrders, saveOrders, addOrder, getOrder, markOrderPaymentSent, markOrderPaid, updateOrderStatus, getPaidOrders, getPendingOrders, deleteOrder,
     getNotifyRequests, saveNotifyRequests, addNotifyRequest, deleteNotifyRequest,
     newId, fileToDataUrl,
     isAuthed, getSession, login, logout, enforceSession, sessionMsLeft, SESSION_MS,
@@ -901,15 +910,4 @@ BVPH.unreserveBooks = async function(bookIds) {
   }
 };
 
-BVPH.deleteOrder = async function(orderId) {
-  const sb = BVPH.supabase();
-  if (sb) {
-    const { error } = await sb.from('orders').delete().eq('id', orderId);
-    if (error) console.error('Delete order error:', error);
-  }
-  // Also remove from local
-  const orders = BVPH.getOrders().filter(o => o.id !== orderId);
-  BVPH.saveOrders(orders);
-  // Reload to update in-memory cache
-  await BVPH.loadOrders();
-};
+
