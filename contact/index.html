@@ -249,5 +249,6 @@ BVPH.init().then(() => {
 
 document.addEventListener('click',e=>{const a=e.target.closest('a[href]');if(a)BVPH.track(a.href.includes('instagram.com')||a.href.includes('mailto:')||a.href.includes('facebook.com')?'contact_click':'nav_click',{element:(a.textContent||'link').trim(),target:a.getAttribute('href')||''});},true);
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(e=>console.log("SW:",e));}</script>
 </body>
 </html>

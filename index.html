@@ -27,7 +27,12 @@
 <meta name="twitter:image" content="https://thebookvaultph.com/og-preview.png">
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="apple-touch-icon" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#4A1C2A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Book Vault">
 <meta name="theme-color" content="#4A1C2A">
 
 <!-- Schema.org structured data -->
@@ -1723,6 +1728,11 @@ document.getElementById('homeContactForm').addEventListener('submit', async (e) 
     alert('Something went wrong. Please try emailing us directly.');
   }
 });
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
+}
 </script>
 </body>
 </html>

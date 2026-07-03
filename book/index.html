@@ -231,5 +231,6 @@ a:hover{text-decoration:underline;}
   if (BVPH.trackPageView) BVPH.trackPageView({ page:'book', bookId: book.id, slug });
 })();
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(e=>console.log("SW:",e));}</script>
 </body>
 </html>

@@ -957,5 +957,6 @@ body::before{
 })();
 </script>
 <button id="backToTop" aria-label="Back to top">↑</button>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(e=>console.log("SW:",e));}</script>
 </body>
 </html>
