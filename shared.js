@@ -910,4 +910,6 @@ BVPH.deleteOrder = async function(orderId) {
   // Also remove from local
   const orders = BVPH.getOrders().filter(o => o.id !== orderId);
   BVPH.saveOrders(orders);
+  // Reload to update in-memory cache
+  await BVPH.loadOrders();
 };
