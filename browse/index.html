@@ -815,16 +815,27 @@ body::before{
   window.handleSort = handleSort;
 
   function sortBooks(books){
+    // Pinned popular books (shown first when sorting by Most Popular)
+    const pinnedTitles = ['mockingjay', 'where the crawdads sing', 'the girl who played with fire', 'inferno', "the time traveler's wife", 'if i stay', 'the hate u give', 'room', 'the danish girl', 'grey'];
+    const isPinned = (title) => pinnedTitles.includes((title||'').toLowerCase());
+    const getPinIndex = (title) => {
+      const idx = pinnedTitles.indexOf((title||'').toLowerCase());
+      return idx === -1 ? 999 : idx;
+    };
+    
     switch(sortBy){
       case 'price-low': return books.sort((a,b) => (Number(a.sellPrice)||0) - (Number(b.sellPrice)||0));
       case 'price-high': return books.sort((a,b) => (Number(b.sellPrice)||0) - (Number(a.sellPrice)||0));
       case 'title': return books.sort((a,b) => (a.title||'').localeCompare(b.title||''));
       case 'rating': return books.sort((a,b) => (Number(b.rating)||0) - (Number(a.rating)||0));
       default: return books.sort((a, b) => {
-        const aAdapted = /adapted|movie|series|film|netflix|hbo|hulu/i.test(a.summary || '');
-        const bAdapted = /adapted|movie|series|film|netflix|hbo|hulu/i.test(b.summary || '');
-        if (bAdapted && !aAdapted) return 1;
-        if (aAdapted && !bAdapted) return -1;
+        // Pinned books first
+        const aPinned = isPinned(a.title);
+        const bPinned = isPinned(b.title);
+        if (aPinned && !bPinned) return -1;
+        if (!aPinned && bPinned) return 1;
+        if (aPinned && bPinned) return getPinIndex(a.title) - getPinIndex(b.title);
+        // Then by rating
         return (Number(b.rating) || 0) - (Number(a.rating) || 0);
       });
     }

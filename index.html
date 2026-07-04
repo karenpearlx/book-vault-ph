@@ -1396,14 +1396,14 @@ body::before{
     const toShow = sorted.slice(0, LIMIT);
 
     if (state.q) {
-      $('#shelfLede').innerHTML = `Showing results for <em>"${esc(state.q)}"</em> · ${filtered.length} found`;
+      $('#shelfLede').innerHTML = `Showing results for <em>"${esc(state.q)}"</em> · ${sorted.length} found`;
     } else if (state.genre !== 'All') {
-      $('#shelfLede').textContent = `${filtered.length} books in ${state.genre}.`;
+      $('#shelfLede').textContent = `${sorted.length} books in ${state.genre}.`;
     } else {
       $('#shelfLede').textContent = `Every book in the vault, ready to be claimed.`;
     }
 
-    if (!filtered.length) {
+    if (!sorted.length) {
       grid.innerHTML = `<div class="empty-state"><div class="ic"></div>${
         state.q ? `No books match "${esc(state.q)}". Try another search.` :
         all.length === 0 ? `The shelf is being stocked. Check back soon.` :
@@ -1412,7 +1412,7 @@ body::before{
       return;
     }
     grid.innerHTML = toShow.map(bookCard).join('') + 
-      (hasMore ? `<a href="/browse" class="see-more-btn">See all ${filtered.length} books →</a>` : '');
+      (hasMore ? `<a href="/browse" class="see-more-btn">See all ${sorted.length} books →</a>` : '');
     loadCoversForBooks(toShow.map(b => b.id));
   }
 
