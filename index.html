@@ -1389,11 +1389,7 @@ body::before{
 
   function renderShelf(){
     const all = BVPH.getBooks().filter(b => b.status !== 'coming_soon');
-    const filtered = filterBooks(all);
-    // Prioritize books with adaptations
-    const withAdaptation = filtered.filter(b => b.has_adaptation);
-    const withoutAdaptation = filtered.filter(b => !b.has_adaptation);
-    const sorted = [...withAdaptation, ...withoutAdaptation];
+    const sorted = filterBooks(all); // Already sorted with pinned books at top
     const grid = $('#shelfGrid');
     const LIMIT = 8;
     const hasMore = sorted.length > LIMIT;
