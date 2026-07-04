@@ -1350,13 +1350,31 @@ body::before{
 
   function sortBooks(arr){
     const a = [...arr];
-    switch(state.sort){
-      case 'rating': return a.sort((x,y)=>(y.rating||0)-(x.rating||0));
-      case 'priceLow': return a.sort((x,y)=>x.sellPrice-y.sellPrice);
-      case 'priceHigh': return a.sort((x,y)=>y.sellPrice-x.sellPrice);
-      case 'title': return a.sort((x,y)=>(x.title||'').localeCompare(y.title||''));
-      default: return a.sort((x,y)=>(y.createdAt||0)-(x.createdAt||0));
-    }
+    // Pin popular books at top (case-insensitive)
+    const pinnedTitles = ['mockingjay', 'where the crawdads sing', 'the girl who played with fire', 'inferno', 'the time traveler\'s wife', 'if i stay', 'the hate u give', 'room', 'the danish girl', 'grey'];
+    const isPinned = (title) => pinnedTitles.includes((title||'').toLowerCase());
+    
+    const baseSort = (x, y) => {
+      switch(state.sort){
+        case 'rating': return (y.rating||0)-(x.rating||0);
+        case 'priceLow': return x.sellPrice-y.sellPrice;
+        case 'priceHigh': return y.sellPrice-x.sellPrice;
+        case 'title': return (x.title||'').localeCompare(y.title||'');
+        default: return (y.createdAt||0)-(x.createdAt||0);
+      }
+    };
+    
+    return a.sort((x,y) => {
+      const xPinned = isPinned(x.title);
+      const yPinned = isPinned(y.title);
+      if (xPinned && !yPinned) return -1;
+      if (!xPinned && yPinned) return 1;
+      if (xPinned && yPinned) {
+        // Both pinned - sort by pinned order
+        return pinnedTitles.indexOf((x.title||'').toLowerCase()) - pinnedTitles.indexOf((y.title||'').toLowerCase());
+      }
+      return baseSort(x, y);
+    });
   }
 
   function filterBooks(books){
