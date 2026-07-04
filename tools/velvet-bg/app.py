@@ -11,7 +11,7 @@ TEXTURE_PATH = BASE_DIR / "burgundy-velvet.png"
 
 app = Flask(__name__)
 CORS(app)
-session = new_session("u2netp")
+session = new_session("isnet-general-use")
 
 
 def velvet_texture(size):
