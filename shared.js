@@ -199,7 +199,7 @@ const BVPH = (() => {
     }
     
     // Then fetch fresh data in background
-    await Promise.all([loadBooks(), loadFeatured(), loadOrders()]);
+    await Promise.all([loadBooks(), loadFeatured(), loadOrders(), loadExcludeIps()]);
     _notify(); // Update with fresh data
     
     if (USE_SUPABASE) _setupRealtime();
@@ -213,7 +213,8 @@ const BVPH = (() => {
           await loadBooks(); _notify();
         })
         .on('postgres_changes', { event:'*', schema:'public', table:'settings' }, async () => {
-          await loadFeatured(); _notify();
+          await Promise.all([loadFeatured(), loadExcludeIps()]);
+          _notify();
         })
         .on('postgres_changes', { event:'*', schema:'public', table:'orders' }, async () => {
           await loadOrders(); _notify();
@@ -444,6 +445,52 @@ const BVPH = (() => {
   // Location from IP (cached per session)
   let _geoCache = null;
   let _geoPromise = null;
+  let _excludeIps = [];
+  const configExcludeIps = () => {
+    const raw = cfg.ANALYTICS_EXCLUDE_IPS;
+    return Array.isArray(raw) ? raw.map(String) : [];
+  };
+  async function loadExcludeIps() {
+    const merged = new Set(configExcludeIps());
+    if (USE_SUPABASE) {
+      const { data, error } = await sb.from('settings').select('value').eq('key', 'analytics_exclude_ips').maybeSingle();
+      if (error) console.warn('[BVPH] load exclude ips error:', error.message || error);
+      const fromDb = data?.value;
+      const ips = Array.isArray(fromDb) ? fromDb : (fromDb?.ips || []);
+      ips.forEach(ip => merged.add(String(ip)));
+    }
+    _excludeIps = [...merged];
+    return _excludeIps;
+  }
+  const getExcludedIps = () => [..._excludeIps];
+  const isIpExcluded = (ip) => !!(ip && _excludeIps.includes(String(ip)));
+  async function addExcludedIp(ip) {
+    const next = String(ip || '').trim();
+    if (!next) return getExcludedIps();
+    if (!USE_SUPABASE) {
+      _excludeIps = [...new Set([..._excludeIps, next])];
+      return _excludeIps;
+    }
+    const current = new Set(getExcludedIps());
+    current.add(next);
+    const ips = [...current];
+    const { error } = await sb.from('settings').upsert({ key: 'analytics_exclude_ips', value: ips }, { onConflict: 'key' });
+    if (error) throw error;
+    _excludeIps = ips;
+    return _excludeIps;
+  }
+  async function removeExcludedIp(ip) {
+    const target = String(ip || '').trim();
+    const ips = getExcludedIps().filter(x => x !== target);
+    if (!USE_SUPABASE) {
+      _excludeIps = ips;
+      return _excludeIps;
+    }
+    const { error } = await sb.from('settings').upsert({ key: 'analytics_exclude_ips', value: ips }, { onConflict: 'key' });
+    if (error) throw error;
+    _excludeIps = ips;
+    return _excludeIps;
+  }
   async function getGeoLocation() {
     if (_geoCache) return _geoCache;
     const cached = sessionStorage.getItem('bvph_geo');
@@ -452,8 +499,14 @@ const BVPH = (() => {
     _geoPromise = fetch('https://ipapi.co/json/')
       .then(r => r.json())
       .then(d => {
-        if (d.city && d.country_code) {
-          _geoCache = { city: d.city, region: d.region, country: d.country_name, country_code: d.country_code };
+        if (d.ip || (d.city && d.country_code)) {
+          _geoCache = {
+            ip: d.ip || null,
+            city: d.city || null,
+            region: d.region || null,
+            country: d.country_name || null,
+            country_code: d.country_code || null,
+          };
           sessionStorage.setItem('bvph_geo', JSON.stringify(_geoCache));
           return _geoCache;
         }
@@ -465,8 +518,9 @@ const BVPH = (() => {
 
   async function track(eventType, opts = {}) {
     if (!USE_SUPABASE || !ANALYTICS_EVENTS.has(eventType)) return false;
-    if (localStorage.getItem('bvph_admin')) return false; // exclude admin visits
+    if (localStorage.getItem('bvph_admin')) return false; // exclude admin visits on this browser
     const geo = await getGeoLocation();
+    if (isIpExcluded(geo?.ip)) return false;
     const payload = {
       event_type: eventType,
       page: opts.page || currentPage(),
@@ -882,6 +936,7 @@ const BVPH = (() => {
     onWishlistChange, getWishlistBooks,
     getCart, getCartCount, isInCart, addToCart, updateCartQty, removeFromCart, clearCart, onCartChange, getCartBooks, getCartTotal, getCartSubtotal, getCartDiscount, getCartItemCount,
     track, trackPageView, trackClick, getAnalytics,
+    getExcludedIps, addExcludedIp, removeExcludedIp, getGeoLocation,
     supabase: () => sb,
   };
 })();

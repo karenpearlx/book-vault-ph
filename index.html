@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
 <title>Pre-Loved Books · The Book Vault PH</title>
-<meta name="description" content="The Book Vault PH — well-loved, handpicked books at friendly prices. Thrillers, romance, fantasy, gothic horror & more. Based in San Carlos City, ships nationwide. GCash, Maya, BPI & COD." />
+<meta name="description" content="The Book Vault PH — pre-loved books, mostly ₱150–₱350. Thrillers, romance, fantasy, horror & more. Ships nationwide. GCash, Maya, BPI & COD." />
 <meta name="keywords" content="preloved books philippines, pre-loved books ph, buy books online ph, second hand books ph, bookshop san carlos, thriller books ph, romance books ph, fantasy books ph">
 <meta name="author" content="The Book Vault PH">
 <meta name="robots" content="index,follow">
@@ -15,7 +15,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="The Book Vault PH">
 <meta property="og:title" content="Pre-Loved Books · The Book Vault PH">
-<meta property="og:description" content="Well-loved, handpicked books at friendly prices. Based in San Carlos City, ships nationwide. GCash, Maya, BPI & COD.">
+<meta property="og:description" content="Pre-loved books at honest prices. Thrillers, romance, fantasy, horror & more. Ships nationwide — GCash, Maya, BPI & COD.">
 <meta property="og:url" content="https://thebookvaultph.com/">
 <meta property="og:image" content="https://thebookvaultph.com/og-preview.png">
 <meta property="og:locale" content="en_PH">
@@ -23,7 +23,7 @@
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Pre-Loved Books · The Book Vault PH">
-<meta name="twitter:description" content="Well-loved, handpicked books at friendly prices. San Carlos City · ships nationwide · GCash, Maya, BPI & COD.">
+<meta name="twitter:description" content="Pre-loved books, mostly ₱150–₱350. Ships nationwide · GCash, Maya, BPI & COD.">
 <meta name="twitter:image" content="https://thebookvaultph.com/og-preview.png">
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -43,7 +43,7 @@
   "@id": "https://thebookvaultph.com/#bookstore",
   "name": "The Book Vault PH",
   "alternateName": "Book Vault Philippines",
-  "description": "A small business in San Carlos City selling well-loved, handpicked preloved books online. Thrillers, romance, fantasy, gothic horror, and more.",
+  "description": "Pre-loved books sold online from the Philippines. Thrillers, romance, fantasy, horror, and more — usually ₱150–₱350.",
   "url": "https://thebookvaultph.com/",
   "image": "https://thebookvaultph.com/favicon.svg",
   "telephone": "",
@@ -292,7 +292,7 @@ body::before{
 .marquee{
   background:var(--burgundy);color:var(--cream);
   border-top:1px solid rgba(216,154,85,.25);border-bottom:1px solid rgba(216,154,85,.25);
-  padding:18px 0;overflow:hidden;position:relative;
+  padding:22px 0;overflow:hidden;position:relative;
 }
 .marquee::before,.marquee::after{
   content:"";position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none;
@@ -300,17 +300,17 @@ body::before{
 .marquee::before{left:0;background:linear-gradient(90deg,var(--burgundy),transparent);}
 .marquee::after{right:0;background:linear-gradient(-90deg,var(--burgundy),transparent);}
 .marquee-track{
-  display:flex;gap:48px;width:max-content;
-  animation:marquee 38s linear infinite;
+  display:flex;gap:64px;width:max-content;
+  animation:marquee 42s linear infinite;
 }
 .marquee:hover .marquee-track{animation-play-state:paused;}
 @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-.marquee span{
-  font-family:"Playfair Display",serif;font-style:italic;font-size:1.05rem;color:var(--cream);
-  white-space:nowrap;display:inline-flex;align-items:center;gap:48px;letter-spacing:.01em;
+.marquee-group{
+  display:flex;align-items:center;gap:28px;flex-shrink:0;
+  font-family:"DM Mono",monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(253,248,243,.88);white-space:nowrap;
 }
-.marquee .dot{color:var(--copper-soft);font-style:normal;font-size:.7rem;}
-.marquee .paw{color:var(--copper-soft);font-size:1rem;}
+.marquee-group .dot{color:var(--copper-soft);opacity:.55;font-size:.65rem;}
 
 /* Visually hidden but accessible to screen readers */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
@@ -427,13 +427,14 @@ body::before{
 .categories-section h2 em{font-style:italic;color:var(--copper);}
 .categories-section .lede{color:var(--ink-soft);margin-top:8px;}
 .categories-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:28px;
   max-width:1100px;margin:0 auto;
 }
 .category-card{
   position:relative;border-radius:12px;overflow:hidden;
   text-decoration:none;color:#fff;
   height:220px;
+  background-color:var(--burgundy-deep);
   background-size:cover;background-position:center;
   transition:all .3s ease;
 }
@@ -455,11 +456,11 @@ body::before{
 .cat-romance{background-image:url('https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=600&q=80');}
 .cat-thriller{background-image:url('https://images.unsplash.com/photo-1587876931567-564ce588bfbd?w=600&q=80');}
 .cat-fiction{background-image:url('https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&q=80');}
-.cat-fantasy{background-image:url('https://images.unsplash.com/photo-1518709268805-4e9042af2179?w=600&q=80');}
-.cat-horror{background-image:url('https://images.unsplash.com/photo-1509245858460-1337239842a49?w=600&q=80');}
-.cat-mystery{background-image:url('https://images.unsplash.com/photo-1457694587812-e8bf152a7900?w=600&q=80');}
+.cat-fantasy{background-image:url('https://images.unsplash.com/photo-1778407729185-949b4446da0f?w=600&q=80');background-position:center 35%;}
+.cat-horror{background-image:url('https://images.unsplash.com/photo-1762029070095-1c06dccbe374?w=600&q=80');}
+.cat-mystery{background-image:url('https://images.unsplash.com/photo-1768157691867-c60fd7a1244c?w=600&q=80');background-position:center 60%;}
 @media(max-width:700px){
-  .categories-grid{grid-template-columns:repeat(2,1fr);max-width:100%;}
+  .categories-grid{grid-template-columns:repeat(2,1fr);max-width:100%;gap:20px;}
   .categories-section{padding:48px 20px;}
   .category-card{height:180px;}
 }
@@ -1074,20 +1075,20 @@ body::before{
   <header class="hero" role="banner">
     <div class="hero-grid">
       <div class="fade-up">
-        <p class="kicker">Currently reading · Fourth Wing — still not over the dragon guy</p>
-        <h1>Find your next <em><span class="hero-rotate" id="heroRotate">book obsession</span></em></h1>
-        <p class="hero-sub">Well-loved thrillers, romance, and gothic horror — handpicked, reads clean, priced for real readers. Ships nationwide.</p>
+        <p class="kicker">Pre-loved books · ships anywhere in the PH</p>
+        <h1>Good reads, <em>honest prices</em></h1>
+        <p class="hero-sub">Mostly thrillers, romance, and horror — the paperbacks and hardcovers we actually have in stock. Pick a book, fill out the form, pay via GCash, Maya, or BPI, and we pack it up.</p>
         <div class="hero-cta">
-          <a class="primary" href="#browse">Browse the shelf →</a>
-          <a class="ghost" href="#howto">How to order</a>
+          <a class="primary" href="#browse">See what's on the shelf →</a>
+          <a class="ghost" href="#howto">How ordering works</a>
         </div>
       </div>
       <div class="hero-side">
         <div class="hero-form">
-          <h3>Browse books</h3>
-          <p>Thrillers, romance, gothic horror, and dark fiction. All handpicked, all at good prices.</p>
-          <a href="#browse" class="hero-form-btn">See the shelf →</a>
-          <a href="/coming-soon" class="hero-form-link">or check what's coming soon</a>
+          <h3>What's on the shelf</h3>
+          <p>Scroll the list, tap a cover, check the price and condition. No account needed.</p>
+          <a href="#browse" class="hero-form-btn">Browse books →</a>
+          <a href="/coming-soon" class="hero-form-link">Coming soon list</a>
         </div>
       </div>
     </div>
@@ -1098,8 +1099,22 @@ body::before{
 <!-- ============== MARQUEE ============== -->
 <div class="marquee" aria-hidden="true">
   <div class="marquee-track">
-    <span>handpicked reads <span class="dot">·</span> ships nationwide via J&amp;T and LBC <span class="dot">·</span> free delivery for certain areas <span class="dot">·</span> curated by a very small dog <span class="dot">·</span></span>
-    <span>handpicked reads <span class="dot">·</span> ships nationwide via J&amp;T and LBC <span class="dot">·</span> free delivery for certain areas <span class="dot">·</span> curated by a very small dog <span class="dot">·</span></span>
+    <div class="marquee-group">
+      <span>GCash</span><span class="dot">·</span>
+      <span>Maya</span><span class="dot">·</span>
+      <span>BPI</span><span class="dot">·</span>
+      <span>COD</span><span class="dot">·</span>
+      <span>J&amp;T &amp; LBC nationwide</span><span class="dot">·</span>
+      <span>free delivery in select areas</span>
+    </div>
+    <div class="marquee-group">
+      <span>GCash</span><span class="dot">·</span>
+      <span>Maya</span><span class="dot">·</span>
+      <span>BPI</span><span class="dot">·</span>
+      <span>COD</span><span class="dot">·</span>
+      <span>J&amp;T &amp; LBC nationwide</span><span class="dot">·</span>
+      <span>free delivery in select areas</span>
+    </div>
   </div>
 </div>
 
@@ -1109,8 +1124,8 @@ body::before{
 <!-- ============== POPULAR CATEGORIES ============== -->
 <section class="section categories-section">
   <div class="section-head" style="text-align:center;margin-bottom:32px;">
-    <h2>Most popular <em>categories</em></h2>
-    <p class="lede">Find your next favorite read</p>
+    <h2>Shop by <em>genre</em></h2>
+    <p class="lede">Thriller people and romance people welcome</p>
   </div>
   <div class="categories-grid">
     <a href="/browse?genre=fiction" class="category-card cat-fiction">
@@ -1140,7 +1155,7 @@ body::before{
     <div class="section-head">
       <div>
         <h2>The <em>shelf</em></h2>
-        <p class="lede" id="shelfLede">Every book in the vault, ready to be claimed.</p>
+        <p class="lede" id="shelfLede">What's listed right now — updated when something sells.</p>
       </div>
       <div class="sort-wrap">
         <select id="sortSelect" onchange="bv.setSort(this.value)" aria-label="Sort">
@@ -1167,14 +1182,14 @@ body::before{
     <div class="perk-item">
       <div class="perk-text">
         <h4>Buy 3+, Get 10% Off</h4>
-        <p>Bundle up your favorites and save on your order!</p>
+        <p>Three books or more on one order — 10% off.</p>
       </div>
     </div>
     <div class="perk-divider"></div>
     <div class="perk-item">
       <div class="perk-text">
         <h4>Refer 3 Friends, Get 20% Off</h4>
-        <p>Share the love and get rewarded on your next purchase.</p>
+        <p>Three friends who actually buy — 20% off your next order.</p>
       </div>
     </div>
     <div class="perk-divider"></div>
@@ -1193,7 +1208,7 @@ body::before{
 <section class="howto" id="howto">
   <div class="howto-inner">
     <h2>How to <em>order</em></h2>
-    <p class="lede">Simple, no checkout chaos. Four steps from the shelf to your shelf.</p>
+    <p class="lede">No cart wizardry. Pick a book, send payment, wait for J&amp;T or LBC.</p>
     <div class="steps">
       <div class="step">
         <div class="num">01</div>
@@ -1242,14 +1257,14 @@ body::before{
   <div class="footer-inner">
     <div class="foot-brand">
       <h5>The Book Vault PH</h5>
-      <p>A small business based in San Carlos City, Negros Occidental — with an online shelf that ships well-loved books nationwide.</p>
+      <p>Pre-loved books sold online from Negros Occidental. Message us on Instagram if you're hunting for a specific title.</p>
     </div>
     <div>
       <h5>Find us</h5>
       <ul>
         <li><a href="https://instagram.com/thebookvaultph" target="_blank" rel="noopener">Instagram · @thebookvaultph</a></li>
         <li><a href="https://facebook.com/phthebookvault" target="_blank" rel="noopener">Facebook · The Book Vault PH</a></li>
-        <li><a href="/cdn-cgi/l/email-protection#e6968e928e838489898d9087938a92a6818b878f8ac885898b"><span class="__cf_email__" data-cfemail="83f3ebf7ebe6e1ecece8f5e2f6eff7c3e4eee2eaefade0ecee">[email&#160;protected]</span></a></li>
+        <li><a href="mailto:info@thebookvaultph.com">info@thebookvaultph.com</a></li>
       </ul>
     </div>
     <div>
@@ -1261,7 +1276,7 @@ body::before{
     </div>
   </div>
   <div class="copyline">
-    <span>© <span id="yr"></span> The Book Vault PH · Made with care</span>
+    <span>© <span id="yr"></span> The Book Vault PH</span>
   </div>
 </footer>
 
@@ -1302,7 +1317,7 @@ body::before{
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/config.js"></script>
 <script src="/shared.js?v=20260703c"></script>
 <script>
@@ -1702,22 +1717,6 @@ body::before{
 
   $('#yr').textContent = new Date().getFullYear();
 
-  // Rotating hero phrase
-  (function(){
-    const phrases = ['book obsession','favorite ship','angsty protagonist','3am plot twist','slow-burn romance','morally grey villain'];
-    const el = document.getElementById('heroRotate');
-    if (!el) return;
-    let i = 0;
-    setInterval(() => {
-      el.classList.add('fade');
-      setTimeout(() => {
-        i = (i + 1) % phrases.length;
-        el.textContent = phrases[i];
-        el.classList.remove('fade');
-      }, 350);
-    }, 3200);
-  })();
-
   // pick up ?q= from URL (for schema SearchAction + shareable links)
   const urlQ = new URLSearchParams(location.search).get('q');
   if (urlQ) { state.q = urlQ; const si = document.getElementById('searchInput'); if (si) si.value = urlQ; }
@@ -1773,7 +1772,7 @@ document.getElementById('homeContactForm').addEventListener('submit', async (e) 
     const { error } = await sb.from('messages').insert([data]);
     if (error) throw error;
     
-    fetch('https://formsubmit.co/ajax/phthebookvault@gmail.com', {
+    fetch('https://formsubmit.co/ajax/info@thebookvaultph.com', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(data)

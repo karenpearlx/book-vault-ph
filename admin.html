@@ -80,12 +80,7 @@
   .login-card input:focus{outline:none;border-color:var(--burgundy);background:var(--cream);box-shadow:0 0 0 3px rgba(74,28,42,.1);}
   .login-card .err{color:#dc2626;font-size:.85rem;margin-top:10px;min-height:18px;}
   .login-card button{
-    width:100%;margin-top:18px;padding:14px;background:var(--burgundy);
-  }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04;color:var(--cream-warm);
+    width:100%;margin-top:18px;padding:14px;background:var(--burgundy);color:var(--cream-warm);
     font-family:'Inter',sans-serif;font-size:.85rem;font-weight:600;letter-spacing:.01em;
     border-radius:12px;transition:all .2s;
   }
@@ -103,11 +98,6 @@
     background:var(--burgundy);
     z-index:101;
   }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04;position:sticky;top:0;z-index:10;
-  }
   .topbar .brand{display:flex;align-items:center;gap:10px;font-family:'Inter',sans-serif;font-weight:600;font-size:1rem;color:var(--cream-warm);}
   .topbar .brand svg{width:32px;height:32px;}
   .topbar .tag{font-family:'Inter',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--burgundy);background:var(--copper);padding:4px 10px;border-radius:6px;margin-left:8px;}
@@ -117,12 +107,16 @@
   .topbar button.logout:hover{background:rgba(255,100,100,.2);color:#ffaaaa;}
 
   .container{
-    flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
-    max-width:100%;margin:0 auto;padding:24px 24px 60px;
+    flex:1 1 0;min-height:0;height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
+    width:100%;max-width:1600px;margin:0 auto;padding:20px 28px 80px;
     scroll-padding-top:16px;
+    overscroll-behavior-y:contain;
+  }
+  .container.container--blog{
+    overflow:hidden;display:flex;flex-direction:column;padding-bottom:0;
   }
   @media (max-width:780px){ 
-  .container{padding:20px 16px 60px;} 
+  .container{padding:16px 14px 80px;} 
   .topbar{padding:12px 16px;flex-wrap:nowrap;gap:12px;} 
   .topbar .brand{font-size:.9rem;} 
   .topbar .tag{display:none;} 
@@ -155,10 +149,6 @@
   .traffic-columns{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
   @media(max-width:980px){.traffic-columns{grid-template-columns:1fr;}}
   .traffic-box{background:var(--burgundy);border:none;border-radius:14px;padding:20px;color:var(--cream-warm);overflow:hidden;}
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04;}
   .traffic-box h4{font-family:'Inter',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--copper);margin-bottom:14px;}
   .traffic-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.1);}
   .traffic-row:last-child{border-bottom:0;}
@@ -172,6 +162,16 @@
   .funnel-step .n{font-family:"Playfair Display",serif;font-size:1.8rem;color:var(--copper);line-height:1;}
   .funnel-step .t{font-family:"DM Mono",monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cream-warm);opacity:.7;margin-top:8px;}
   .activity-feed{max-height:320px;overflow:auto;padding-right:4px;}
+  .exclude-ip-panel{margin-bottom:18px;padding:14px 16px;background:rgba(255,255,255,.06);border:1px solid rgba(216,154,85,.2);border-radius:10px;}
+  .exclude-ip-panel h5{font-family:'Inter',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--copper);margin:0 0 8px;}
+  .exclude-ip-panel p{margin:0 0 12px;font-size:.85rem;color:rgba(253,248,243,.72);line-height:1.5;}
+  .exclude-ip-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+  .exclude-ip-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.25);border:1px solid rgba(216,154,85,.25);font-family:'DM Mono',monospace;font-size:.72rem;color:var(--cream-warm);}
+  .exclude-ip-chip button{background:none;border:none;color:rgba(232,122,122,.9);cursor:pointer;font-size:.85rem;line-height:1;padding:0;}
+  .exclude-ip-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .exclude-ip-actions button{padding:8px 14px;border-radius:6px;border:none;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:600;cursor:pointer;}
+  .exclude-ip-actions .btn-exclude{background:var(--copper);color:var(--burgundy);}
+  .exclude-ip-actions .btn-exclude:hover{background:#e8b878;}
   .activity-item{display:grid;grid-template-columns:88px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.1);}
   .activity-time{font-family:"DM Mono",monospace;font-size:.58rem;color:var(--cream-warm);opacity:.5;text-transform:uppercase;}
   .activity-text{font-size:.92rem;color:var(--cream-warm);line-height:1.25;}
@@ -272,11 +272,7 @@
   }
   .booktable .title-cell{font-family:"Playfair Display",serif;font-style:italic;font-size:1.05rem;color:var(--burgundy);}
   .booktable .title-cell .a{display:block;font-family:"Cormorant Garamond",serif;font-style:normal;font-size:.9rem;color:var(--burgundy);opacity:.7;margin-top:2px;}
-  .booktable .badge{display:inline-block;padding:4px 10px;background:var(--burgundy);border-radius:8px;font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-warm);}
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04;border:none;border-radius:4px;font-family:"DM Mono",monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cream-warm);}
+  .booktable .badge{display:inline-block;padding:4px 10px;background:var(--burgundy);border:none;border-radius:8px;font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-warm);}
   .booktable .price-cell{font-family:"Playfair Display",serif;color:var(--burgundy);font-weight:700;}
   .booktable .actions-cell{text-align:right;white-space:nowrap;}
   .booktable .icon-btn{padding:6px 10px;font-size:.6rem;letter-spacing:.18em;border-radius:4px;border:1px solid transparent;}
@@ -573,7 +569,7 @@
   content:''; position:absolute; bottom:-1px; left:50%; transform:translateX(-50%);
   width:24px; height:3px; background:var(--copper); border-radius:3px 3px 0 0;
 }
-.tab-content { display:none; padding:0 16px; }
+.tab-content { display:none; padding:0 4px; }
 .tab-content.active { display:block; }
 @media(max-width:680px){
   .tab-nav{overflow-x:scroll;overflow-y:hidden;overscroll-behavior:none;padding:0 12px;gap:0;scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-x pinch-zoom;}
@@ -583,15 +579,16 @@
 
 /* Sub-Tab Navigation */
 .sub-tab-nav {
-  display:flex; gap:8px; padding:16px 0; margin-bottom:8px;
+  display:flex; flex-wrap:wrap; gap:10px; padding:16px 0; margin-bottom:8px;
   border-bottom:1px solid rgba(74,28,42,.15);
 }
 .sub-tab-btn {
-  padding:10px 18px; background:rgba(244,233,216,.75); border:1px solid rgba(255,255,255,.3);
+  padding:12px 20px; background:rgba(244,233,216,.75); border:1px solid rgba(255,255,255,.3);
   border-radius:10px; color:var(--burgundy); font-family:'Inter',sans-serif; font-size:.85rem;
   font-weight:500; cursor:pointer; transition:all .15s; display:flex; align-items:center; gap:8px;
   backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
   box-shadow:0 2px 8px rgba(74,28,42,.08);
+  flex:1 1 auto; min-width:max-content; justify-content:center;
 }
 .sub-tab-btn:hover { background:rgba(244,233,216,.9); }
 .sub-tab-btn.active { background:var(--copper); color:var(--burgundy); border-color:transparent; backdrop-filter:none; }
@@ -608,6 +605,23 @@
 .traffic-tab-content.active { display:block; }
 .blog-tab-content { display:none; }
 .blog-tab-content.active { display:block; }
+#tab-blogs.tab-content.active {
+  display:flex;flex-direction:column;flex:1 1 auto;min-height:0;overflow:hidden;
+}
+.blog-scroll{
+  flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+  padding:0 0 96px;
+}
+.blog-action-bar{
+  position:sticky;bottom:0;z-index:3;
+  background:linear-gradient(to top, var(--cream-warm) 70%, rgba(244,233,216,0));
+  padding:16px 0 8px;margin-top:8px;
+}
+#bf_preview{
+  min-height:400px;max-height:none;overflow:visible;
+  touch-action:pan-y;
+}
 
 /* AI suggest */
 .ai-suggest-btn {
@@ -622,12 +636,7 @@
 .ai-suggest-btn:disabled { opacity:.5; cursor:wait; }
 
 .tb-btn {
-  background:var(--burgundy);
-  }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;
+  background:var(--burgundy);border:none;border-radius:6px;padding:6px 10px;cursor:pointer;
   font-size:.85rem;color:var(--cream-warm);min-width:28px;transition:all .15s;
 }
 .tb-btn:hover { background:#3d1623;color:var(--cream-warm); }
@@ -712,11 +721,13 @@
   .kw-row .kw-actions { width:100%; }
 }
 
-.blog-editor-grid { display:grid; grid-template-columns:1fr 340px; gap:24px; align-items:stretch; }
+.blog-editor-grid { display:grid; grid-template-columns:1fr 340px; gap:24px; align-items:start; }
 .blog-editor-left { min-width:0; display:flex; flex-direction:column; }
-.blog-editor-right { position:sticky; top:20px; display:flex; flex-direction:column; gap:16px; }
+.blog-editor-right { position:static; display:flex; flex-direction:column; gap:16px; }
 .blog-editor-right .field { margin-bottom:0; }
-@media(max-width:900px){ .blog-editor-grid { grid-template-columns:1fr; } .blog-editor-right { position:static; } }
+.blog-tab-content.active { padding-bottom:24px; }
+#tab-blogs .panel { margin-bottom:24px; }
+@media(max-width:900px){ .blog-editor-grid { grid-template-columns:1fr; } }
 
 .blog-admin-list { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 340px)); gap:20px; justify-content:start; }
 .blog-row {
@@ -732,12 +743,7 @@
   border-radius:12px 12px 0 0;
 }
 .blog-row .thumb img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; }
-.blog-row .meta { flex:1; min-width:0; padding:18px; background:var(--burgundy);
-  }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04; }
+.blog-row .meta { flex:1; min-width:0; padding:18px; background:var(--burgundy); }
 .blog-row .meta h4 {
   margin:0; font-family:'Playfair Display',serif;
   color:var(--cream-warm); font-size:1.1rem; font-weight:500; line-height:1.4;
@@ -761,12 +767,7 @@
 }
 .blog-row .meta .info .pill.scheduled { background:rgba(59,130,246,.4); color:#fff; }
 .blog-row .meta .info .pill.draft { background:rgba(255,255,255,.2); color:var(--cream-warm); }
-.blog-row .row-actions { display:flex; gap:6px; flex-wrap:wrap; padding:12px 18px 18px; margin-top:auto; background:var(--burgundy);
-  }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04; border-radius:0 0 16px 16px; }
+.blog-row .row-actions { display:flex; gap:6px; flex-wrap:wrap; padding:12px 18px 18px; margin-top:auto; background:var(--burgundy); border-radius:0 0 16px 16px; }
 .blog-row .row-actions .icon-btn {
   padding:8px 14px; font-size:.75rem;
   border-radius:8px; border:none;
@@ -791,8 +792,11 @@
   .blog-row .row-actions { width:100%; justify-content:flex-start; }
 }
 @media(max-width:680px){
-  .sub-tab-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:12px 0;gap:6px;}
-  .sub-tab-btn{white-space:nowrap;flex-shrink:0;padding:10px 14px;font-size:.85rem;}
+  .sub-tab-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:12px 0;gap:8px;flex-wrap:nowrap;}
+  .sub-tab-btn{white-space:nowrap;flex:0 0 auto;padding:12px 16px;font-size:.85rem;}
+}
+@media(min-width:681px){
+  .sub-tab-btn{flex:0 1 auto;}
 }
 
 /* Expense category badges with colors */
@@ -831,25 +835,25 @@
   .message-card{padding:14px;}
 }
 
-.status-list { display:flex; flex-direction:column; gap:10px; }
+.status-list { display:flex; flex-direction:column; gap:12px; }
 .status-card {
-  display:grid; grid-template-columns:60px 1fr auto; gap:12px; align-items:center;
-  padding:16px; background:#4A1E2A;
+  display:grid; grid-template-columns:60px 1fr auto; gap:12px 16px; align-items:start;
+  padding:18px 20px; background:#4A1E2A;
   border:1px solid rgba(216,154,85,.3); border-radius:12px;
 }
 .status-card:hover { border-color:rgba(216,154,85,.5); }
-.status-card .cover { width:60px; height:85px; object-fit:cover; border-radius:6px; background:#2E0F1A; }
+.status-card .cover { width:60px; height:85px; object-fit:cover; border-radius:6px; background:#2E0F1A; grid-row:1 / span 2; }
 .status-card .info { min-width:0; }
-.status-card .title { font-weight:600; color:#FAF7F2; font-size:.9rem; line-height:1.3; }
-.status-card .price { font-family:'DM Mono',monospace; color:#E8C496; font-size:.85rem; font-weight:700; display:inline; }
-.status-card .author { font-size:.8rem; color:#C9B89A; margin-top:2px; }
-.status-card .meta { font-size:.75rem; color:#C9B89A; margin-top:6px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
-.status-card .actions { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+.status-card .title { font-weight:600; color:#FAF7F2; font-size:.95rem; line-height:1.3; }
+.status-card .price { font-family:'DM Mono',monospace; color:#E8C496; font-size:.9rem; font-weight:700; white-space:nowrap; align-self:start; }
+.status-card .author { font-size:.85rem; color:#C9B89A; margin-top:2px; }
+.status-card .meta { font-size:.8rem; color:#C9B89A; margin-top:8px; display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+.status-card .actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-start; grid-column:1 / -1; margin-top:4px; padding-top:12px; border-top:1px solid rgba(216,154,85,.15); }
 @media(max-width:560px){
-  .status-card{ grid-template-columns:50px 1fr; gap:10px; padding:12px; }
+  .status-card{ grid-template-columns:50px 1fr auto; gap:10px; padding:14px 16px; }
   .status-card .cover{ width:50px; height:72px; }
   .status-card .title{ font-size:.85rem; }
-  .status-card .actions{ grid-column:1/-1; margin-top:8px; justify-content:flex-start; }
+  .status-card .price{ font-size:.85rem; }
 }
 .status-card .actions button { padding:8px 14px; font-size:.75rem; border-radius:6px; cursor:pointer; white-space:nowrap; font-weight:600; transition:all .15s; }
 .status-card .actions button:hover { opacity:.85; transform:translateY(-1px); }
@@ -860,7 +864,7 @@
 .status-card .unpaid-badge { background:#5a4a1a; color:#ffc107; padding:4px 10px; border-radius:5px; font-size:.7rem; text-transform:uppercase; font-weight:700; }
 
 /* Order Cards */
-.order-card { padding:18px; background:#4A1E2A; border:1px solid rgba(216,154,85,.3); border-radius:12px; margin-bottom:12px; }
+.order-card { padding:20px 22px; background:#4A1E2A; border:1px solid rgba(216,154,85,.3); border-radius:12px; margin-bottom:12px; width:100%; }
 .order-card:hover { border-color:rgba(216,154,85,.5); }
 .order-card.paid { border-left:4px solid #7dc97d; }
 .order-card.pending { border-left:4px solid #ffc107; }
@@ -920,12 +924,7 @@
 
 /* AI Image Gen Styles */
 .template-grid { display:flex; flex-wrap:wrap; gap:8px; }
-.template-btn { padding:10px 16px; border-radius:6px; border:none; background:var(--burgundy);
-  }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04; color:var(--cream-warm); font-size:.8rem; cursor:pointer; transition:all .2s; }
+.template-btn { padding:10px 16px; border-radius:6px; border:none; background:var(--burgundy); color:var(--cream-warm); font-size:.8rem; cursor:pointer; transition:all .2s; }
 .template-btn:hover { background:#3d1623; }
 .template-btn.active { background:var(--copper); color:var(--burgundy); }
 .upload-zone { border:2px dashed var(--border); border-radius:8px; padding:30px; text-align:center; cursor:pointer; transition:all .2s; background:var(--cream-soft); }
@@ -938,12 +937,7 @@
 .watermark-preview-grid .preview-item .remove-btn { position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:rgba(0,0,0,.6); color:#fff; border:none; cursor:pointer; font-size:.8rem; line-height:1; }
 .gen-image-container { background:var(--cream-soft); border-radius:8px; padding:12px; border:1px solid var(--border); }
 .template-section { margin-bottom:16px; }
-.view-tab{background:var(--burgundy);
-  }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04;border:none;padding:10px 18px;cursor:pointer;color:var(--cream-warm);opacity:.7;font-size:.8rem;font-family:'Inter',sans-serif;font-weight:500;transition:all .15s;}
+.view-tab{background:var(--burgundy);border:none;padding:10px 18px;cursor:pointer;color:var(--cream-warm);opacity:.7;font-size:.8rem;font-family:'Inter',sans-serif;font-weight:500;transition:all .15s;}
 .view-tab:hover{background:#3d1623;opacity:1;}
 .view-tab.active{background:var(--copper);color:var(--burgundy);opacity:1;}
 #bf_preview h1,#bf_preview h2,#bf_preview h3{font-family:"Playfair Display",serif;color:var(--burgundy);margin:1em 0 .5em;}
@@ -952,21 +946,11 @@
 #bf_preview ul,#bf_preview ol{padding-left:1.4em;margin:0 0 1em;}
 #bf_preview blockquote{margin:1em 0;padding:12px 18px;border-left:3px solid var(--copper);background:rgba(184,115,51,.08);font-style:italic;}
 #bf_preview code{background:rgba(74,28,42,.1);padding:2px 6px;border-radius:3px;font-size:.9em;}
-#bf_preview pre{background:var(--burgundy);
-  }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04;color:var(--cream);padding:14px;border-radius:6px;overflow-x:auto;}
+#bf_preview pre{background:var(--burgundy);color:var(--cream);padding:14px;border-radius:6px;overflow-x:auto;}
 #bf_preview img{max-width:100%;border-radius:6px;margin:1em 0;}
 #bf_preview table{width:100%;border-collapse:collapse;margin:1em 0;font-size:.95rem;}
 #bf_preview th,#bf_preview td{padding:10px 12px;border:1px solid var(--border);text-align:left;}
-#bf_preview th{background:var(--burgundy);
-  }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04;color:var(--cream);}
+#bf_preview th{background:var(--burgundy);color:var(--cream);}
 /* Pull to refresh */
   .ptr-indicator{position:fixed;top:0;left:50%;transform:translateX(-50%) translateY(-100%);z-index:9999;background:var(--burgundy);color:var(--cream-warm);padding:10px 20px;border-radius:0 0 12px 12px;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;transition:transform .2s ease-out;box-shadow:0 4px 12px rgba(74,28,42,.3);}
   .ptr-indicator.visible{transform:translateX(-50%) translateY(0);}
@@ -1155,6 +1139,14 @@
         <button onclick="resetAnalytics()" style="padding:8px 16px;background:rgba(255,255,255,.05);border:none;color:rgba(232,122,122,.8);border-radius:6px;font-size:.75rem;cursor:pointer;">reset all data</button>
       </div>
       <div class="sub">— homepage visits, clicks, wishlists, and order funnel</div>
+      <div class="exclude-ip-panel" id="excludeIpPanel">
+        <h5>Excluded IPs</h5>
+        <p>Visits from these addresses won't be recorded in traffic watch. Admin login on this browser is already excluded.</p>
+        <div class="exclude-ip-list" id="excludeIpList"></div>
+        <div class="exclude-ip-actions">
+          <button type="button" class="btn-exclude" id="excludeMyIpBtn">Exclude my current IP</button>
+        </div>
+      </div>
       <div id="trafficDashboard">
         <div class="empty">v5</div>
       </div>
@@ -1623,6 +1615,7 @@
 
     <!-- ============= BLOGS TAB ============= -->
     <div class="tab-content" id="tab-blogs">
+      <div class="blog-scroll">
       <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
         <button class="sub-tab-btn active" onclick="switchBlogTab('create')" id="blogTabBtn-create">+ create</button>
         <button class="sub-tab-btn" onclick="switchBlogTab('posts')" id="blogTabBtn-posts">published <span id="blogCount-posts" class="tab-badge">0</span></button>
@@ -1677,7 +1670,7 @@
                 <button type="button" class="view-tab active" data-view="content">Content</button>
                 <button type="button" class="view-tab" data-view="raw">Raw</button>
               </div>
-              <div id="bf_preview" contenteditable="true" style="flex:1;min-height:500px;padding:28px 32px;background:#E6D5D8;color:var(--burgundy);border:1px solid rgba(74,28,42,.12);border-top:none;border-radius:0 0 8px 8px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;line-height:1.75;overflow-y:auto;outline:none;cursor:text;"></div>
+              <div id="bf_preview" contenteditable="true" style="min-height:400px;padding:28px 32px;background:#E6D5D8;color:var(--burgundy);border:1px solid rgba(74,28,42,.12);border-top:none;border-radius:0 0 8px 8px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;line-height:1.75;outline:none;cursor:text;"></div>
               <textarea id="bf_content" rows="14" required placeholder="Write your post here..." style="flex:1;min-height:500px;border-radius:0 0 8px 8px;border-top:none;display:none;"></textarea>
               <small style="color:var(--ink-soft);font-size:.7rem;display:flex;gap:14px;flex-wrap:wrap;">
                 <span><span id="bf_wordCount">0</span> words</span>
@@ -1722,12 +1715,7 @@
 
                 <div class="field">
                   <label>featured image</label>
-                  <div class="upload-zone" id="blogImgZone" style="padding:16px;border:1px dashed rgba(255,255,255,.3);border-radius:10px;background:var(--burgundy);
-  }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04;text-align:center;">
+                  <div class="upload-zone" id="blogImgZone" style="padding:16px;border:1px dashed rgba(255,255,255,.3);border-radius:10px;background:var(--burgundy);text-align:center;">
                     <input type="file" id="bf_imageFile" accept="image/*" style="display:none;">
                     <div class="upload-placeholder" id="blogImgPlaceholder">
                       <p style="margin:0;font-size:.85rem;color:var(--cream-warm);opacity:.6;">drag or click to upload</p>
@@ -1749,12 +1737,7 @@
                   <div id="bf_tagChips" style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px;"></div>
                 </div>
 
-                <details style="border:1px solid rgba(74,28,42,.3);border-radius:8px;padding:10px 14px;background:var(--burgundy);
-  }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity:.04;">
+                <details style="border:1px solid rgba(74,28,42,.3);border-radius:8px;padding:10px 14px;background:var(--burgundy);color:var(--cream-warm);">
                   <summary style="cursor:pointer;font-size:.75rem;font-weight:600;color:var(--cream-warm);">SEO &amp; sharing</summary>
                   <div class="field" style="margin-top:12px;">
                     <label>meta title <button type="button" class="ai-suggest-btn" data-suggest="metaTitle">✨</button></label>
@@ -1791,10 +1774,10 @@
                   </div>
                 </details>
 
-                <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(74,28,42,.1);">
+                <div class="blog-action-bar">
                   <button type="button" class="btn-sm" id="bf_saveDraft" style="width:100%;">💾 save draft</button>
-                  <button type="button" class="btn-sm" id="bf_schedule" style="width:100%;">⏰ schedule</button>
-                  <button type="button" class="btn-sm fill" id="bf_publish" style="width:100%;">✓ publish now</button>
+                  <button type="button" class="btn-sm" id="bf_schedule" style="width:100%;margin-top:8px;">⏰ schedule</button>
+                  <button type="button" class="btn-sm fill" id="bf_publish" style="width:100%;margin-top:8px;">✓ publish now</button>
                 </div>
 
                 <div id="bf_msg" style="margin-top:10px;font-size:.7rem;text-align:center;color:var(--burgundy);"></div>
@@ -1897,6 +1880,7 @@
         </div>
       </div>
 
+      </div><!-- end blog-scroll -->
     </div><!-- end tab-blogs -->
 
     <!-- AI Suggest Modal -->
@@ -2071,7 +2055,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/config.js"></script>
-<script src="/shared.js?v=20260703c"></script>
+<script src="/shared.js?v=20260707a"></script>
 <script>
   const $ = sel => document.querySelector(sel);
   const $$ = sel => document.querySelectorAll(sel);
@@ -2155,6 +2139,12 @@
   $('#logoutBtn').addEventListener('click', () => doLogout('manual'));
 
   // ===== TAB NAVIGATION =====
+  const syncBlogScrollMode = () => {
+    const container = $('.container');
+    if (!container) return;
+    const blogsOpen = $('#tab-blogs')?.classList.contains('active');
+    container.classList.toggle('container--blog', !!blogsOpen);
+  };
   $$('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const tabId = btn.dataset.tab;
@@ -2164,6 +2154,7 @@
       // Update active content
       $$('.tab-content').forEach(t => t.classList.remove('active'));
       $(`#tab-${tabId}`).classList.add('active');
+      syncBlogScrollMode();
       // Save to localStorage
       localStorage.setItem('bvph_active_tab', tabId);
     });
@@ -2176,6 +2167,7 @@
     $$('.tab-content').forEach(t => t.classList.remove('active'));
     $(`#tab-${savedTab}`).classList.add('active');
   }
+  syncBlogScrollMode();
 
   // ===== SUB-TAB NAVIGATION (inside catalogue) =====
   $$('.sub-tab-btn').forEach(btn => {
@@ -2739,6 +2731,51 @@
     if (!rows.length) return '<div class="empty" style="padding:18px;">nothing here yet.</div>';
     return rows.map(([name,n]) => `<div class="traffic-row"><div class="traffic-name">${escapeHtml(name)}</div><div class="traffic-num">${n}</div><div class="traffic-bar"><span style="width:${Math.max(6, pct(n,max))}%"></span></div></div>`).join('');
   }
+  function renderExcludeIps() {
+    const list = document.getElementById('excludeIpList');
+    if (!list) return;
+    const ips = BVPH.getExcludedIps ? BVPH.getExcludedIps() : [];
+    if (!ips.length) {
+      list.innerHTML = '<span style="font-size:.85rem;color:rgba(253,248,243,.55);font-style:italic;">none yet</span>';
+      return;
+    }
+    list.innerHTML = ips.map(ip => `
+      <span class="exclude-ip-chip">${escapeHtml(ip)}
+        <button type="button" title="Remove" data-remove-ip="${escapeHtml(ip)}">×</button>
+      </span>`).join('');
+  }
+  document.getElementById('excludeIpList')?.addEventListener('click', async e => {
+    const btn = e.target.closest('[data-remove-ip]');
+    if (!btn) return;
+    const ip = btn.getAttribute('data-remove-ip');
+    try {
+      await BVPH.removeExcludedIp(ip);
+      renderExcludeIps();
+      toast('IP removed from exclude list');
+    } catch (err) {
+      console.error(err);
+      toast('could not remove IP');
+    }
+  });
+  document.getElementById('excludeMyIpBtn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('excludeMyIpBtn');
+    btn.disabled = true;
+    btn.textContent = 'detecting…';
+    try {
+      const geo = await BVPH.getGeoLocation();
+      const ip = geo?.ip;
+      if (!ip) throw new Error('Could not detect IP');
+      await BVPH.addExcludedIp(ip);
+      renderExcludeIps();
+      toast(`Excluded ${ip} ✦`);
+    } catch (err) {
+      console.error(err);
+      toast('could not detect or save IP');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Exclude my current IP';
+    }
+  });
   async function resetAnalytics(){
     if (!confirm('Reset all traffic data? This cannot be undone.')) return;
     const box = document.getElementById('trafficDashboard');
@@ -3606,6 +3643,7 @@
     try { renderStatusSections(); } catch(e) { console.error('renderStatusSections', e); }
     try { refreshStudio(); } catch(e) { console.error('refreshStudio', e); }
     try { renderTraffic(); } catch(e) { console.error('renderTraffic', e); }
+    try { renderExcludeIps(); } catch(e) { console.error('renderExcludeIps', e); }
   };
 
   // ============ CONTENT STUDIO ============
@@ -5585,6 +5623,15 @@ Rules: no em dashes, mention "The Book Vault PH, an online preloved bookshop in 
     
     // Initial render
     updatePreview();
+
+    // Let page scroll when wheeling over the contenteditable preview
+    const blogScroller = () => document.querySelector('#tab-blogs.active .blog-scroll');
+    previewDiv.addEventListener('wheel', (e) => {
+      const scroller = blogScroller();
+      if (!scroller) return;
+      scroller.scrollTop += e.deltaY;
+      e.preventDefault();
+    }, { passive: false });
     
     // Update preview when textarea changes
     contentField.addEventListener('input', updatePreview);
@@ -5978,8 +6025,14 @@ function showSocialModal(post) {
   let pulling = false;
   const threshold = 80;
   
+  const getScroller = () => {
+    const blog = document.querySelector('#tab-blogs.active .blog-scroll');
+    if (blog) return blog;
+    return document.querySelector('.app.show .container');
+  };
+  
   document.addEventListener('touchstart', e => {
-    const scroller = document.querySelector('.app.show .container');
+    const scroller = getScroller();
     const atTop = scroller ? scroller.scrollTop <= 0 : window.scrollY === 0;
     if (atTop) {
       startY = e.touches[0].clientY;
@@ -5989,7 +6042,7 @@ function showSocialModal(post) {
   
   document.addEventListener('touchmove', e => {
     if (!pulling) return;
-    const scroller = document.querySelector('.app.show .container');
+    const scroller = getScroller();
     const atTop = scroller ? scroller.scrollTop <= 0 : window.scrollY === 0;
     const y = e.touches[0].clientY;
     const diff = y - startY;
@@ -6005,7 +6058,7 @@ function showSocialModal(post) {
   
   document.addEventListener('touchend', e => {
     if (!pulling) return;
-    const scroller = document.querySelector('.app.show .container');
+    const scroller = getScroller();
     const atTop = scroller ? scroller.scrollTop <= 0 : window.scrollY === 0;
     const diff = e.changedTouches[0].clientY - startY;
     if (diff > threshold && atTop) {
