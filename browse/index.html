@@ -4,19 +4,19 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-<title>Browse Books — The Book Vault PH</title>
-<meta name="description" content="Browse our collection of cheap, like-new books. Thrillers, romance, fantasy, gothic horror and more. Free delivery in San Carlos City, COD nationwide.">
+<title>Browse Pre-Loved Books — The Book Vault PH</title>
+<meta name="description" content="Browse well-loved, handpicked books at The Book Vault PH. Thrillers, romance, fantasy, gothic horror and more. San Carlos City · ships nationwide · GCash, Maya, BPI & COD.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="The Book Vault PH">
 <meta property="og:title" content="Browse Books — The Book Vault PH">
-<meta property="og:description" content="Browse our collection of cheap, like-new books. Thrillers, romance, fantasy and more.">
+<meta property="og:description" content="Browse well-loved, handpicked books. Thrillers, romance, fantasy and more. GCash, Maya, BPI & COD.">
 <meta property="og:url" content="https://thebookvaultph.com/browse">
 <meta property="og:image" content="https://thebookvaultph.com/og-preview.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Browse Books — The Book Vault PH">
-<meta name="twitter:description" content="Browse our collection of cheap, like-new books.">
+<meta name="twitter:description" content="Browse well-loved, handpicked books at friendly prices.">
 <meta name="twitter:image" content="https://thebookvaultph.com/og-preview.png">
-<meta name="description" content="Browse all available books at The Book Vault PH. Thrillers, romance, gothic horror and more." />
+<meta name="description" content="Browse all available pre-loved books at The Book Vault PH. Thrillers, romance, gothic horror and more." />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="theme-color" content="#4A1C2A">
 
@@ -338,6 +338,11 @@ body::before{
 .bd-info .pricerow{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:auto;padding-top:18px;border-top:1px dashed var(--rule);}
 .pricerow-btns{display:flex;align-items:center;gap:10px;}
 .bd-info .price{font-family:"Playfair Display",serif;font-weight:600;color:var(--copper);font-size:2rem;line-height:1;}
+.bd-info .pay-strip{margin-bottom:4px;}
+.bd-info .pay-label{font-family:"DM Mono",monospace;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 8px;}
+.bd-info .pay-badges{display:flex;flex-wrap:wrap;gap:6px;}
+.bd-info .pay-badge{font-family:"DM Mono",monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:4px;border:1px solid rgba(184,115,51,.35);color:var(--burgundy);background:rgba(255,155,0,.08);}
+.bd-info .pay-hint{font-size:.88rem;color:var(--ink-soft);font-style:italic;margin:8px 0 0;line-height:1.4;}
 .bd-navrow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0 0;margin-top:20px;border-top:1px solid var(--rule);}
 .bd-navrow .bd-nav{background:none;border:none;color:var(--ink-soft);font-family:"Cormorant Garamond",serif;font-size:.9rem;cursor:pointer;display:flex;align-items:center;gap:6px;transition:color .2s;padding:8px 0;}
 .bd-navrow .bd-nav:hover{color:var(--burgundy);}
@@ -466,7 +471,7 @@ body::before{
 </main>
 
 <footer class="footer">
-  <p>© <span id="yr"></span> The Book Vault PH · Detective Mochi approves</p>
+  <p>© <span id="yr"></span> The Book Vault PH</p>
 </footer>
 
 <!-- WISHLIST MODAL -->
@@ -514,6 +519,18 @@ body::before{
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const peso = n => '₱' + Math.round(Number(n)||0).toLocaleString('en-PH');
   const padNo = title => 'No. ' + String(Math.abs((title||'').length*7) % 99 + 1).padStart(3,'0');
+
+  const PAY_STRIP = `<div class="pay-strip">
+    <p class="pay-label">We accept</p>
+    <div class="pay-badges">
+      <span class="pay-badge">GCash</span>
+      <span class="pay-badge">Maya</span>
+      <span class="pay-badge">BPI</span>
+      <span class="pay-badge">InstaPay</span>
+      <span class="pay-badge">COD</span>
+    </div>
+    <p class="pay-hint">No bank account? GCash and Maya work fine.</p>
+  </div>`;
 
   function coverHTML(book){
     const hasImg = !!book.cover;
@@ -592,6 +609,7 @@ body::before{
       <p class="by">by ${esc(b.author||'Unknown')}</p>
       ${grRow}
       ${summary}
+      ${PAY_STRIP}
       <div class="pricerow">
         <span class="price">${peso(b.sellPrice)}</span>
         ${(b.quantity && b.quantity > 1) ? `<span style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-soft);">${b.quantity} copies</span>` : ''}

@@ -4,9 +4,9 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-<title>Cheap Books Online Philippines — The Book Vault PH · Online Bookshop</title>
-<meta name="description" content="The Book Vault PH is a small online bookshop in the Philippines selling handpicked like-new books. Cheap thrillers, romance, fantasy, gothic horror & more. Free delivery in San Carlos City, COD nationwide via J&T or LBC." />
-<meta name="keywords" content="cheap books online, cheap books philippines, buy books online ph, online bookshop philippines, like new books ph, bookshop negros occidental, thriller books ph, romance books ph, fantasy books ph">
+<title>Pre-Loved Books · The Book Vault PH</title>
+<meta name="description" content="The Book Vault PH — well-loved, handpicked books at friendly prices. Thrillers, romance, fantasy, gothic horror & more. Based in San Carlos City, ships nationwide. GCash, Maya, BPI & COD." />
+<meta name="keywords" content="preloved books philippines, pre-loved books ph, buy books online ph, second hand books ph, bookshop san carlos, thriller books ph, romance books ph, fantasy books ph">
 <meta name="author" content="The Book Vault PH">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://thebookvaultph.com/">
@@ -14,16 +14,16 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="The Book Vault PH">
-<meta property="og:title" content="Cheap Books Online Philippines — The Book Vault PH">
-<meta property="og:description" content="Handpicked like-new books, shipped nationwide across the Philippines. Free delivery in San Carlos City, Cash on Delivery available anywhere in PH.">
+<meta property="og:title" content="Pre-Loved Books · The Book Vault PH">
+<meta property="og:description" content="Well-loved, handpicked books at friendly prices. Based in San Carlos City, ships nationwide. GCash, Maya, BPI & COD.">
 <meta property="og:url" content="https://thebookvaultph.com/">
 <meta property="og:image" content="https://thebookvaultph.com/og-preview.png">
 <meta property="og:locale" content="en_PH">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Cheap Books Online Philippines — The Book Vault PH">
-<meta name="twitter:description" content="Handpicked like-new books, shipped nationwide. Free delivery in San Carlos City, COD elsewhere in PH.">
+<meta name="twitter:title" content="Pre-Loved Books · The Book Vault PH">
+<meta name="twitter:description" content="Well-loved, handpicked books at friendly prices. San Carlos City · ships nationwide · GCash, Maya, BPI & COD.">
 <meta name="twitter:image" content="https://thebookvaultph.com/og-preview.png">
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -43,7 +43,7 @@
   "@id": "https://thebookvaultph.com/#bookstore",
   "name": "The Book Vault PH",
   "alternateName": "Book Vault Philippines",
-  "description": "Small online bookshop in the Philippines selling handpicked like-new books. Thrillers, romance, fantasy, gothic horror, and more.",
+  "description": "A small business in San Carlos City selling well-loved, handpicked preloved books online. Thrillers, romance, fantasy, gothic horror, and more.",
   "url": "https://thebookvaultph.com/",
   "image": "https://thebookvaultph.com/favicon.svg",
   "telephone": "",
@@ -68,7 +68,7 @@
     "@type": "Offer",
     "itemOffered": {
       "@type": "Product",
-      "category": "Books, Like New Books, Cheap Books"
+      "category": "Books, Pre-Loved Books, Second Hand Books"
     },
     "availability": "https://schema.org/InStock"
   }
@@ -222,15 +222,12 @@ body::before{
 .hero h1{
   font-family:"Playfair Display",serif;font-weight:400;
   font-size:clamp(2.8rem,6.5vw,5rem);line-height:1.04;letter-spacing:-.015em;
-  color:var(--cream);margin:0 0 32px;max-width:14ch;
+  color:var(--cream);margin:0 0 32px;max-width:17ch;
   text-shadow:0 2px 30px rgba(0,0,0,.4);
 }
-.hero h1 em{font-style:italic;color:var(--copper-soft);font-weight:500;
-  animation:flicker 5s ease-in-out infinite;}
-@keyframes flicker{
-  0%,18%,22%,25%,53%,57%,100%{opacity:1;text-shadow:0 0 18px rgba(216,154,85,.45);}
-  20%,24%,55%{opacity:.78;text-shadow:0 0 4px rgba(216,154,85,.2);}
-}
+.hero h1 em{font-style:italic;color:var(--copper-soft);font-weight:500;}
+.hero-rotate{display:inline-block;transition:opacity .35s ease;text-shadow:0 0 18px rgba(216,154,85,.35);}
+.hero-rotate.fade{opacity:0;}
 .hero-sub{font-size:1.2rem;color:rgba(253,248,243,.78);max-width:48ch;margin:0 0 44px;line-height:1.6;}
 
 .hero-cta{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
@@ -431,7 +428,7 @@ body::before{
 .categories-section .lede{color:var(--ink-soft);margin-top:8px;}
 .categories-grid{
   display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
-  max-width:1000px;margin:0 auto;
+  max-width:1100px;margin:0 auto;
 }
 .category-card{
   position:relative;border-radius:12px;overflow:hidden;
@@ -457,11 +454,17 @@ body::before{
 .category-card p{display:none;}
 .cat-romance{background-image:url('https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=600&q=80');}
 .cat-thriller{background-image:url('https://images.unsplash.com/photo-1587876931567-564ce588bfbd?w=600&q=80');}
-.cat-ya{background-image:url('https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&q=80');}
+.cat-fiction{background-image:url('https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&q=80');}
+.cat-fantasy{background-image:url('https://images.unsplash.com/photo-1518709268805-4e9042af2179?w=600&q=80');}
+.cat-horror{background-image:url('https://images.unsplash.com/photo-1509245858460-1337239842a49?w=600&q=80');}
+.cat-mystery{background-image:url('https://images.unsplash.com/photo-1457694587812-e8bf152a7900?w=600&q=80');}
 @media(max-width:700px){
-  .categories-grid{grid-template-columns:1fr;max-width:400px;}
+  .categories-grid{grid-template-columns:repeat(2,1fr);max-width:100%;}
   .categories-section{padding:48px 20px;}
   .category-card{height:180px;}
+}
+@media(max-width:480px){
+  .categories-grid{grid-template-columns:1fr;max-width:400px;}
 }
 .coming-link{
   font-family:"DM Mono",monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;
@@ -949,7 +952,7 @@ body::before{
 .footer a:hover{color:var(--copper);}
 .footer ul{list-style:none;padding:0;margin:0;}
 .footer li{margin-bottom:8px;}
-.foot-brand p{font-style:italic;color:var(--ink-soft);max-width:42ch;margin:0;}
+.foot-brand p{color:var(--ink-soft);max-width:42ch;margin:0;line-height:1.6;}
 .copyline{
   max-width:1280px;margin:48px auto 0;padding-top:24px;
   border-top:1px solid rgba(253,248,243,.2);
@@ -1022,6 +1025,11 @@ body::before{
 .bd-info .rec-book:hover{transform:translateY(-2px);}
 .bd-info .rec-book img{width:80px;height:120px;object-fit:cover;border-radius:3px;box-shadow:0 4px 12px -4px rgba(0,0,0,.3);}
 .bd-info .rec-book .rec-title{font-size:.65rem;color:var(--ink);margin-top:6px;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.bd-info .pay-strip{margin-bottom:4px;}
+.bd-info .pay-label{font-family:"DM Mono",monospace;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 8px;}
+.bd-info .pay-badges{display:flex;flex-wrap:wrap;gap:6px;}
+.bd-info .pay-badge{font-family:"DM Mono",monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:4px;border:1px solid rgba(184,115,51,.35);color:var(--burgundy);background:rgba(255,155,0,.08);}
+.bd-info .pay-hint{font-size:.88rem;color:var(--ink-soft);font-style:italic;margin:8px 0 0;line-height:1.4;}
 
 /* ============== UTIL ============== */
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
@@ -1066,9 +1074,9 @@ body::before{
   <header class="hero" role="banner">
     <div class="hero-grid">
       <div class="fade-up">
-        <p class="kicker">An online bookshop · Philippines</p>
-        <h1>Find your next <em>book obsession</em></h1>
-        <p class="hero-sub">Handpicked thrillers, romance, and gothic horror. Shipped nationwide across the Philippines.</p>
+        <p class="kicker">Currently reading · Fourth Wing — still not over the dragon guy</p>
+        <h1>Find your next <em><span class="hero-rotate" id="heroRotate">book obsession</span></em></h1>
+        <p class="hero-sub">Well-loved thrillers, romance, and gothic horror — handpicked, reads clean, priced for real readers. Ships nationwide.</p>
         <div class="hero-cta">
           <a class="primary" href="#browse">Browse the shelf →</a>
           <a class="ghost" href="#howto">How to order</a>
@@ -1090,8 +1098,8 @@ body::before{
 <!-- ============== MARQUEE ============== -->
 <div class="marquee" aria-hidden="true">
   <div class="marquee-track">
-    <span>handpicked reads <span class="dot">·</span> ships nationwide via J&amp;T and LBC <span class="dot">·</span> free delivery within San Carlos City <span class="dot">·</span> curated by a very small dog <span class="dot">·</span></span>
-    <span>handpicked reads <span class="dot">·</span> ships nationwide via J&amp;T and LBC <span class="dot">·</span> free delivery within San Carlos City <span class="dot">·</span> curated by a very small dog <span class="dot">·</span></span>
+    <span>handpicked reads <span class="dot">·</span> ships nationwide via J&amp;T and LBC <span class="dot">·</span> free delivery for certain areas <span class="dot">·</span> curated by a very small dog <span class="dot">·</span></span>
+    <span>handpicked reads <span class="dot">·</span> ships nationwide via J&amp;T and LBC <span class="dot">·</span> free delivery for certain areas <span class="dot">·</span> curated by a very small dog <span class="dot">·</span></span>
   </div>
 </div>
 
@@ -1105,14 +1113,23 @@ body::before{
     <p class="lede">Find your next favorite read</p>
   </div>
   <div class="categories-grid">
-    <a href="/browse?genre=romance" class="category-card cat-romance">
-      <h3>Romance</h3>
+    <a href="/browse?genre=fiction" class="category-card cat-fiction">
+      <h3>Fiction</h3>
     </a>
     <a href="/browse?genre=thriller" class="category-card cat-thriller">
       <h3>Thriller</h3>
     </a>
-    <a href="/browse?genre=young%20adult" class="category-card cat-ya">
-      <h3>Young Adult</h3>
+    <a href="/browse?genre=romance" class="category-card cat-romance">
+      <h3>Romance</h3>
+    </a>
+    <a href="/browse?genre=fantasy" class="category-card cat-fantasy">
+      <h3>Fantasy</h3>
+    </a>
+    <a href="/browse?genre=horror" class="category-card cat-horror">
+      <h3>Horror</h3>
+    </a>
+    <a href="/browse?genre=mystery" class="category-card cat-mystery">
+      <h3>Mystery</h3>
     </a>
   </div>
 </section>
@@ -1190,8 +1207,8 @@ body::before{
       </div>
       <div class="step">
         <div class="num">03</div>
-        <h4>Pay via bank transfer</h4>
-        <p>Send payment and receipt, we'll mark your order reserved.</p>
+        <h4>Pay via GCash, Maya, or BPI</h4>
+        <p>Scan the QR on the next page — GCash and Maya work too, no bank account needed. Send your receipt and we'll reserve your book.</p>
       </div>
       <div class="step">
         <div class="num">04</div>
@@ -1225,7 +1242,7 @@ body::before{
   <div class="footer-inner">
     <div class="foot-brand">
       <h5>The Book Vault PH</h5>
-      <p>A small online bookshop in San Carlos, Negros Occidental. Handpicked books shipped across the Philippines.</p>
+      <p>A small business based in San Carlos City, Negros Occidental — with an online shelf that ships well-loved books nationwide.</p>
     </div>
     <div>
       <h5>Find us</h5>
@@ -1244,8 +1261,7 @@ body::before{
     </div>
   </div>
   <div class="copyline">
-    <span>© <span id="yr"></span> The Book Vault PH</span>
-    <span>Made with care · Detective Mochi approves</span>
+    <span>© <span id="yr"></span> The Book Vault PH · Made with care</span>
   </div>
 </footer>
 
@@ -1295,6 +1311,18 @@ body::before{
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const peso = n => '₱' + Math.round(Number(n)||0).toLocaleString('en-PH');
   const padNo = title => 'No. ' + String(Math.abs((title||'').length*7) % 99 + 1).padStart(3,'0');
+
+  const PAY_STRIP = `<div class="pay-strip">
+    <p class="pay-label">We accept</p>
+    <div class="pay-badges">
+      <span class="pay-badge">GCash</span>
+      <span class="pay-badge">Maya</span>
+      <span class="pay-badge">BPI</span>
+      <span class="pay-badge">InstaPay</span>
+      <span class="pay-badge">COD</span>
+    </div>
+    <p class="pay-hint">No bank account? GCash and Maya work fine.</p>
+  </div>`;
 
   const state = { genre:'All', sort:'newest', q:'' };
 
@@ -1512,6 +1540,7 @@ body::before{
       <p class="by">by ${esc(b.author||'Unknown')}</p>
       ${grRow}
       ${summary}
+      ${PAY_STRIP}
       <div class="pricerow">
         <span class="price">${peso(b.sellPrice)}</span>
         ${(b.quantity && b.quantity > 1) ? `<span style="font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-soft);">${b.quantity} in stock</span>` : ''}
@@ -1672,6 +1701,22 @@ body::before{
   window.bv = bv;
 
   $('#yr').textContent = new Date().getFullYear();
+
+  // Rotating hero phrase
+  (function(){
+    const phrases = ['book obsession','favorite ship','angsty protagonist','3am plot twist','slow-burn romance','morally grey villain'];
+    const el = document.getElementById('heroRotate');
+    if (!el) return;
+    let i = 0;
+    setInterval(() => {
+      el.classList.add('fade');
+      setTimeout(() => {
+        i = (i + 1) % phrases.length;
+        el.textContent = phrases[i];
+        el.classList.remove('fade');
+      }, 350);
+    }, 3200);
+  })();
 
   // pick up ?q= from URL (for schema SearchAction + shareable links)
   const urlQ = new URLSearchParams(location.search).get('q');
