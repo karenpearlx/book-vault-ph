@@ -90,19 +90,15 @@ body::before{
 
 /* HERO */
 .hero{
-  background:var(--burgundy-deep);color:var(--cream);padding:80px 28px;text-align:center;
+  background:#000;color:var(--cream);padding:80px 28px;text-align:center;
   position:relative;overflow:hidden;
 }
-.hero::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(ellipse 80% 60% at 50% 30%, rgba(184,115,51,.18), transparent 60%);
-}
 .hero h1{
-  font-family:"Playfair Display",serif;font-weight:400;
-  font-size:clamp(2.2rem,5vw,3.5rem);line-height:1.1;margin:0 0 16px;
+  font-family:"Comic Sans MS","Comic Sans",cursive;font-weight:400;
+  font-size:64px;line-height:1.1;margin:0 0 16px;color:#39FF14;
   position:relative;z-index:2;
 }
-.hero h1 em{font-style:italic;color:var(--copper-soft);}
+.hero h1 em{font-style:italic;color:#39FF14;}
 .hero p{
   font-size:1.15rem;color:rgba(253,248,243,.75);max-width:50ch;margin:0 auto;
   position:relative;z-index:2;
@@ -125,6 +121,12 @@ body::before{
 }
 .section-head p{color:var(--ink-soft);font-style:italic;margin:0;}
 
+/* RECENTLY ADDED */
+.recent-section{margin-bottom:72px;}
+.recent-shelf{grid-template-columns:repeat(5,1fr);}
+@media (max-width:900px){.recent-shelf{grid-template-columns:repeat(3,1fr);}}
+@media (max-width:680px){.recent-shelf{grid-template-columns:repeat(2,1fr);}}
+
 /* BOOK GRID */
 .shelf{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:40px 28px;
@@ -133,7 +135,7 @@ body::before{
 
 .book{
   display:flex;flex-direction:column;text-align:left;
-  background:none;border:0;padding:0;color:inherit;font:inherit;cursor:pointer;
+  background:#fff;border:4px dashed #FF69B4;padding:12px;color:inherit;font:inherit;cursor:pointer;
 }
 .book:hover .cover-wrap{transform:translateY(-4px);transition:transform .25s;}
 .book .cover-wrap{
@@ -438,6 +440,13 @@ body::before{
 </div>
 
 <main class="content">
+  <section class="recent-section" id="recentSection" style="display:none;">
+    <div class="section-head">
+      <h2>Recently <em>added</em></h2>
+    </div>
+    <div class="shelf recent-shelf" id="recentGrid"></div>
+  </section>
+
   <div class="browse-controls">
     <div class="search-wrap">
       <input type="text" id="searchInput" placeholder="Search by title, author, or genre..." oninput="handleSearch()">
@@ -864,11 +873,10 @@ body::before{
     for (const id of ids) {
       const coverUrl = covers[id];
       if (!coverUrl) continue;
-      const el = document.querySelector(`[data-cover-id="${id}"]`);
-      if (el) {
+      document.querySelectorAll(`[data-cover-id="${id}"]`).forEach(el => {
         el.style.backgroundImage = `url('${coverUrl}')`;
         el.classList.add('has-img');
-      }
+      });
     }
   }
 
@@ -876,6 +884,16 @@ body::before{
     const all = BVPH.getBooks();
     const browseBooks = all.filter(b => b.status !== 'coming_soon' && b.sale_status !== 'sold');
     renderGenrePills(browseBooks);
+
+    const recentSection = document.getElementById('recentSection');
+    const recent = [...browseBooks].sort((a,b) => (b.createdAt||0) - (a.createdAt||0)).slice(0,5);
+    if (recent.length) {
+      document.getElementById('recentGrid').innerHTML = recent.map(bookCard).join('');
+      loadCoversForPage(recent.map(b => b.id));
+      recentSection.style.display = '';
+    } else {
+      recentSection.style.display = 'none';
+    }
 
     let filtered = browseBooks;
     if(activeGenre && activeGenre !== 'All'){
