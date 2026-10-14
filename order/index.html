@@ -11,6 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{
+    --font-book-title:Georgia,serif;
     --burgundy:#4A1C2A;
     --burgundy-deep:#2E0F1A;
     --burgundy-ink:#1A0810;
@@ -81,9 +82,9 @@
   .bc-cover.has-img{padding:0}
   .bc-cover.has-img .pub,.bc-cover.has-img .ttl,.bc-cover.has-img .auth{display:none}
   .bc-cover .pub{font-family:"DM Mono",monospace;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;opacity:.7;color:var(--cream)}
-  .bc-cover .ttl{font-family:"Playfair Display",serif;font-style:italic;font-size:1.4rem;color:var(--cream);line-height:1.05}
+  .bc-cover .ttl{font-family:var(--font-book-title);font-style:italic;font-size:1.4rem;color:var(--cream);line-height:1.05}
   .bc-cover .auth{font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cream);opacity:.9;margin-top:6px}
-  .bc-title{font-family:"Playfair Display",serif;font-style:italic;font-size:1.4rem;color:var(--cream);line-height:1.15}
+  .bc-title{font-family:var(--font-book-title);font-style:italic;font-size:1.4rem;color:var(--cream);line-height:1.15}
   .bc-author{font-style:italic;color:#C9B89A;font-size:1rem;margin-top:4px}
   .bc-meta{margin-top:14px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
   .bc-badge{display:inline-block;padding:4px 10px;background:rgba(216,154,85,.12);border:1px solid rgba(216,154,85,.3);border-radius:3px;font-family:"DM Mono",monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--copper-bright)}
@@ -101,7 +102,7 @@
   .cart-book-row{display:grid;grid-template-columns:50px 1fr auto;gap:12px;align-items:center;padding:10px;background:rgba(0,0,0,.2);border-radius:6px;}
   .cart-book-cover{width:50px;height:70px;background:linear-gradient(160deg,#4A1C2A,#2E0F1A);border-radius:3px;background-size:cover;background-position:center;}
   .cart-book-info{min-width:0;}
-  .cart-book-title{font-family:"Playfair Display",serif;font-size:1rem;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .cart-book-title{font-family:var(--font-book-title);font-size:1rem;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .cart-book-author{font-style:italic;color:#C9B89A;font-size:.85rem;}
   .cart-book-price{font-family:"DM Mono",monospace;font-size:.75rem;color:var(--copper-bright);letter-spacing:.1em;}
   .cart-total-row{display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px dashed rgba(216,154,85,.3);}
