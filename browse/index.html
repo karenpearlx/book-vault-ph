@@ -90,19 +90,15 @@ body::before{
 
 /* HERO */
 .hero{
-  background:var(--burgundy-deep);color:var(--cream);padding:80px 28px;text-align:center;
+  background:#000;color:var(--cream);padding:80px 28px;text-align:center;
   position:relative;overflow:hidden;
 }
-.hero::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(ellipse 80% 60% at 50% 30%, rgba(184,115,51,.18), transparent 60%);
-}
 .hero h1{
-  font-family:"Playfair Display",serif;font-weight:400;
-  font-size:clamp(2.2rem,5vw,3.5rem);line-height:1.1;margin:0 0 16px;
+  font-family:"Comic Sans MS","Comic Sans",cursive;font-weight:400;
+  font-size:64px;line-height:1.1;margin:0 0 16px;color:#39FF14;
   position:relative;z-index:2;
 }
-.hero h1 em{font-style:italic;color:var(--copper-soft);}
+.hero h1 em{font-style:italic;color:#39FF14;}
 .hero p{
   font-size:1.15rem;color:rgba(253,248,243,.75);max-width:50ch;margin:0 auto;
   position:relative;z-index:2;
@@ -133,7 +129,7 @@ body::before{
 
 .book{
   display:flex;flex-direction:column;text-align:left;
-  background:none;border:0;padding:0;color:inherit;font:inherit;cursor:pointer;
+  background:#fff;border:4px dashed #FF69B4;padding:12px;color:inherit;font:inherit;cursor:pointer;
 }
 .book:hover .cover-wrap{transform:translateY(-4px);transition:transform .25s;}
 .book .cover-wrap{
