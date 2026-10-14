@@ -28,6 +28,7 @@
   --burgundy:#4A1C2A;--burgundy-deep:#2E0F1A;--copper:#FF9B00;--copper-soft:#FFAD33;
   --cream:#EEE0D9;--cream-warm:#F4E9D8;--ink:#3A2018;--ink-soft:#6E5347;
   --rule:rgba(74,28,42,.14);
+  --font-book-title:Georgia,serif;
 }
 *,*::before,*::after{box-sizing:border-box;}
 html,body{margin:0;padding:0;background:var(--cream);color:var(--ink);font-family:"Cormorant Garamond",Georgia,serif;font-size:18px;line-height:1.55;}
@@ -54,12 +55,12 @@ a:hover{text-decoration:underline;}
 
 .cover{aspect-ratio:2/3;background:linear-gradient(135deg,var(--burgundy) 0%,var(--burgundy-deep) 100%);border-radius:6px;box-shadow:0 18px 40px -10px rgba(46,15,26,.5),0 4px 10px -4px rgba(46,15,26,.25);background-size:cover;background-position:center;position:relative;overflow:hidden;}
 .cover.placeholder{display:grid;place-items:center;text-align:center;color:var(--cream);padding:24px;font-family:"Playfair Display",serif;}
-.cover.placeholder .ph-title{font-size:1.4rem;line-height:1.2;font-weight:600;}
+.cover.placeholder .ph-title{font-family:var(--font-book-title);font-size:1.4rem;line-height:1.2;font-weight:600;}
 .cover.placeholder .ph-author{font-size:.85rem;font-style:italic;opacity:.75;margin-top:8px;}
 .sold-overlay{position:absolute;inset:0;background:rgba(20,8,12,.55);display:grid;place-items:center;color:var(--cream);font-family:"Playfair Display",serif;font-weight:700;font-size:1.8rem;letter-spacing:.3em;}
 
 .info .genre{font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--copper);margin-bottom:12px;}
-.info h1{font-family:"Playfair Display",serif;font-size:2.4rem;line-height:1.15;margin:0 0 8px;font-weight:500;}
+.info h1{font-family:var(--font-book-title);font-size:2.4rem;line-height:1.15;margin:0 0 8px;font-weight:500;}
 .info h1 em{font-style:italic;color:var(--burgundy);}
 .info .by{font-style:italic;color:var(--ink-soft);margin:0 0 20px;font-size:1.15rem;}
 .rating{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
