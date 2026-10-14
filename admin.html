@@ -115,6 +115,12 @@
   .container.container--blog{
     overflow:hidden;display:flex;flex-direction:column;padding-bottom:0;
   }
+  .quick-add-btn{
+    display:block;width:100%;margin:0 0 20px;padding:28px;
+    background:#FF0000;color:#fff;border:none;border-radius:14px;cursor:pointer;
+    font-family:'Inter',sans-serif;font-size:1.8rem;font-weight:800;letter-spacing:.06em;
+  }
+  .quick-add-btn:hover{background:#D90000;}
   @media (max-width:780px){ 
   .container{padding:16px 14px 80px;} 
   .topbar{padding:12px 16px;flex-wrap:nowrap;gap:12px;} 
@@ -1030,6 +1036,9 @@
 
   <div class="container">
 
+    <!-- QUICK ADD -->
+    <button id="quickAddBtn" class="quick-add-btn">+ QUICK ADD</button>
+
     <!-- ============= OVERVIEW TAB ============= -->
     <div class="tab-content active" id="tab-overview">
 
@@ -1203,7 +1212,6 @@
           </select>
         </div>
         <div class="count" id="bookCount">0 books</div>
-        <button class="btn btn-primary" id="addBookBtn">+ add new book</button>
       </div>
 
       <div class="booklist">
@@ -1986,6 +1994,23 @@
   </div>
 </div>
 
+<!-- ============= QUICK ADD MODAL ============= -->
+<div class="modal-bg" id="quickAddModal">
+  <div class="modal" style="position:relative;max-width:440px;">
+    <span class="close" id="quickAddClose">×</span>
+    <h3>quick <span class="accent">add</span></h3>
+    <form id="quickAddForm">
+      <div class="field" style="margin-bottom:18px;">
+        <label>book title *</label>
+        <input type="text" id="qa_title" required>
+      </div>
+      <div class="btn-row">
+        <button type="submit" class="btn btn-primary" id="quickAddSave" style="background:#FF0000;border-color:#FF0000;color:#fff;">+ QUICK ADD</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- ============= CREDIT MODAL ============= -->
@@ -2374,7 +2399,56 @@
     }
   });
 
-  $('#addBookBtn').addEventListener('click', () => openModal());
+  // ===== QUICK ADD =====
+  const quickAddModal = $('#quickAddModal');
+  $('#quickAddBtn').addEventListener('click', () => {
+    $('#qa_title').value = '';
+    quickAddModal.classList.add('show');
+    $('#qa_title').focus();
+  });
+  const closeQuickAdd = () => quickAddModal.classList.remove('show');
+  $('#quickAddClose').addEventListener('click', closeQuickAdd);
+  quickAddModal.addEventListener('click', e => { if (e.target===quickAddModal) closeQuickAdd(); });
+
+  $('#quickAddForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const title = $('#qa_title').value.trim();
+    if (!title) return;
+
+    let books = BVPH.getBooks();
+    if (books.some(b=>b.demo)) books = books.filter(b=>!b.demo);
+    books.unshift({
+      id: BVPH.newId(),
+      title,
+      author: '',
+      genre: BVPH.GENRES[0],
+      condition: BVPH.CONDITIONS[0],
+      status: 'available',
+      quantity: 1,
+      costPrice: 0,
+      sellPrice: 0,
+      cover: '',
+      summary: '',
+      rating: null,
+      goodreads_url: null,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
+
+    const btn = $('#quickAddSave');
+    btn.disabled = true; btn.textContent = 'adding…';
+    try {
+      await BVPH.saveBooks(books);
+      closeQuickAdd();
+      render();
+      toast('book added ✦');
+    } catch(err) {
+      console.error(err);
+      toast('save failed — check console');
+    } finally {
+      btn.disabled = false; btn.textContent = '+ QUICK ADD';
+    }
+  });
 
   // ===== FEATURED =====
   const refreshFeatured = () => {
