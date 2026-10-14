@@ -108,6 +108,8 @@
   --ink-soft:#6E5347;
   --rule:rgba(74,28,42,.14);
   --shadow-book: 0 18px 40px -18px rgba(46,15,26,.45), 0 4px 10px -4px rgba(46,15,26,.18);
+  --heading-color:#FF0000;
+  --heading-size:32px;
 }
 
 *,*::before,*::after{box-sizing:border-box;}
@@ -221,11 +223,11 @@ body::before{
 .kicker::after{content:"";flex:0 0 80px;height:1px;background:var(--copper-soft);opacity:.5;}
 .hero h1{
   font-family:"Playfair Display",serif;font-weight:400;
-  font-size:clamp(2.8rem,6.5vw,5rem);line-height:1.04;letter-spacing:-.015em;
-  color:var(--cream);margin:0 0 32px;max-width:17ch;
+  font-size:var(--heading-size);line-height:1.04;letter-spacing:-.015em;
+  color:var(--heading-color);margin:0 0 32px;max-width:17ch;
   text-shadow:0 2px 30px rgba(0,0,0,.4);
 }
-.hero h1 em{font-style:italic;color:var(--copper-soft);font-weight:500;}
+.hero h1 em{font-style:italic;color:var(--heading-color);font-weight:500;}
 .hero-rotate{display:inline-block;transition:opacity .35s ease;text-shadow:0 0 18px rgba(216,154,85,.35);}
 .hero-rotate.fade{opacity:0;}
 .hero-sub{font-size:1.2rem;color:rgba(253,248,243,.78);max-width:48ch;margin:0 0 44px;line-height:1.6;}
