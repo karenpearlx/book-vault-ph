@@ -217,6 +217,9 @@
   .toolbar .search{flex:1;max-width:340px;}
   .toolbar .search input{width:100%;padding:10px 14px;background:#E6D5D8;border:1px solid rgba(74,28,42,.12);border-radius:999px;color:var(--burgundy);}
   .toolbar .count{font-family:"DM Mono",monospace;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-bright);}
+  .toolbar .quick-add{display:flex;gap:8px;align-items:center;}
+  .toolbar .quick-add input{padding:10px 14px;background:#E6D5D8;border:1px solid rgba(74,28,42,.12);border-radius:999px;color:var(--burgundy);min-width:180px;}
+  @media(max-width:560px){.toolbar .quick-add input{flex:1;min-width:0;}}
 
   .booklist-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
   .booktable{width:100%;border-collapse:separate;border-spacing:0 10px;min-width:600px;}
@@ -1203,7 +1206,10 @@
           </select>
         </div>
         <div class="count" id="bookCount">0 books</div>
-        <button class="btn btn-primary" id="addBookBtn">+ add new book</button>
+        <form class="quick-add" id="quickAddForm">
+          <input type="text" id="quickAddTitle" placeholder="book title…" required>
+          <button type="submit" class="btn btn-primary">add</button>
+        </form>
       </div>
 
       <div class="booklist">
@@ -1903,7 +1909,7 @@
 <div class="modal-bg" id="modal">
   <div class="modal" style="position:relative;">
     <span class="close" id="modalClose">×</span>
-    <h3 id="modalTitle">add a <span class="accent">new book</span></h3>
+    <h3 id="modalTitle">edit <span class="accent">book</span></h3>
     <form id="bookForm">
       <input type="hidden" id="bookId">
       <div class="row">
@@ -2252,7 +2258,6 @@
   // ===== MODAL =====
   const modal = $('#modal');
   const openModal = (book=null) => {
-    $('#modalTitle').innerHTML = book ? 'edit <span class="accent">book</span>' : 'add a <span class="accent">new book</span>';
     $('#bookId').value = book?.id || '';
     $('#f_title').value = book?.title || '';
     $('#f_author').value = book?.author || '';
@@ -2374,7 +2379,47 @@
     }
   });
 
-  $('#addBookBtn').addEventListener('click', () => openModal());
+  // ===== QUICK ADD =====
+  $('#quickAddForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const title = $('#quickAddTitle').value.trim();
+    if (!title) return;
+
+    let books = BVPH.getBooks();
+    if (books.some(b=>b.demo)) books = books.filter(b=>!b.demo);
+
+    books.unshift({
+      id: BVPH.newId(),
+      title,
+      author: '',
+      genre: BVPH.GENRES[0],
+      condition: BVPH.CONDITIONS[0],
+      status: 'available',
+      quantity: 1,
+      costPrice: 0,
+      sellPrice: 0,
+      cover: '',
+      summary: '',
+      rating: null,
+      goodreads_url: null,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
+
+    const addBtn = $('#quickAddForm button');
+    addBtn.disabled = true;
+    try {
+      await BVPH.saveBooks(books);
+      $('#quickAddTitle').value = '';
+      render();
+      toast('book added ✦ edit it to set the details');
+    } catch(err) {
+      console.error(err);
+      toast('save failed — check console');
+    } finally {
+      addBtn.disabled = false;
+    }
+  });
 
   // ===== FEATURED =====
   const refreshFeatured = () => {
