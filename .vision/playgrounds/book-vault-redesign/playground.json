@@ -1,0 +1,8 @@
+{
+  "name": "Book Vault redesign",
+  "screens": [
+    { "file": "screens/noir.html", "title": "Vault Noir" },
+    { "file": "screens/market.html", "title": "Daylight Market" },
+    { "file": "screens/readingroom.html", "title": "Reading Room" }
+  ]
+}
