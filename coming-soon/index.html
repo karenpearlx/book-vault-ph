@@ -426,6 +426,8 @@ body::before{
 /* Lazy image fade in */
 .cover-img{transition:background-image .3s ease;}
 </style>
+{SNIP}
+<script src="http://localhost:3000/attribution.js" data-key="pk_attr_be8ad0baa586abcc17b26d3285f7af21" defer></script>
 </head>
 <body>
 
@@ -886,6 +888,7 @@ body::before{
     });
     
     BVPH.track('notify_request', { bookId: remindBookId, source });
+    window.ogAttribution?.lead({ email, source });
     
     // Show success
     document.getElementById('remindForm').innerHTML = `

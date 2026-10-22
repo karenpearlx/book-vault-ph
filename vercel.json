@@ -1,13 +1,16 @@
 {
   "trailingSlash": false,
   "routes": [
+    { "src": "/blog", "dest": "https://3c092978-b4f0-42bc-a184-3690df0445cb.blogs.ogtool.com/blog" },
+    { "src": "/blog\\.data", "dest": "https://3c092978-b4f0-42bc-a184-3690df0445cb.blogs.ogtool.com/blog.data" },
+    { "src": "/blog/(.*)", "dest": "https://3c092978-b4f0-42bc-a184-3690df0445cb.blogs.ogtool.com/blog/$1" },
+    { "src": "/blogs(/.*)?", "status": 301, "headers": { "Location": "/blog" } },
     { "handle": "filesystem" },
     { "src": "/admin$", "dest": "/admin.html" },
     { "src": "/browse$", "dest": "/browse.html" },
     { "src": "/contact$", "dest": "/contact.html" },
     { "src": "/coming-soon$", "dest": "/coming-soon.html" },
     { "src": "/payment$", "dest": "/payment.html" },
-    { "src": "/book/([^/]+)$", "dest": "/book/index.html" },
-    { "src": "/blog/([^/]+)$", "dest": "/blog/post.html" }
+    { "src": "/book/([^/]+)$", "dest": "/book/index.html" }
   ]
 }
