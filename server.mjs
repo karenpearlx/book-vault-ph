@@ -1,143 +1,70 @@
-// Static file server for The Book Vault PH.
-// Mirrors the routing in vercel.json so local/dev and production behave the same:
-// filesystem first, then clean URLs (/browse -> browse/index.html, /admin -> admin.html),
-// then the dynamic routes /book/:slug and /blog/:slug.
+// The Book Vault PH web server.
+// Serves the static site (mirroring the rewrites in vercel.json) plus the
+// OGTool-hosted blog, reverse-proxied under /blog (see ogtool-blog.md).
 
-import { createServer } from 'node:http';
-import { createReadStream } from 'node:fs';
-import { stat } from 'node:fs/promises';
-import { extname, join, normalize, resolve } from 'node:path';
-import { Readable } from 'node:stream';
+import express from 'express';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = resolve(import.meta.dirname);
-const PORT = Number(process.env.PORT) || 8000;
+const root = path.dirname(fileURLToPath(import.meta.url));
+const app = express();
+app.disable('x-powered-by');
 
-// /blog is an OGTool-hosted blog served under this domain via reverse proxy.
-// Forward the FULL path (never strip the /blog prefix) — the hosted blog's own
-// URLs start with /blog and its client-side navigation fetches /blog/<slug>.data.
-// Mirrored for Vercel in vercel.json; see ogtool-blog.md.
+// OGTool-hosted blog, reverse-proxied (200 rewrite, never a redirect).
+// The full path must reach the blog unchanged — its client-side navigation
+// fetches /blog/<slug>.data, and stripping the prefix breaks post clicks.
 const BLOG_ORIGIN = 'https://3c092978-b4f0-42bc-a184-3690df0445cb.blogs.ogtool.com';
-
-function isBlogPath(pathname) {
-  // /__ogtool-verify (root) is OGTool's proxy-detection endpoint.
-  return pathname === '/blog' || pathname === '/blog.data' || pathname.startsWith('/blog/')
-    || pathname === '/__ogtool-verify';
-}
-
-async function proxyBlog(req, res, pathname, search) {
-  const upstream = await fetch(BLOG_ORIGIN + pathname + search, {
-    method: req.method,
-    headers: {
-      'accept': req.headers['accept'] || '*/*',
-      'accept-language': req.headers['accept-language'] || '',
-      'user-agent': req.headers['user-agent'] || '',
-      'x-forwarded-host': req.headers['host'] || '',
-      'x-forwarded-proto': 'https',
-    },
-    body: req.method === 'GET' || req.method === 'HEAD' ? undefined : req,
-    duplex: 'half',
-    redirect: 'follow',
-  });
-
-  const headers = {};
-  for (const [key, value] of upstream.headers) {
-    // fetch already decompressed the body; let Node recompute framing.
-    if (['content-encoding', 'content-length', 'transfer-encoding', 'connection'].includes(key)) continue;
-    headers[key] = value;
-  }
-  res.writeHead(upstream.status, headers);
-  if (req.method === 'HEAD' || !upstream.body) {
-    res.end();
-    return;
-  }
-  Readable.fromWeb(upstream.body).pipe(res);
-}
-
-const MIME = {
-  '.html': 'text/html; charset=utf-8',
-  '.js': 'text/javascript; charset=utf-8',
-  '.mjs': 'text/javascript; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
-  '.svg': 'image/svg+xml',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.webp': 'image/webp',
-  '.gif': 'image/gif',
-  '.ico': 'image/x-icon',
-  '.pdf': 'application/pdf',
-  '.txt': 'text/plain; charset=utf-8',
-  '.xml': 'application/xml; charset=utf-8',
-  '.woff': 'font/woff',
-  '.woff2': 'font/woff2',
-};
-
-async function fileAt(pathname) {
-  const target = join(ROOT, normalize(pathname));
-  if (target !== ROOT && !target.startsWith(ROOT + '/')) return null;
+async function proxyBlog(req, res) {
   try {
-    const info = await stat(target);
-    return info.isFile() ? target : null;
-  } catch {
-    return null;
-  }
-}
-
-async function resolveFile(pathname) {
-  if (pathname === '/') return fileAt('/index.html');
-
-  const clean = pathname.replace(/\/+$/, '') || '/';
-
-  return (
-    (await fileAt(clean)) ||
-    (await fileAt(`${clean}.html`)) ||
-    (await fileAt(`${clean}/index.html`)) ||
-    (/^\/book\/[^/]+$/.test(clean) ? await fileAt('/book/index.html') : null) ||
-    (/^\/blog\/[^/]+$/.test(clean) ? await fileAt('/blog/post.html') : null)
-  );
-}
-
-const server = createServer(async (req, res) => {
-  let pathname, search;
-  try {
-    const url = new URL(req.url, 'http://localhost');
-    pathname = decodeURIComponent(url.pathname);
-    search = url.search;
-  } catch {
-    res.writeHead(400, { 'Content-Type': 'text/plain' }).end('Bad request');
-    return;
-  }
-
-  if (isBlogPath(pathname)) {
-    try {
-      await proxyBlog(req, res, pathname, search);
-    } catch (err) {
-      console.error('blog proxy error:', err);
-      if (!res.headersSent) res.writeHead(502, { 'Content-Type': 'text/plain' });
-      res.end('Blog is temporarily unavailable.');
+    const hasBody = !['GET', 'HEAD'].includes(req.method);
+    const upstream = await fetch(BLOG_ORIGIN + req.originalUrl, {
+      method: req.method,
+      headers: {
+        accept: req.headers.accept || '*/*',
+        'accept-language': req.headers['accept-language'] || 'en',
+        'user-agent': req.headers['user-agent'] || 'bookvaultph-proxy',
+        'x-forwarded-host': req.headers.host || '',
+        'x-forwarded-proto': 'https',
+        ...(req.headers['content-type'] ? { 'content-type': req.headers['content-type'] } : {}),
+      },
+      ...(hasBody ? { body: req, duplex: 'half' } : {}),
+      redirect: 'manual',
+    });
+    res.status(upstream.status);
+    for (const h of ['content-type', 'cache-control', 'etag', 'last-modified']) {
+      const v = upstream.headers.get(h);
+      if (v) res.set(h, v);
     }
-    return;
+    // Keep upstream redirects on this domain; never expose the ogtool.com URL.
+    const loc = upstream.headers.get('location');
+    if (loc) res.set('location', loc.replace(BLOG_ORIGIN, ''));
+    res.send(Buffer.from(await upstream.arrayBuffer()));
+  } catch (err) {
+    console.error('blog proxy error:', err);
+    res.status(502).send('Blog temporarily unavailable. Please try again shortly.');
   }
+}
+app.all('/blog', proxyBlog);
+app.all('/blog.data', proxyBlog);
+app.all('/blog/*', proxyBlog);
+// OGTool's proxy-detection endpoint at the site root.
+app.all('/__ogtool-verify', proxyBlog);
 
-  const file = await resolveFile(pathname);
-  if (!file) {
-    res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end('<!doctype html><meta charset="utf-8"><title>Not found</title><p>Page not found. <a href="/">Back to the shop</a>.</p>');
-    return;
-  }
+// The blog briefly lived at /blogs; keep old links working.
+app.get(['/blogs', '/blogs/*'], (req, res) => res.redirect(301, '/blog'));
 
-  const type = MIME[extname(file).toLowerCase()] || 'application/octet-stream';
-  const cache = file.endsWith('.html') ? 'no-cache' : 'public, max-age=3600';
-  res.writeHead(200, { 'Content-Type': type, 'Cache-Control': cache });
+// Static-site rewrites (same table as vercel.json).
+const send = file => (req, res) => res.sendFile(path.join(root, file));
+app.get('/admin', send('admin.html'));
+app.get('/browse', send('browse/index.html'));
+app.get('/contact', send('contact/index.html'));
+app.get('/coming-soon', send('coming-soon/index.html'));
+app.get('/payment', send('payment/index.html'));
+app.get('/order', send('order/index.html'));
+app.get('/book/:id', send('book/index.html'));
 
-  if (req.method === 'HEAD') {
-    res.end();
-    return;
-  }
-  createReadStream(file).pipe(res);
-});
+app.use(express.static(root, { extensions: ['html'] }));
+app.use((req, res) => res.status(404).send('Not found'));
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`The Book Vault PH running on http://0.0.0.0:${PORT}`);
-});
+const port = Number(process.env.PORT) || 8000;
+app.listen(port, () => console.log(`The Book Vault PH listening on :${port}`));

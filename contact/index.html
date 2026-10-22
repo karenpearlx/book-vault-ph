@@ -240,6 +240,7 @@ BVPH.init().then(() => {
       // Success
       window.ogAttribution?.lead({ email: data.email, source: 'contact-form' });
       document.getElementById('contactForm').innerHTML = '<p style="text-align:center;color:var(--burgundy);font-size:1.1rem;">Message sent! We\'ll get back to you soon. 📚</p>';
+      window.ogAttribution?.lead({ email: data.email, source: 'contact-form' });
     } catch (err) {
       console.error('Form error:', err);
       btn.disabled = false;

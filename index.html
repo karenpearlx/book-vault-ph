@@ -1780,6 +1780,7 @@ document.getElementById('homeContactForm').addEventListener('submit', async (e) 
     });
     
     document.getElementById('homeContactForm').innerHTML = '<p style="color:var(--burgundy);font-size:1.1rem;">Message sent! We\'ll get back to you soon. 📚</p>';
+    window.ogAttribution?.lead({ email: data.email, source: 'homepage-contact-form' });
   } catch (err) {
     console.error('Form error:', err);
     btn.disabled = false;

@@ -330,6 +330,20 @@ BVPH.init().then(async () => {
     </div>
   `;
   
+  // Report the conversion once per order (guard against refreshes)
+  try {
+    const convKey = 'bvph_conv_' + order.id;
+    if (!localStorage.getItem(convKey)) {
+      const contact = (order.customerContact || '').trim();
+      window.ogAttribution?.conversion({
+        email: contact.includes('@') ? contact : undefined,
+        value: total,
+        currency: 'PHP',
+      });
+      localStorage.setItem(convKey, '1');
+    }
+  } catch (e) { /* attribution must never break the page */ }
+
   // Handle "I've sent my payment" button
   const paidBtn = $('#paidBtn');
   if (paidBtn) {
