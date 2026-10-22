@@ -47,6 +47,8 @@ async function proxyBlog(req, res) {
 app.all('/blog', proxyBlog);
 app.all('/blog.data', proxyBlog);
 app.all('/blog/*', proxyBlog);
+// OGTool's proxy-detection endpoint at the site root.
+app.all('/__ogtool-verify', proxyBlog);
 
 // The blog briefly lived at /blogs; keep old links working.
 app.get(['/blogs', '/blogs/*'], (req, res) => res.redirect(301, '/blog'));
