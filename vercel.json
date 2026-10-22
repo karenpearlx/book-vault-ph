@@ -1,6 +1,9 @@
 {
   "trailingSlash": false,
   "routes": [
+    { "src": "/blogs", "dest": "/api/blogs?p=index" },
+    { "src": "/blogs/([^/]+)", "dest": "/api/blogs?path=$1" },
+    { "src": "/llms.txt", "dest": "/api/blogs?p=llms" },
     { "handle": "filesystem" },
     { "src": "/admin$", "dest": "/admin.html" },
     { "src": "/browse$", "dest": "/browse.html" },
