@@ -121,6 +121,8 @@ body{margin:0;font-family:"Cormorant Garamond",Georgia,serif;background:var(--cr
 .footer{background:var(--cream-warm);padding:40px 28px;border-top:1px solid var(--cream-shadow);text-align:center;}
 .footer p{margin:0;color:var(--ink-soft);font-size:.9rem;}
 </style>
+{SNIP}
+<script src="http://localhost:3000/attribution.js" data-key="pk_attr_97ebfb7450b7e1e1597ecb721fea6c35" defer></script>
 </head>
 <body>
 
@@ -135,7 +137,7 @@ body{margin:0;font-family:"Cormorant Garamond",Georgia,serif;background:var(--cr
       <a href="/">Home</a>
       <a href="/browse">Browse</a>
       <a href="/coming-soon">Coming Soon</a>
-      <a href="/blog">Blog</a>
+      <a href="/blogs">Blog</a>
       <a href="/contact">Contact</a>
     </div>
   </div>
@@ -238,6 +240,7 @@ BVPH.init().then(() => {
       
       // Success
       document.getElementById('contactForm').innerHTML = '<p style="text-align:center;color:var(--burgundy);font-size:1.1rem;">Message sent! We\'ll get back to you soon. 📚</p>';
+      window.ogAttribution?.lead({ email: data.email, source: 'contact-form' });
     } catch (err) {
       console.error('Form error:', err);
       btn.disabled = false;

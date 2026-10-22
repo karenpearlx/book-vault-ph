@@ -146,6 +146,8 @@ footer{text-align:center;padding:2rem;font-size:.8rem;color:rgba(255,255,255,.4)
   .book-cover{width:45px;height:65px;}
 }
 </style>
+{SNIP}
+<script src="http://localhost:3000/attribution.js" data-key="pk_attr_97ebfb7450b7e1e1597ecb721fea6c35" defer></script>
 </head>
 <body>
 
@@ -157,7 +159,7 @@ footer{text-align:center;padding:2rem;font-size:.8rem;color:rgba(255,255,255,.4)
     <a href="/">Home</a>
     <a href="/browse">Browse</a>
     <a href="/coming-soon">Coming Soon</a>
-    <a href="/blog">Blog</a>
+    <a href="/blogs">Blog</a>
     <a href="/contact">Contact</a>
   </div>
 </nav>
@@ -329,6 +331,20 @@ BVPH.init().then(async () => {
     </div>
   `;
   
+  // Report the conversion once per order (guard against refreshes)
+  try {
+    const convKey = 'bvph_conv_' + order.id;
+    if (!localStorage.getItem(convKey)) {
+      const contact = (order.customerContact || '').trim();
+      window.ogAttribution?.conversion({
+        email: contact.includes('@') ? contact : undefined,
+        value: total,
+        currency: 'PHP',
+      });
+      localStorage.setItem(convKey, '1');
+    }
+  } catch (e) { /* attribution must never break the page */ }
+
   // Handle "I've sent my payment" button
   const paidBtn = $('#paidBtn');
   if (paidBtn) {
