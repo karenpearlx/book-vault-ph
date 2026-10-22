@@ -23,6 +23,8 @@ async function proxyBlog(req, res) {
         accept: req.headers.accept || '*/*',
         'accept-language': req.headers['accept-language'] || 'en',
         'user-agent': req.headers['user-agent'] || 'bookvaultph-proxy',
+        'x-forwarded-host': req.headers.host || '',
+        'x-forwarded-proto': 'https',
         ...(req.headers['content-type'] ? { 'content-type': req.headers['content-type'] } : {}),
       },
       ...(hasBody ? { body: req, duplex: 'half' } : {}),
@@ -37,7 +39,8 @@ async function proxyBlog(req, res) {
     const loc = upstream.headers.get('location');
     if (loc) res.set('location', loc.replace(BLOG_ORIGIN, ''));
     res.send(Buffer.from(await upstream.arrayBuffer()));
-  } catch {
+  } catch (err) {
+    console.error('blog proxy error:', err);
     res.status(502).send('Blog temporarily unavailable. Please try again shortly.');
   }
 }

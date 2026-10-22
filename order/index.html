@@ -189,8 +189,7 @@
     position:relative;z-index:2;
   }
 </style>
-{SNIP}
-<script src="http://localhost:3000/attribution.js" data-key="pk_attr_be8ad0baa586abcc17b26d3285f7af21" defer></script>
+<script src="https://app.ogtool.com/attribution.js" data-key="pk_attr_be8ad0baa586abcc17b26d3285f7af21" defer></script>
 </head>
 <body>
 
@@ -405,6 +404,7 @@
         });
         // Track only after successful save
         BVPH.track('order_submit', { bookId: book.id, orderId: order.id });
+        if (contact.includes('@')) window.ogAttribution?.lead({ email: contact, source: 'order-form' });
         // Reserve the book (reduce stock)
         await BVPH.reserveBooks([book.id]);
         location.href = '/payment?order=' + encodeURIComponent(order.id);
@@ -556,6 +556,7 @@
         });
         // Track only after successful save
         BVPH.track('order_submit', { bookIds: books.map(b=>b.id), mode: 'cart', orderId: order.id });
+        if (contact.includes('@')) window.ogAttribution?.lead({ email: contact, source: 'order-form-cart' });
         // Reserve all books in cart (reduce stock)
         await BVPH.reserveBooks(books.map(b => b.id));
         BVPH.clearCart();

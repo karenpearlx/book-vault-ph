@@ -146,8 +146,7 @@ footer{text-align:center;padding:2rem;font-size:.8rem;color:rgba(255,255,255,.4)
   .book-cover{width:45px;height:65px;}
 }
 </style>
-{SNIP}
-<script src="http://localhost:3000/attribution.js" data-key="pk_attr_be8ad0baa586abcc17b26d3285f7af21" defer></script>
+<script src="https://app.ogtool.com/attribution.js" data-key="pk_attr_be8ad0baa586abcc17b26d3285f7af21" defer></script>
 </head>
 <body>
 
@@ -352,6 +351,8 @@ BVPH.init().then(async () => {
       paidBtn.disabled = true;
       paidBtn.textContent = 'Sending...';
       await BVPH.markOrderPaymentSent(orderId);
+      const buyerContact = String(order.customerContact || '');
+      if (buyerContact.includes('@')) window.ogAttribution?.conversion({ email: buyerContact, value: total, currency: 'PHP' });
       paidBtn.textContent = 'Payment marked ✓';
       paidBtn.parentElement.innerHTML = `
         <div class="success-state">
