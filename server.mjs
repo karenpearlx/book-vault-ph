@@ -19,7 +19,9 @@ const PORT = Number(process.env.PORT) || 8000;
 const BLOG_ORIGIN = 'https://3c092978-b4f0-42bc-a184-3690df0445cb.blogs.ogtool.com';
 
 function isBlogPath(pathname) {
-  return pathname === '/blog' || pathname === '/blog.data' || pathname.startsWith('/blog/');
+  // /__ogtool-verify (root) is OGTool's proxy-detection endpoint.
+  return pathname === '/blog' || pathname === '/blog.data' || pathname.startsWith('/blog/')
+    || pathname === '/__ogtool-verify';
 }
 
 async function proxyBlog(req, res, pathname, search) {
