@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vault Noir</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --burgundy:#4A1C2A; --deep:#2E0F1A; --deeper:#1A0810;
+  --copper:#FF9B00; --copper-soft:#FFAD33;
+  --cream:#EEE0D9; --cream-warm:#F4E9D8;
+  --line:rgba(216,154,85,.18);
+  --serif:"Cormorant Garamond",Georgia,serif;
+  --display:"Playfair Display",Georgia,serif;
+  --mono:"DM Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;overflow-x:clip}
+body{
+  background:var(--deeper);color:var(--cream);
+  font-family:var(--serif);font-size:18px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+.mono{font-family:var(--mono);text-transform:uppercase;letter-spacing:.22em;font-size:.66rem}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;background:rgba(14,5,9,.94);backdrop-filter:blur(12px) saturate(1.3);border-bottom:1px solid var(--line)}
+.nav-inner{display:flex;align-items:center;gap:20px;padding-top:12px;padding-bottom:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.brand-mark{width:30px;height:30px;border-radius:7px;background:linear-gradient(145deg,var(--copper),#b8541a);display:grid;place-items:center;font-family:var(--display);color:var(--deeper);font-size:1rem;font-weight:600}
+.brand-word{font-family:var(--display);font-size:1.08rem;white-space:nowrap}
+.brand-word em{font-style:italic;color:var(--copper-soft)}
+.search{display:flex;align-items:center;flex:1 1 260px;min-width:0;background:rgba(253,248,243,.06);border:1px solid var(--line);border-radius:999px;padding:4px 5px 4px 16px;transition:border-color .2s,background .2s}
+.search:focus-within{border-color:var(--copper-soft);background:rgba(253,248,243,.1)}
+.search svg{width:16px;height:16px;color:var(--copper-soft);flex:0 0 16px}
+.search input{flex:1;min-width:0;border:0;background:transparent;outline:none;color:var(--cream);font-family:var(--serif);font-size:1rem;padding:8px 12px}
+.search input::placeholder{color:rgba(238,224,217,.45);font-style:italic}
+.search .clear{border:0;background:transparent;color:rgba(238,224,217,.5);padding:6px 10px;font-size:1rem;display:none}
+.search .clear.show{display:block}
+.nav-cart{display:flex;align-items:center;gap:8px;background:var(--copper);color:var(--deeper);border:0;border-radius:999px;padding:9px 16px;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500;flex-shrink:0}
+.nav-cart:hover{background:var(--cream)}
+.nav-cart b{font-family:var(--mono);font-weight:500}
+@media(max-width:860px){
+  .nav-inner{gap:12px}
+  .search{order:3;flex-basis:100%}
+}
+
+/* ---------- hero ---------- */
+.hero{position:relative;border-bottom:1px solid var(--line);overflow:hidden;background:
+  radial-gradient(ellipse 70% 70% at 15% 10%, rgba(184,115,51,.24), transparent 62%),
+  radial-gradient(ellipse 80% 90% at 90% 85%, rgba(74,28,42,.75), transparent 65%),
+  linear-gradient(160deg,#2E0F1A 0%,#17070E 60%,#240D16 100%)}
+.hero-inner{padding:clamp(48px,7vw,86px) 0 clamp(44px,6vw,70px);display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:center}
+.kicker{color:var(--copper-soft);margin:0 0 18px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(2.3rem,6vw,4rem);line-height:1.03;margin:0 0 18px}
+.hero h1 em{font-style:italic;color:var(--copper-soft)}
+.hero p.sub{margin:0 0 28px;max-width:46ch;font-size:1.12rem;color:rgba(238,224,217,.82)}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:13px 24px;font-family:var(--mono);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;border:1px solid transparent;transition:.2s}
+.btn-primary{background:var(--copper);color:var(--deeper)}
+.btn-primary:hover{background:var(--cream)}
+.btn-ghost{border-color:var(--line);color:var(--cream)}
+.btn-ghost:hover{border-color:var(--copper-soft);color:var(--copper-soft)}
+.stack{display:flex;gap:10px;justify-content:center;align-items:flex-end;height:240px}
+.stack .spine{width:46px;border-radius:3px 6px 6px 3px;box-shadow:0 18px 40px -18px rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;transition:transform .25s}
+.stack .spine span{writing-mode:vertical-rl;transform:rotate(180deg);font-family:var(--display);font-style:italic;font-size:.85rem;color:rgba(255,255,255,.9);white-space:nowrap}
+.stack .spine:hover{transform:translateY(-10px)}
+@media(max-width:1000px){
+  .hero-inner{grid-template-columns:1fr;gap:34px}
+  .stack{height:180px;justify-content:flex-start}
+}
+@media(max-width:560px){.stack .spine{width:38px}}
+
+/* ---------- payments strip ---------- */
+.strip{background:var(--copper);color:#2A1004}
+.strip-inner{display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:center;padding:14px 0;font-family:var(--mono);font-size:.62rem;letter-spacing:.24em;text-transform:uppercase}
+
+/* ---------- shelf ---------- */
+.shelf-section{padding:clamp(40px,6vw,72px) 0 90px}
+.sec-head{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:26px}
+.sec-head h2{font-family:var(--display);font-weight:400;font-size:clamp(1.8rem,4vw,2.6rem);margin:0}
+.sec-head h2 em{font-style:italic;color:var(--copper-soft)}
+.sec-head .count{color:rgba(238,224,217,.6);font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase}
+select.sort{background:rgba(253,248,243,.06);color:var(--cream);border:1px solid var(--line);border-radius:999px;padding:10px 16px;font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;outline:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.chip{background:transparent;border:1px solid var(--line);color:rgba(238,224,217,.75);border-radius:999px;padding:8px 16px;font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;transition:.18s}
+.chip:hover{border-color:var(--copper-soft);color:var(--copper-soft)}
+.chip.active{background:var(--copper);border-color:var(--copper);color:var(--deeper)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:clamp(16px,2.6vw,30px)}
+.card{text-align:left;background:transparent;border:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.cover{position:relative;aspect-ratio:2/3;border-radius:4px 8px 8px 4px;overflow:hidden;box-shadow:0 18px 38px -20px rgba(0,0,0,.9);display:flex;flex-direction:column;justify-content:space-between;padding:16px 14px;transition:transform .25s,box-shadow .25s}
+.card:hover .cover{transform:translateY(-6px);box-shadow:0 26px 48px -20px rgba(0,0,0,1)}
+.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(255,255,255,.14),transparent 28%),linear-gradient(0deg,rgba(0,0,0,.35),transparent 55%)}
+.cover .c-pub,.cover .c-auth{font-family:var(--mono);font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.75);position:relative;z-index:2}
+.cover .c-ttl{font-family:var(--display);font-style:italic;font-size:1.15rem;line-height:1.1;color:#fff;position:relative;z-index:2}
+.tag{position:absolute;top:10px;right:10px;z-index:3;background:rgba(14,5,9,.8);border:1px solid var(--line);color:var(--copper-soft);border-radius:999px;padding:4px 9px;font-family:var(--mono);font-size:.5rem;letter-spacing:.14em;text-transform:uppercase}
+.c-title{font-family:var(--display);font-size:1.02rem;line-height:1.25;margin:0}
+.c-author{color:rgba(238,224,217,.6);font-size:.92rem;margin:0}
+.c-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:2px}
+.price{font-family:var(--mono);font-size:.82rem;color:var(--copper-soft)}
+.add{border:1px solid var(--line);background:transparent;color:var(--cream);border-radius:999px;padding:7px 13px;font-family:var(--mono);font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;transition:.18s}
+.add:hover{background:var(--copper);border-color:var(--copper);color:var(--deeper)}
+.add.in{background:rgba(255,155,0,.16);border-color:var(--copper);color:var(--copper-soft)}
+.empty{padding:70px 0;text-align:center;color:rgba(238,224,217,.7)}
+.empty h3{font-family:var(--display);font-size:1.7rem;font-weight:400;margin:0 0 10px;color:var(--cream)}
+
+/* ---------- perks ---------- */
+.perks{background:linear-gradient(180deg,#240D16,#1A0810);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.perks-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:clamp(20px,4vw,48px);padding:clamp(34px,5vw,54px) 0}
+.perk h4{font-family:var(--display);font-weight:400;font-size:1.3rem;margin:0 0 6px;color:var(--copper-soft)}
+.perk p{margin:0;color:rgba(238,224,217,.72);font-size:1rem}
+
+/* ---------- footer ---------- */
+.footer{padding:46px 0 60px;color:rgba(238,224,217,.6);font-size:.95rem}
+.footer-inner{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center}
+.footer a:hover{color:var(--copper-soft)}
+
+/* ---------- overlays ---------- */
+.scrim{position:fixed;inset:0;background:rgba(10,3,7,.72);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .22s;z-index:80}
+.scrim.open{opacity:1;pointer-events:auto}
+.modal{position:fixed;z-index:90;left:50%;top:50%;transform:translate(-50%,-46%) scale(.98);opacity:0;pointer-events:none;transition:.22s;width:min(760px,calc(100vw - 32px));max-height:86vh;overflow:auto;background:#241019;border:1px solid var(--line);border-radius:14px;padding:clamp(20px,3vw,32px)}
+.modal.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.modal-grid{display:grid;grid-template-columns:200px minmax(0,1fr);gap:26px}
+@media(max-width:620px){.modal-grid{grid-template-columns:1fr}.modal-grid .cover{max-width:180px}}
+.modal h3{font-family:var(--display);font-weight:400;font-size:1.9rem;margin:0 0 6px;line-height:1.1}
+.meta-rows{margin:18px 0;border-top:1px solid var(--line)}
+.meta-rows div{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.98rem}
+.meta-rows span:first-child{font-family:var(--mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(238,224,217,.55)}
+.close{position:absolute;top:14px;right:16px;background:transparent;border:0;color:rgba(238,224,217,.7);font-size:1.5rem;line-height:1}
+.close:hover{color:var(--copper-soft)}
+
+.drawer{position:fixed;z-index:95;top:0;right:0;height:100%;width:min(430px,100vw);background:#1E0B13;border-left:1px solid var(--line);transform:translateX(102%);transition:transform .26s ease;display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.drawer-head{padding:20px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.drawer-head h3{font-family:var(--display);font-weight:400;font-size:1.4rem;margin:0}
+.drawer-body{flex:1;overflow:auto;padding:18px 22px}
+.drawer-foot{padding:18px 22px;border-top:1px solid var(--line)}
+.line{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.line .mini{width:46px;height:69px;border-radius:3px;flex-shrink:0}
+.line h4{font-family:var(--display);font-weight:400;font-size:1.02rem;margin:0 0 2px;line-height:1.2}
+.line p{margin:0;font-size:.88rem;color:rgba(238,224,217,.6)}
+.qty{display:flex;align-items:center;gap:10px;margin-top:8px}
+.qty button{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--cream);display:grid;place-items:center;font-size:.9rem;line-height:1}
+.qty button:hover{border-color:var(--copper-soft);color:var(--copper-soft)}
+.qty .n{font-family:var(--mono);font-size:.8rem;min-width:14px;text-align:center}
+.link-btn{background:none;border:0;color:rgba(238,224,217,.5);font-family:var(--mono);font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;padding:0;margin-left:auto;align-self:flex-start}
+.link-btn:hover{color:var(--copper-soft)}
+.totals div{display:flex;justify-content:space-between;padding:5px 0;font-size:.98rem}
+.totals .grand{font-family:var(--display);font-size:1.3rem;padding-top:10px;margin-top:6px;border-top:1px solid var(--line)}
+.save{color:var(--copper-soft)}
+.full{display:block;width:100%;text-align:center;justify-content:center;margin-top:14px}
+.field{display:block;width:100%;background:rgba(253,248,243,.05);border:1px solid var(--line);border-radius:8px;color:var(--cream);font-family:var(--serif);font-size:1rem;padding:11px 14px;margin-bottom:10px;outline:none}
+.field:focus{border-color:var(--copper-soft)}
+.field::placeholder{color:rgba(238,224,217,.4);font-style:italic}
+.pay-opts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:4px 0 14px}
+.pay{border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--cream);padding:11px;font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase}
+.pay.sel{border-color:var(--copper);background:rgba(255,155,0,.14);color:var(--copper-soft)}
+.note{font-family:var(--mono);font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(238,224,217,.45);margin-top:12px;text-align:center}
+.done{text-align:center;padding:30px 6px}
+.done .ring{width:62px;height:62px;border-radius:50%;border:1px solid var(--copper);color:var(--copper-soft);display:grid;place-items:center;margin:0 auto 18px;font-size:1.6rem}
+.done h3{font-family:var(--display);font-weight:400;font-size:1.7rem;margin:0 0 8px}
+.done p{color:rgba(238,224,217,.7);margin:0 auto 10px;max-width:30ch}
+.ref{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;color:var(--copper-soft)}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,16px);z-index:120;background:#2E1119;border:1px solid var(--copper);color:var(--cream);border-radius:999px;padding:11px 22px;font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;opacity:0;pointer-events:none;transition:.22s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark">V</span>
+      <span class="brand-word">The Book <em>Vault</em></span>
+    </a>
+    <form class="search" onsubmit="event.preventDefault();document.getElementById('shelf').scrollIntoView({behavior:'smooth'})">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search by title or author" oninput="onSearch(this.value)">
+      <button type="button" class="clear" id="clearBtn" onclick="clearSearch()" aria-label="Clear search">&times;</button>
+    </form>
+    <button class="nav-cart" onclick="openCart()">Cart <b id="cartCount">0</b></button>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap hero-inner">
+    <div>
+      <p class="kicker mono">Pre-loved books, shipped anywhere in the PH</p>
+      <h1>Good reads, <em>honest prices</em></h1>
+      <p class="sub">Thrillers, romance and horror that already had one life. Most sit between ₱150 and ₱350, and every copy on this page is in the box right now.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#shelf">See the shelf</a>
+        <button class="btn btn-ghost" onclick="openHow()">How ordering works</button>
+      </div>
+    </div>
+    <div class="stack" id="heroStack"></div>
+  </div>
+</header>
+
+<div class="strip"><div class="wrap strip-inner">
+  <span>GCash</span><span>Maya</span><span>BPI</span><span>Cash on delivery</span><span>J&amp;T and LBC nationwide</span>
+</div></div>
+
+<main class="wrap shelf-section" id="shelf">
+  <div class="sec-head">
+    <div>
+      <h2>The <em>shelf</em></h2>
+      <p class="count" id="resultCount">16 books in stock</p>
+    </div>
+    <select class="sort" id="sort" onchange="render()">
+      <option value="newest">Newest first</option>
+      <option value="priceLow">Price, low to high</option>
+      <option value="priceHigh">Price, high to low</option>
+      <option value="rating">Highest rated</option>
+      <option value="title">Title A to Z</option>
+    </select>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none">
+    <h3>Nothing on the shelf matches that</h3>
+    <p>Try another title, or message us and we will hunt for it.</p>
+    <button class="btn btn-ghost" style="margin-top:14px" onclick="resetFilters()">Clear filters</button>
+  </div>
+</main>
+
+<section class="perks">
+  <div class="wrap perks-grid">
+    <div class="perk"><h4>Buy 3, save 10%</h4><p>Three books or more on one order, applied in the cart.</p></div>
+    <div class="perk"><h4>Free shipping over ₱899</h4><p>Delivered nationwide by J&amp;T or LBC.</p></div>
+    <div class="perk"><h4>Condition stated upfront</h4><p>Every listing says how worn the copy is before you pay.</p></div>
+  </div>
+</section>
+
+<footer class="footer"><div class="wrap footer-inner">
+  <span>The Book Vault PH, San Carlos City, Negros Occidental</span>
+  <span><a href="#shelf">Shelf</a> &nbsp; <a href="#" onclick="event.preventDefault();openHow()">How to order</a> &nbsp; <a href="#" onclick="event.preventDefault();toast('Demo, Instagram opens on the live site')">Instagram</a></span>
+</div></footer>
+
+<div class="scrim" id="scrim" onclick="closeAll()"></div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <button class="close" onclick="closeAll()" aria-label="Close">&times;</button>
+  <div id="modalBody"></div>
+</div>
+
+<aside class="drawer" id="drawer" aria-label="Cart">
+  <div class="drawer-head">
+    <h3 id="drawerTitle">Your cart</h3>
+    <button class="close" style="position:static" onclick="closeAll()" aria-label="Close cart">&times;</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot" id="drawerFoot"></div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const BOOKS = [
+  {id:1,t:"Snowdrops",a:"A. D. Miller",g:"Thriller",c:"Very good",p:180,r:4.1,s:"A British lawyer in Moscow talks himself into a deal he knows is rotten. Winter sets in, the snow melts, and what was under it comes up."},
+  {id:2,t:"The Secret of Crickley Hall",a:"James Herbert",g:"Horror",c:"Good",p:320,r:4.3,s:"A grieving family rents an old house in the north of England. The cellar door will not stay shut and the children in the walls are not theirs."},
+  {id:3,t:"I Will Find You",a:"Harlan Coben",g:"Thriller",c:"Like new",p:350,r:4.5,s:"Five years into a life sentence for killing his own son, a father is shown a photograph of a boy who should be dead."},
+  {id:4,t:"Havana Storm",a:"Clive Cussler",g:"Thriller",c:"Good",p:250,r:3.9,s:"A toxic plume in the Caribbean leads Dirk Pitt to a Cuban secret buried since the revolution."},
+  {id:5,t:"The Dark Heroine",a:"Abigail Gibbs",g:"Fantasy",c:"Very good",p:230,r:3.8,s:"A girl walks into the wrong Trafalgar Square massacre and leaves it as the only witness the vampires cannot kill."},
+  {id:6,t:"Catch Your Death",a:"Louise Voss",g:"Mystery",c:"Well-loved",p:190,r:4.0,s:"A cold research facility, a virus nobody admits to, and a woman whose childhood file has been quietly rewritten."},
+  {id:7,t:"The Favor",a:"Nicci French",g:"Thriller",c:"Very good",p:280,r:4.2,s:"An old friend asks for an alibi. Giving it costs less than refusing, right up until the police arrive."},
+  {id:8,t:"In Bitter Chill",a:"Sarah Ward",g:"Mystery",c:"Good",p:175,r:4.0,s:"Two girls were taken in 1978. One walked home. Thirty years later her mother is found dead in a hotel room."},
+  {id:9,t:"The Broker",a:"John Grisham",g:"Thriller",c:"Good",p:260,r:4.1,s:"A pardoned Washington power broker is parked in Bologna with a new name and four governments listening for him to use a phone."},
+  {id:10,t:"Five Quarters of the Orange",a:"Joanne Harris",g:"Fiction",c:"Very good",p:210,r:4.4,s:"A woman returns to her mother's village under a false name, carrying the recipe album that records what happened in the war."},
+  {id:11,t:"The Danish Girl",a:"David Ebershoff",g:"Fiction",c:"Like new",p:240,r:4.3,s:"Copenhagen, 1925. A painter asks her husband to sit for her in a dress, and neither marriage nor name survives it."},
+  {id:12,t:"Escape to the Little Cornish Isles",a:"Phillipa Ashley",g:"Romance",c:"Good",p:165,r:4.0,s:"A failed studio on a tiny Scilly island, a lease that runs out in spring, and the one person who knows why it closed."},
+  {id:13,t:"No Child of Mine",a:"Susan Lewis",g:"Fiction",c:"Well-loved",p:200,r:4.2,s:"A social worker with a full caseload keeps coming back to one quiet girl whose file says nothing is wrong."},
+  {id:14,t:"The Grasmere Grudge",a:"Rebecca Tope",g:"Mystery",c:"Very good",p:185,r:3.9,s:"A Lake District antiques dealer is found dead in his own van, and the florist who booked him last is the one holding the key."},
+  {id:15,t:"Sleeping in the Ground",a:"Peter Robinson",g:"Mystery",c:"Good",p:220,r:4.1,s:"A sniper opens fire on a Yorkshire wedding party. Banks knows the bride's family from a case he closed too fast."},
+  {id:16,t:"Mothers and Daughters",a:"Erica James",g:"Romance",c:"Very good",p:150,r:3.8,s:"Three women, one house in Cheshire, and a will that gives it to the daughter who left."}
+];
+const GENRES=["All","Thriller","Mystery","Romance","Fantasy","Horror","Fiction"];
+const PALETTE={Thriller:["#7a2c40","#3b1119"],Mystery:["#284842","#0f2521"],Romance:["#a4445e","#5c1f30"],Fantasy:["#4a2f50","#28162e"],Horror:["#2b2b33","#111114"],Fiction:["#a85a25","#5e3010"]};
+const cov=b=>`linear-gradient(170deg,${PALETTE[b.g][0]},${PALETTE[b.g][1]})`;
+const peso=n=>"₱"+n.toLocaleString("en-PH");
+
+let state={q:"",genre:"All",cart:{},step:"cart",pay:"GCash"};
+
+/* hero spines */
+document.getElementById("heroStack").innerHTML=BOOKS.slice(0,6).map((b,i)=>
+  `<button class="spine" style="background:${cov(b)};height:${150+((i*37)%90)}px" onclick="openBook(${b.id})" title="${b.t}"><span>${b.t}</span></button>`).join("");
+
+/* chips */
+document.getElementById("chips").innerHTML=GENRES.map(g=>
+  `<button class="chip" data-g="${g}" onclick="setGenre('${g}')">${g}</button>`).join("");
+
+function setGenre(g){state.genre=g;render();}
+function onSearch(v){state.q=v.trim().toLowerCase();document.getElementById("clearBtn").classList.toggle("show",!!v);render();}
+function clearSearch(){document.getElementById("q").value="";onSearch("");}
+function resetFilters(){state.genre="All";clearSearch();}
+
+function visible(){
+  let out=BOOKS.filter(b=>(state.genre==="All"||b.g===state.genre)&&
+    (!state.q||b.t.toLowerCase().includes(state.q)||b.a.toLowerCase().includes(state.q)));
+  const s=document.getElementById("sort").value;
+  const by={priceLow:(x,y)=>x.p-y.p,priceHigh:(x,y)=>y.p-x.p,rating:(x,y)=>y.r-x.r,title:(x,y)=>x.t.localeCompare(y.t),newest:(x,y)=>x.id-y.id}[s];
+  return out.sort(by);
+}
+
+function render(){
+  document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active",c.dataset.g===state.genre));
+  const list=visible();
+  document.getElementById("resultCount").textContent=
+    list.length===BOOKS.length?`${BOOKS.length} books in stock`:`${list.length} of ${BOOKS.length} books`;
+  document.getElementById("empty").style.display=list.length?"none":"block";
+  document.getElementById("grid").innerHTML=list.map(b=>`
+    <div class="card">
+      <button class="cover" style="background:${cov(b)}" onclick="openBook(${b.id})" aria-label="Open ${b.t}">
+        <span class="tag">${b.c}</span>
+        <span class="c-pub">${b.g}</span>
+        <span class="c-ttl">${b.t}</span>
+        <span class="c-auth">${b.a}</span>
+      </button>
+      <h3 class="c-title">${b.t}</h3>
+      <p class="c-author">${b.a}</p>
+      <div class="c-foot">
+        <span class="price">${peso(b.p)}</span>
+        <button class="add ${state.cart[b.id]?"in":""}" onclick="addToCart(${b.id})">${state.cart[b.id]?"In cart "+state.cart[b.id]:"Add"}</button>
+      </div>
+    </div>`).join("");
+  document.getElementById("cartCount").textContent=Object.values(state.cart).reduce((a,n)=>a+n,0);
+}
+
+/* ---- book modal ---- */
+function openBook(id){
+  const b=BOOKS.find(x=>x.id===id);
+  document.getElementById("modalBody").innerHTML=`
+    <div class="modal-grid">
+      <div class="cover" style="background:${cov(b)};cursor:default">
+        <span class="c-pub">${b.g}</span>
+        <span class="c-ttl">${b.t}</span>
+        <span class="c-auth">${b.a}</span>
+      </div>
+      <div>
+        <h3>${b.t}</h3>
+        <p style="margin:0;color:rgba(238,224,217,.65)">${b.a}</p>
+        <p style="margin:16px 0 0">${b.s}</p>
+        <div class="meta-rows">
+          <div><span>Condition</span><span>${b.c}</span></div>
+          <div><span>Genre</span><span>${b.g}</span></div>
+          <div><span>Goodreads</span><span>${b.r.toFixed(1)} out of 5</span></div>
+          <div><span>Price</span><span class="price">${peso(b.p)}</span></div>
+        </div>
+        <button class="btn btn-primary full" onclick="addToCart(${b.id});openCart()">Add to cart, ${peso(b.p)}</button>
+        <p class="note">One copy only. It leaves the shelf when it sells.</p>
+      </div>
+    </div>`;
+  show("modal");
+}
+
+function openHow(){
+  const steps=[["01","Pick your book","Tap a cover, read the condition and summary, add it to the cart."],
+    ["02","Fill the form","Name, address, and a note if you want it wrapped."],
+    ["03","Pay with GCash, Maya or BPI","Scan the QR, send the receipt, and we reserve the copy."],
+    ["04","Wait for the courier","Two to five days nationwide by J&T or LBC."]];
+  document.getElementById("modalBody").innerHTML=`
+    <h3 style="margin-bottom:18px">How ordering works</h3>
+    <div class="meta-rows">${steps.map(s=>`<div style="align-items:flex-start"><span>${s[0]}</span><span style="text-align:right;max-width:46ch"><b style="font-family:var(--display);font-weight:400;font-size:1.08rem;display:block">${s[1]}</b>${s[2]}</span></div>`).join("")}</div>
+    <button class="btn btn-primary full" onclick="closeAll();document.getElementById('shelf').scrollIntoView({behavior:'smooth'})">Start on the shelf</button>`;
+  show("modal");
+}
+
+/* ---- cart ---- */
+function addToCart(id){
+  state.cart[id]=(state.cart[id]||0)+1;
+  state.step="cart";
+  toast(BOOKS.find(b=>b.id===id).t+" added");
+  render();drawCart();
+}
+function setQty(id,d){
+  state.cart[id]=(state.cart[id]||0)+d;
+  if(state.cart[id]<1)delete state.cart[id];
+  render();drawCart();
+}
+function removeItem(id){delete state.cart[id];render();drawCart();}
+
+function cartLines(){return Object.keys(state.cart).map(id=>({b:BOOKS.find(x=>x.id===+id),n:state.cart[id]}));}
+function totals(){
+  const lines=cartLines();
+  const items=lines.reduce((a,l)=>a+l.n,0);
+  const sub=lines.reduce((a,l)=>a+l.b.p*l.n,0);
+  const disc=items>=3?Math.round(sub*0.1):0;
+  const ship=(sub-disc)>=899||!items?0:85;
+  return {items,sub,disc,ship,grand:sub-disc+ship};
+}
+
+function drawCart(){
+  const body=document.getElementById("drawerBody"),foot=document.getElementById("drawerFoot");
+  const t=totals();
+  document.getElementById("drawerTitle").textContent=
+    state.step==="cart"?"Your cart":state.step==="checkout"?"Delivery details":"Order placed";
+
+  if(state.step==="done"){
+    body.innerHTML=`<div class="done">
+      <div class="ring">✓</div>
+      <h3>We are packing it</h3>
+      <p>Send your ${state.pay} receipt to the number on screen and the copy is held for you.</p>
+      <p class="ref">ORDER BV-${String(Math.floor(Math.random()*9000)+1000)}</p>
+      <p class="note">Demo, no payment was taken and no email was sent.</p>
+    </div>`;
+    foot.innerHTML=`<button class="btn btn-ghost full" onclick="state.cart={};state.step='cart';render();drawCart();closeAll()">Back to the shelf</button>`;
+    return;
+  }
+  if(!t.items){
+    body.innerHTML=`<div class="done"><h3>Nothing in the cart yet</h3><p>Add a book from the shelf and it shows up here.</p></div>`;
+    foot.innerHTML=`<button class="btn btn-ghost full" onclick="closeAll();document.getElementById('shelf').scrollIntoView({behavior:'smooth'})">Browse the shelf</button>`;
+    return;
+  }
+  if(state.step==="cart"){
+    body.innerHTML=cartLines().map(l=>`
+      <div class="line">
+        <div class="mini" style="background:${cov(l.b)}"></div>
+        <div style="flex:1;min-width:0">
+          <h4>${l.b.t}</h4>
+          <p>${l.b.a}</p>
+          <p>${l.b.c}, ${peso(l.b.p)}</p>
+          <div class="qty">
+            <button onclick="setQty(${l.b.id},-1)" aria-label="Fewer">−</button>
+            <span class="n">${l.n}</span>
+            <button onclick="setQty(${l.b.id},1)" aria-label="More">+</button>
+          </div>
+        </div>
+        <button class="link-btn" onclick="removeItem(${l.b.id})">Remove</button>
+      </div>`).join("");
+    foot.innerHTML=`
+      <div class="totals">
+        <div><span>Subtotal</span><span>${peso(t.sub)}</span></div>
+        ${t.disc?`<div class="save"><span>Three book discount</span><span>−${peso(t.disc)}</span></div>`:
+          `<div style="opacity:.6"><span>Add ${3-t.items} more for 10% off</span><span></span></div>`}
+        <div><span>Shipping</span><span>${t.ship?peso(t.ship):"Free"}</span></div>
+        <div class="grand"><span>Total</span><span>${peso(t.grand)}</span></div>
+      </div>
+      <button class="btn btn-primary full" onclick="state.step='checkout';drawCart()">Checkout</button>`;
+    return;
+  }
+  body.innerHTML=`
+    <input class="field" id="f-name" placeholder="Full name">
+    <input class="field" id="f-phone" placeholder="Mobile number">
+    <textarea class="field" id="f-addr" rows="3" placeholder="Shipping address"></textarea>
+    <p class="mono" style="color:rgba(238,224,217,.55);margin:18px 0 8px">Payment</p>
+    <div class="pay-opts">
+      ${["GCash","Maya","BPI","Cash on delivery"].map(p=>`<button class="pay ${state.pay===p?"sel":""}" onclick="state.pay='${p}';drawCart()">${p}</button>`).join("")}
+    </div>
+    <input class="field" placeholder="Note, freebies or wrapping">`;
+  foot.innerHTML=`
+    <div class="totals"><div class="grand"><span>${t.items} book${t.items>1?"s":""}</span><span>${peso(t.grand)}</span></div></div>
+    <button class="btn btn-primary full" onclick="placeOrder()">Place order with ${state.pay}</button>
+    <button class="btn btn-ghost full" onclick="state.step='cart';drawCart()">Back to cart</button>
+    <p class="note">Demo checkout, nothing is charged.</p>`;
+}
+
+function placeOrder(){
+  const name=document.getElementById("f-name");
+  if(name&&!name.value.trim()){name.focus();name.style.borderColor="#FF9B00";toast("Add a name first");return;}
+  state.step="done";drawCart();
+}
+
+function openCart(){drawCart();show("drawer");}
+function show(id){document.getElementById(id).classList.add("open");document.getElementById("scrim").classList.add("open");document.body.style.overflow="hidden";}
+function closeAll(){["modal","drawer","scrim"].forEach(i=>document.getElementById(i).classList.remove("open"));document.body.style.overflow="";}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeAll();});
+
+let tid;
+function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");clearTimeout(tid);tid=setTimeout(()=>el.classList.remove("show"),1900);}
+
+render();
+</script>
+</body>
+</html>

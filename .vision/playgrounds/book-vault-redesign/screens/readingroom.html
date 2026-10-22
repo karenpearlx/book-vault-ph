@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Reading Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --burgundy:#4A1C2A; --deep:#2E0F1A; --copper:#FF9B00;
+  --paper:#F4E9D8; --paper-2:#EEE0D9; --ink:#3A2018; --ink-soft:#75594C;
+  --line:rgba(74,28,42,.16);
+  --serif:"Cormorant Garamond",Georgia,serif;
+  --display:"Playfair Display",Georgia,serif;
+  --mono:"DM Mono",ui-monospace,Menlo,monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;overflow-x:clip}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,44px)}
+.mono{font-family:var(--mono);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase}
+
+/* masthead */
+.masthead{background:var(--deep);color:var(--paper)}
+.mast-top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0;flex-wrap:wrap}
+.mast-left{display:flex;align-items:center;gap:12px;min-width:0}
+.mast-word{font-family:var(--display);font-size:1.1rem;white-space:nowrap}
+.mast-word em{font-style:italic;color:var(--copper)}
+.mast-date{font-family:var(--mono);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,233,216,.55);white-space:nowrap}
+@media(max-width:1000px){.mast-date{display:none}}
+.mast-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.ghost-btn{background:transparent;border:1px solid rgba(255,155,0,.4);color:var(--paper);border-radius:999px;padding:8px 15px;font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase}
+.ghost-btn:hover{border-color:var(--copper);color:var(--copper)}
+.cart-btn{background:var(--copper);border:0;color:#2A1004;border-radius:999px;padding:9px 16px;font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase}
+.search-row{padding-bottom:14px}
+.search{display:flex;align-items:center;background:rgba(244,233,216,.08);border:1px solid rgba(255,155,0,.25);border-radius:999px;padding:4px 5px 4px 16px}
+.search:focus-within{border-color:var(--copper)}
+.search svg{width:16px;height:16px;color:var(--copper);flex:0 0 16px}
+.search input{flex:1;min-width:0;border:0;background:transparent;outline:none;color:var(--paper);font-family:var(--serif);font-size:1rem;padding:9px 12px}
+.search input::placeholder{color:rgba(244,233,216,.45);font-style:italic}
+
+/* feature spread */
+.feature{background:linear-gradient(180deg,#2E0F1A,#3A1522);color:var(--paper);border-bottom:3px double rgba(255,155,0,.35)}
+.feature-inner{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,4vw,56px);align-items:center;padding:clamp(34px,5vw,64px) 0}
+@media(max-width:860px){.feature-inner{grid-template-columns:1fr;gap:28px}}
+.feature-cover{aspect-ratio:2/3;max-width:270px;width:100%;border-radius:4px 10px 10px 4px;padding:26px 22px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 30px 60px -28px rgba(0,0,0,.9);cursor:pointer;transition:transform .25s}
+.feature-cover:hover{transform:translateY(-6px)}
+.feature-cover .fg{font-family:var(--mono);font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.feature-cover .ft{font-family:var(--display);font-style:italic;font-size:1.7rem;line-height:1.08;color:#fff}
+.feature .eyebrow{color:var(--copper);margin:0 0 14px}
+.feature h1{font-family:var(--display);font-weight:400;font-size:clamp(2rem,4.6vw,3.2rem);line-height:1.05;margin:0 0 6px}
+.feature .by{font-family:var(--display);font-style:italic;color:rgba(244,233,216,.7);margin:0 0 16px;font-size:1.15rem}
+.feature p.blurb{margin:0 0 22px;max-width:52ch;color:rgba(244,233,216,.84)}
+.feature-meta{display:flex;flex-wrap:wrap;gap:22px;margin-bottom:22px}
+.feature-meta div span{display:block}
+.feature-meta .k{font-family:var(--mono);font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,233,216,.5);margin-bottom:3px}
+.feature-meta .v{font-family:var(--display);font-size:1.15rem}
+.row-btns{display:flex;flex-wrap:wrap;gap:10px}
+.btn{border:0;border-radius:999px;padding:12px 22px;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn-copper{background:var(--copper);color:#2A1004}
+.btn-copper:hover{background:var(--paper)}
+.btn-outline{background:transparent;border:1px solid rgba(244,233,216,.4);color:var(--paper)}
+.btn-outline:hover{border-color:var(--copper);color:var(--copper)}
+.btn-ink{background:var(--burgundy);color:var(--paper)}
+.btn-ink:hover{background:var(--deep)}
+.btn-line{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.btn-line:hover{border-color:var(--burgundy)}
+.full{display:flex;width:100%;margin-top:10px}
+
+/* shelves */
+.shelves{padding:clamp(34px,5vw,60px) 0 20px}
+.shelf{margin-bottom:clamp(30px,4vw,48px)}
+.shelf-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.shelf-head h2{font-family:var(--display);font-weight:400;font-size:clamp(1.5rem,3vw,2rem);margin:0}
+.shelf-head h2 em{font-style:italic;color:var(--burgundy)}
+.shelf-head .sub{margin:3px 0 0;color:var(--ink-soft);font-size:1rem}
+.arrows{display:flex;gap:7px;flex-shrink:0}
+.arrows button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--burgundy);display:grid;place-items:center;line-height:1}
+.arrows button:hover{background:var(--burgundy);color:var(--paper);border-color:var(--burgundy)}
+.rail{display:flex;gap:16px;overflow-x:auto;scroll-behavior:smooth;padding:4px 2px 14px;scrollbar-width:thin}
+.rail::-webkit-scrollbar{height:6px}
+.rail::-webkit-scrollbar-thumb{background:rgba(74,28,42,.25);border-radius:4px}
+.tile{flex:0 0 150px;display:flex;flex-direction:column;gap:8px;background:transparent;border:0;padding:0;text-align:left;cursor:pointer}
+.tile .cv{position:relative;aspect-ratio:2/3;border-radius:3px 7px 7px 3px;padding:14px 12px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 14px 30px -18px rgba(46,15,26,.8);transition:transform .22s}
+.tile:hover .cv{transform:translateY(-6px)}
+.cv::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(255,255,255,.15),transparent 30%)}
+.cv .g,.cv .au{font-family:var(--mono);font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.78);position:relative;z-index:2}
+.cv .tt{font-family:var(--display);font-style:italic;font-size:1rem;line-height:1.12;color:#fff;position:relative;z-index:2}
+.cv .badge{position:absolute;top:8px;right:8px;z-index:3;background:rgba(244,233,216,.92);color:var(--ink);border-radius:999px;padding:3px 8px;font-family:var(--mono);font-size:.46rem;letter-spacing:.1em;text-transform:uppercase}
+.tile h3{font-family:var(--display);font-weight:400;font-size:.98rem;line-height:1.25;margin:0}
+.tile .pr{font-family:var(--mono);font-size:.72rem;color:var(--burgundy)}
+.rail-empty{color:var(--ink-soft);padding:16px 2px 24px}
+
+/* request */
+.request{background:var(--paper-2);border-top:1px solid var(--line)}
+.request-inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(22px,4vw,52px);padding:clamp(34px,5vw,58px) 0;align-items:center}
+@media(max-width:860px){.request-inner{grid-template-columns:1fr;gap:24px}}
+.request h2{font-family:var(--display);font-weight:400;font-size:clamp(1.7rem,3.4vw,2.3rem);margin:0 0 10px}
+.request h2 em{font-style:italic;color:var(--burgundy)}
+.request p{margin:0;color:var(--ink-soft);max-width:44ch}
+.form-card{background:#FFFDFA;border:1px solid var(--line);border-radius:14px;padding:22px}
+.field{display:block;width:100%;border:1px solid var(--line);border-radius:9px;background:#fff;padding:11px 13px;font-family:var(--serif);font-size:1rem;color:var(--ink);margin-bottom:10px;outline:none}
+.field:focus{border-color:var(--burgundy)}
+.field::placeholder{color:var(--ink-soft);font-style:italic}
+.form-ok{display:none;text-align:center;padding:14px 4px}
+.form-ok.show{display:block}
+.form-ok h3{font-family:var(--display);font-weight:400;font-size:1.4rem;margin:0 0 6px}
+.form-ok p{margin:0 auto;color:var(--ink-soft)}
+.note{font-family:var(--mono);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);text-align:center;margin-top:10px}
+
+/* steps */
+.steps-sec{padding:clamp(34px,5vw,58px) 0}
+.steps-sec h2{font-family:var(--display);font-weight:400;font-size:clamp(1.7rem,3.4vw,2.3rem);margin:0 0 20px}
+.steps-sec h2 em{font-style:italic;color:var(--burgundy)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:clamp(16px,2.4vw,28px)}
+.step{background:#FFFDFA;border:1px solid var(--line);border-radius:12px;padding:20px 18px;text-align:left}
+.step.on{border-color:var(--burgundy);box-shadow:0 14px 30px -22px rgba(46,15,26,.7)}
+.step .num{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;color:var(--copper);margin-bottom:8px}
+.step h4{font-family:var(--display);font-weight:400;font-size:1.2rem;margin:0 0 6px}
+.step p{margin:0;color:var(--ink-soft);font-size:.98rem}
+
+/* footer */
+.footer{background:var(--deep);color:rgba(244,233,216,.65);padding:40px 0 54px;font-size:.96rem}
+.footer-inner{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+.footer a:hover{color:var(--copper)}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(26,8,16,.5);opacity:0;pointer-events:none;transition:opacity .2s;z-index:70}
+.scrim.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;z-index:80;top:0;right:0;height:100%;width:min(440px,100vw);background:#FFFDFA;border-left:1px solid var(--line);transform:translateX(102%);transition:transform .26s;display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.d-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--line)}
+.d-head h3{font-family:var(--display);font-weight:400;font-size:1.3rem;margin:0}
+.d-body{flex:1;overflow:auto;padding:20px 22px}
+.d-foot{padding:16px 22px;border-top:1px solid var(--line);background:var(--paper-2)}
+.close{background:none;border:0;font-size:1.5rem;line-height:1;color:var(--ink-soft)}
+.close:hover{color:var(--burgundy)}
+.d-cover{aspect-ratio:2/3;max-width:160px;border-radius:5px;padding:15px 13px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 16px 34px -22px rgba(46,15,26,.8)}
+.rows{margin:16px 0;border-top:1px solid var(--line)}
+.rows div{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.98rem}
+.rows span:first-child{font-family:var(--mono);font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
+.line{display:flex;gap:13px;padding:13px 0;border-bottom:1px solid var(--line)}
+.mini{width:44px;height:66px;border-radius:3px;flex-shrink:0}
+.line h4{font-family:var(--display);font-weight:400;font-size:1rem;margin:0 0 2px;line-height:1.2}
+.line p{margin:0;color:var(--ink-soft);font-size:.88rem}
+.qty{display:flex;align-items:center;gap:9px;margin-top:7px}
+.qty button{width:25px;height:25px;border-radius:50%;border:1px solid var(--line);background:transparent;display:grid;place-items:center;line-height:1}
+.qty .n{font-family:var(--mono);font-size:.76rem;min-width:12px;text-align:center}
+.link-btn{background:none;border:0;margin-left:auto;align-self:flex-start;padding:0;font-family:var(--mono);font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);text-decoration:underline}
+.totals div{display:flex;justify-content:space-between;padding:4px 0;font-size:.98rem}
+.totals .grand{font-family:var(--display);font-size:1.25rem;border-top:1px solid var(--line);margin-top:6px;padding-top:9px}
+.save{color:#1E6F5C}
+.pay-opts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.pay{border:1px solid var(--line);background:#fff;border-radius:9px;padding:11px;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase}
+.pay.sel{border-color:var(--burgundy);background:rgba(74,28,42,.07);color:var(--burgundy)}
+.done{text-align:center;padding:28px 4px}
+.done .ring{width:60px;height:60px;border-radius:50%;background:var(--burgundy);color:var(--paper);display:grid;place-items:center;font-size:1.5rem;margin:0 auto 16px}
+.done h3{font-family:var(--display);font-weight:400;font-size:1.6rem;margin:0 0 8px}
+.done p{color:var(--ink-soft);max-width:30ch;margin:0 auto 10px}
+.ref{font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;color:var(--burgundy)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:100;background:var(--deep);color:var(--paper);border-radius:999px;padding:10px 20px;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;opacity:0;pointer-events:none;transition:.2s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+
+<header class="masthead" id="top">
+  <div class="wrap">
+    <div class="mast-top">
+      <div class="mast-left">
+        <span class="mast-word">The Book <em>Vault</em></span>
+        <span class="mast-date">San Carlos City, Negros Occidental</span>
+      </div>
+      <div class="mast-actions">
+        <button class="ghost-btn" onclick="document.getElementById('request').scrollIntoView({behavior:'smooth'})">Request a title</button>
+        <button class="cart-btn" onclick="openCart()">Cart <span id="cartCount">0</span></button>
+      </div>
+    </div>
+    <div class="search-row">
+      <form class="search" onsubmit="event.preventDefault();document.getElementById('shelves').scrollIntoView({behavior:'smooth'})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search the shelves by title or author" oninput="state.q=this.value.trim().toLowerCase();renderShelves()">
+      </form>
+    </div>
+  </div>
+</header>
+
+<section class="feature">
+  <div class="wrap feature-inner">
+    <div class="feature-cover" id="featCover" onclick="openBook(3)"></div>
+    <div>
+      <p class="eyebrow mono">Pick of the week</p>
+      <h1 id="featTitle"></h1>
+      <p class="by" id="featBy"></p>
+      <p class="blurb" id="featBlurb"></p>
+      <div class="feature-meta" id="featMeta"></div>
+      <div class="row-btns">
+        <button class="btn btn-copper" onclick="addToCart(3);openCart()">Add to cart, <span id="featPrice"></span></button>
+        <button class="btn btn-outline" onclick="openBook(3)">Read the details</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap shelves" id="shelves"></main>
+
+<section class="request" id="request">
+  <div class="wrap request-inner">
+    <div>
+      <h2>Hunting a <em>specific title?</em></h2>
+      <p>Tell us what you are after. We check it against the next batch before anything goes on the shelf.</p>
+    </div>
+    <div class="form-card">
+      <form id="reqForm" onsubmit="submitRequest(event)">
+        <input class="field" id="reqTitle" placeholder="Title or author you want">
+        <input class="field" id="reqName" placeholder="Your name">
+        <input class="field" id="reqContact" placeholder="Instagram handle or email">
+        <button class="btn btn-ink full" type="submit" style="margin-top:4px">Send the request</button>
+        <p class="note">Demo form, nothing is sent</p>
+      </form>
+      <div class="form-ok" id="reqOk">
+        <h3>On the list</h3>
+        <p id="reqOkText"></p>
+        <button class="btn btn-line full" onclick="resetRequest()">Request another</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap steps-sec">
+  <h2>How ordering <em>works</em></h2>
+  <div class="steps" id="steps"></div>
+</section>
+
+<footer class="footer"><div class="wrap footer-inner">
+  <span>The Book Vault PH, pre-loved books shipped nationwide</span>
+  <span><a href="#shelves">Shelves</a> &nbsp; <a href="#request">Request a title</a> &nbsp; <a href="#" onclick="event.preventDefault();toast('Demo, Instagram opens on the live site')">Instagram</a></span>
+</div></footer>
+
+<div class="scrim" id="scrim" onclick="closeAll()"></div>
+<aside class="drawer" id="drawer">
+  <div class="d-head"><h3 id="dTitle">Cart</h3><button class="close" onclick="closeAll()" aria-label="Close">&times;</button></div>
+  <div class="d-body" id="dBody"></div>
+  <div class="d-foot" id="dFoot"></div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script>
+const BOOKS=[
+  {id:1,t:"Snowdrops",a:"A. D. Miller",g:"Thriller",c:"Very good",p:180,r:4.1,s:"A British lawyer in Moscow talks himself into a deal he knows is rotten. Winter sets in, the snow melts, and what was under it comes up."},
+  {id:2,t:"The Secret of Crickley Hall",a:"James Herbert",g:"Horror",c:"Good",p:320,r:4.3,s:"A grieving family rents an old house in the north of England. The cellar door will not stay shut and the children in the walls are not theirs."},
+  {id:3,t:"I Will Find You",a:"Harlan Coben",g:"Thriller",c:"Like new",p:350,r:4.5,s:"Five years into a life sentence for killing his own son, a father is shown a photograph of a boy who should be dead. He breaks out of prison the same week."},
+  {id:4,t:"Havana Storm",a:"Clive Cussler",g:"Thriller",c:"Good",p:250,r:3.9,s:"A toxic plume in the Caribbean leads Dirk Pitt to a Cuban secret buried since the revolution."},
+  {id:5,t:"The Dark Heroine",a:"Abigail Gibbs",g:"Fantasy",c:"Very good",p:230,r:3.8,s:"A girl walks into the wrong Trafalgar Square massacre and leaves it as the only witness the vampires cannot kill."},
+  {id:6,t:"Catch Your Death",a:"Louise Voss",g:"Mystery",c:"Well-loved",p:190,r:4.0,s:"A cold research facility, a virus nobody admits to, and a woman whose childhood file has been quietly rewritten."},
+  {id:7,t:"The Favor",a:"Nicci French",g:"Thriller",c:"Very good",p:280,r:4.2,s:"An old friend asks for an alibi. Giving it costs less than refusing, right up until the police arrive."},
+  {id:8,t:"In Bitter Chill",a:"Sarah Ward",g:"Mystery",c:"Good",p:175,r:4.0,s:"Two girls were taken in 1978. One walked home. Thirty years later her mother is found dead in a hotel room."},
+  {id:9,t:"The Broker",a:"John Grisham",g:"Thriller",c:"Good",p:260,r:4.1,s:"A pardoned Washington power broker is parked in Bologna with a new name and four governments listening for him to use a phone."},
+  {id:10,t:"Five Quarters of the Orange",a:"Joanne Harris",g:"Fiction",c:"Very good",p:210,r:4.4,s:"A woman returns to her mother's village under a false name, carrying the recipe album that records what happened in the war."},
+  {id:11,t:"The Danish Girl",a:"David Ebershoff",g:"Fiction",c:"Like new",p:240,r:4.3,s:"Copenhagen, 1925. A painter asks her husband to sit for her in a dress, and neither marriage nor name survives it."},
+  {id:12,t:"Escape to the Little Cornish Isles",a:"Phillipa Ashley",g:"Romance",c:"Good",p:165,r:4.0,s:"A failed studio on a tiny Scilly island, a lease that runs out in spring, and the one person who knows why it closed."},
+  {id:13,t:"No Child of Mine",a:"Susan Lewis",g:"Fiction",c:"Well-loved",p:200,r:4.2,s:"A social worker with a full caseload keeps coming back to one quiet girl whose file says nothing is wrong."},
+  {id:14,t:"The Grasmere Grudge",a:"Rebecca Tope",g:"Mystery",c:"Very good",p:185,r:3.9,s:"A Lake District antiques dealer is found dead in his own van, and the florist who booked him last is the one holding the key."},
+  {id:15,t:"Sleeping in the Ground",a:"Peter Robinson",g:"Mystery",c:"Good",p:220,r:4.1,s:"A sniper opens fire on a Yorkshire wedding party. Banks knows the bride's family from a case he closed too fast."},
+  {id:16,t:"Mothers and Daughters",a:"Erica James",g:"Romance",c:"Very good",p:150,r:3.8,s:"Three women, one house in Cheshire, and a will that gives it to the daughter who left."}
+];
+const SHELVES=[
+  {g:"Thriller",sub:"The ones people come back for"},
+  {g:"Mystery",sub:"Quiet towns, bad outcomes"},
+  {g:"Romance",sub:"Small towns and second chances"},
+  {g:"Horror",sub:"Read these with the light on"},
+  {g:"Fiction",sub:"Literary copies in good shape"},
+  {g:"Fantasy",sub:"A small corner, restocked often"}
+];
+const PALETTE={Thriller:["#7a2c40","#3b1119"],Mystery:["#284842","#0f2521"],Romance:["#a4445e","#5c1f30"],Fantasy:["#4a2f50","#28162e"],Horror:["#2b2b33","#111114"],Fiction:["#a85a25","#5e3010"]};
+const cov=b=>`linear-gradient(170deg,${PALETTE[b.g][0]},${PALETTE[b.g][1]})`;
+const peso=n=>"₱"+n.toLocaleString("en-PH");
+
+let state={q:"",cart:{},view:"cart",pay:"GCash",step:0};
+
+/* feature */
+const F=BOOKS.find(b=>b.id===3);
+document.getElementById("featCover").style.background=cov(F);
+document.getElementById("featCover").innerHTML=`<span class="fg">${F.g}, ${F.c}</span><span class="ft">${F.t}</span><span class="fg">${F.a}</span>`;
+document.getElementById("featTitle").textContent=F.t;
+document.getElementById("featBy").textContent=F.a;
+document.getElementById("featBlurb").textContent=F.s;
+document.getElementById("featPrice").textContent=peso(F.p);
+document.getElementById("featMeta").innerHTML=[["Condition",F.c],["Rating",F.r.toFixed(1)+" out of 5"],["Price",peso(F.p)],["Stock","1 copy"]]
+  .map(m=>`<div><span class="k">${m[0]}</span><span class="v">${m[1]}</span></div>`).join("");
+
+/* shelves */
+function renderShelves(){
+  const host=document.getElementById("shelves");
+  const q=state.q;
+  const sections=SHELVES.map(s=>{
+    const list=BOOKS.filter(b=>b.g===s.g&&(!q||b.t.toLowerCase().includes(q)||b.a.toLowerCase().includes(q)));
+    if(q&&!list.length)return "";
+    return `<section class="shelf">
+      <div class="shelf-head">
+        <div>
+          <h2>${s.g}</h2>
+          <p class="sub">${q?list.length+" matching this search":s.sub}</p>
+        </div>
+        <div class="arrows">
+          <button onclick="scrollRail('rail-${s.g}',-1)" aria-label="Scroll left">←</button>
+          <button onclick="scrollRail('rail-${s.g}',1)" aria-label="Scroll right">→</button>
+        </div>
+      </div>
+      <div class="rail" id="rail-${s.g}">
+        ${list.map(b=>`
+          <button class="tile" onclick="openBook(${b.id})">
+            <span class="cv" style="background:${cov(b)}">
+              <span class="badge">${b.c}</span>
+              <span class="g">${b.g}</span>
+              <span class="tt">${b.t}</span>
+              <span class="au">${b.a}</span>
+            </span>
+            <h3>${b.t}</h3>
+            <span class="pr">${peso(b.p)}</span>
+          </button>`).join("")}
+      </div>
+    </section>`;
+  }).join("");
+  host.innerHTML=sections||`<div class="rail-empty">
+    <h2 style="font-family:var(--display);font-weight:400;margin:0 0 8px">Nothing on the shelves matches that</h2>
+    <p style="margin:0 0 14px">Send it as a request and we will look for it in the next batch.</p>
+    <button class="btn btn-ink" onclick="prefillRequest()">Request this title</button></div>`;
+}
+function scrollRail(id,dir){const el=document.getElementById(id);if(el)el.scrollBy({left:dir*330,behavior:"smooth"});}
+
+/* request form */
+function prefillRequest(){
+  document.getElementById("reqTitle").value=document.getElementById("q").value;
+  document.getElementById("request").scrollIntoView({behavior:"smooth"});
+  setTimeout(()=>document.getElementById("reqName").focus(),420);
+}
+function submitRequest(e){
+  e.preventDefault();
+  const t=document.getElementById("reqTitle"),n=document.getElementById("reqName");
+  if(!t.value.trim()){t.focus();t.style.borderColor="#C62B48";toast("Add a title first");return;}
+  document.getElementById("reqForm").style.display="none";
+  document.getElementById("reqOkText").textContent=
+    `We will message ${n.value.trim()||"you"} when ${t.value.trim()} turns up in a batch.`;
+  document.getElementById("reqOk").classList.add("show");
+  toast("Request logged, demo only");
+}
+function resetRequest(){
+  ["reqTitle","reqName","reqContact"].forEach(i=>{const el=document.getElementById(i);el.value="";el.style.borderColor="";});
+  document.getElementById("reqOk").classList.remove("show");
+  document.getElementById("reqForm").style.display="block";
+}
+
+/* steps */
+const STEPS=[["01","Pick your book","Tap any cover on the shelves and read the condition before you decide."],
+  ["02","Fill the form","Name, address, and a note if you want it wrapped."],
+  ["03","Pay your way","GCash, Maya, BPI or cash on delivery. Send the receipt and we hold the copy."],
+  ["04","Wait for the courier","Two to five days nationwide by J&T or LBC."]];
+function renderSteps(){
+  document.getElementById("steps").innerHTML=STEPS.map((s,i)=>`
+    <button class="step ${state.step===i?"on":""}" onclick="state.step=${i};renderSteps()">
+      <div class="num">${s[0]}</div><h4>${s[1]}</h4><p>${state.step===i?s[2]:""}</p>
+      ${state.step===i?"":`<p style="opacity:.65">Tap to read</p>`}
+    </button>`).join("");
+}
+
+/* cart */
+function cartLines(){return Object.keys(state.cart).map(id=>({b:BOOKS.find(x=>x.id===+id),n:state.cart[id]}));}
+function totals(){
+  const l=cartLines(),items=l.reduce((a,x)=>a+x.n,0),sub=l.reduce((a,x)=>a+x.b.p*x.n,0);
+  const disc=items>=3?Math.round(sub*0.1):0, ship=(!items||sub-disc>=899)?0:85;
+  return {items,sub,disc,ship,grand:sub-disc+ship};
+}
+function addToCart(id){state.cart[id]=(state.cart[id]||0)+1;state.view="cart";toast(BOOKS.find(b=>b.id===id).t+" added");syncCount();if(document.getElementById("drawer").classList.contains("open"))draw();}
+function setQty(id,d){state.cart[id]=(state.cart[id]||0)+d;if(state.cart[id]<1)delete state.cart[id];syncCount();draw();}
+function removeItem(id){delete state.cart[id];syncCount();draw();}
+function syncCount(){document.getElementById("cartCount").textContent=totals().items;}
+
+function openBook(id){state.view="book:"+id;draw();show();}
+function openCart(){state.view="cart";draw();show();}
+
+function draw(){
+  const body=document.getElementById("dBody"),foot=document.getElementById("dFoot"),ttl=document.getElementById("dTitle");
+  const t=totals();
+  if(state.view.startsWith("book:")){
+    const b=BOOKS.find(x=>x.id===+state.view.split(":")[1]);
+    ttl.textContent="Book details";
+    body.innerHTML=`
+      <div class="d-cover" style="background:${cov(b)}">
+        <span style="font-family:var(--mono);font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.8)">${b.g}</span>
+        <span style="font-family:var(--display);font-style:italic;font-size:1.15rem;color:#fff;line-height:1.1">${b.t}</span>
+      </div>
+      <h3 style="font-family:var(--display);font-weight:400;font-size:1.6rem;margin:16px 0 2px">${b.t}</h3>
+      <p style="margin:0;color:var(--ink-soft)">${b.a}</p>
+      <p style="margin:14px 0 0">${b.s}</p>
+      <div class="rows">
+        <div><span>Condition</span><span>${b.c}</span></div>
+        <div><span>Genre</span><span>${b.g}</span></div>
+        <div><span>Rating</span><span>${b.r.toFixed(1)} out of 5</span></div>
+        <div><span>Stock</span><span>1 copy</span></div>
+      </div>`;
+    foot.innerHTML=`
+      <button class="btn btn-ink full" style="margin-top:0" onclick="addToCart(${b.id});state.view='cart';draw()">Add to cart, ${peso(b.p)}</button>
+      <button class="btn btn-line full" onclick="state.view='cart';draw()">View cart</button>`;
+    return;
+  }
+  if(state.view==="done"){
+    ttl.textContent="Order placed";
+    body.innerHTML=`<div class="done"><div class="ring">✓</div>
+      <h3>Held for you</h3>
+      <p>Send your ${state.pay} receipt and the parcel goes out today.</p>
+      <p class="ref">ORDER BV-${String(Math.floor(Math.random()*9000)+1000)}</p>
+      <p class="note">Demo, no payment taken and no email sent</p></div>`;
+    foot.innerHTML=`<button class="btn btn-line full" style="margin-top:0" onclick="state.cart={};state.view='cart';syncCount();closeAll()">Back to the shelves</button>`;
+    return;
+  }
+  if(state.view==="checkout"){
+    ttl.textContent="Delivery details";
+    body.innerHTML=`
+      <input class="field" id="f-name" placeholder="Full name">
+      <input class="field" placeholder="Mobile number">
+      <textarea class="field" rows="3" placeholder="Shipping address"></textarea>
+      <p class="mono" style="color:var(--ink-soft);margin:16px 0 8px">Payment</p>
+      <div class="pay-opts">${["GCash","Maya","BPI","Cash on delivery"].map(p=>`<button class="pay ${state.pay===p?"sel":""}" onclick="state.pay='${p}';draw()">${p}</button>`).join("")}</div>
+      <input class="field" placeholder="Note, freebies or wrapping">`;
+    foot.innerHTML=`
+      <div class="totals"><div class="grand"><span>${t.items} book${t.items>1?"s":""}</span><span>${peso(t.grand)}</span></div></div>
+      <button class="btn btn-ink full" onclick="placeOrder()">Place order with ${state.pay}</button>
+      <button class="btn btn-line full" onclick="state.view='cart';draw()">Back to cart</button>
+      <p class="note">Demo checkout, nothing is charged</p>`;
+    return;
+  }
+  ttl.textContent="Your cart";
+  if(!t.items){
+    body.innerHTML=`<div class="done"><h3>Cart is empty</h3><p>Pick a cover from any shelf and it lands here.</p></div>`;
+    foot.innerHTML=`<button class="btn btn-line full" style="margin-top:0" onclick="closeAll();document.getElementById('shelves').scrollIntoView({behavior:'smooth'})">Back to the shelves</button>`;
+    return;
+  }
+  body.innerHTML=cartLines().map(l=>`
+    <div class="line">
+      <div class="mini" style="background:${cov(l.b)}"></div>
+      <div style="flex:1;min-width:0">
+        <h4>${l.b.t}</h4><p>${l.b.a}</p><p>${l.b.c}, ${peso(l.b.p)}</p>
+        <div class="qty">
+          <button onclick="setQty(${l.b.id},-1)" aria-label="Fewer">−</button>
+          <span class="n">${l.n}</span>
+          <button onclick="setQty(${l.b.id},1)" aria-label="More">+</button>
+        </div>
+      </div>
+      <button class="link-btn" onclick="removeItem(${l.b.id})">Remove</button>
+    </div>`).join("");
+  foot.innerHTML=`
+    <div class="totals">
+      <div><span>Subtotal</span><span>${peso(t.sub)}</span></div>
+      ${t.disc?`<div class="save"><span>Three book discount</span><span>−${peso(t.disc)}</span></div>`:`<div style="opacity:.65"><span>Add ${3-t.items} more for 10% off</span><span></span></div>`}
+      <div><span>Shipping</span><span>${t.ship?peso(t.ship):"Free"}</span></div>
+      <div class="grand"><span>Total</span><span>${peso(t.grand)}</span></div>
+    </div>
+    <button class="btn btn-ink full" onclick="state.view='checkout';draw()">Checkout</button>`;
+}
+function placeOrder(){
+  const n=document.getElementById("f-name");
+  if(n&&!n.value.trim()){n.focus();n.style.borderColor="#C62B48";toast("Add a name first");return;}
+  state.view="done";draw();
+}
+function show(){document.getElementById("drawer").classList.add("open");document.getElementById("scrim").classList.add("open");document.body.style.overflow="hidden";}
+function closeAll(){document.getElementById("drawer").classList.remove("open");document.getElementById("scrim").classList.remove("open");document.body.style.overflow="";}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeAll();});
+let tid;function toast(m){const e=document.getElementById("toast");e.textContent=m;e.classList.add("show");clearTimeout(tid);tid=setTimeout(()=>e.classList.remove("show"),1800);}
+
+renderShelves();renderSteps();syncCount();
+</script>
+</body>
+</html>
