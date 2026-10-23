@@ -1,11 +1,11 @@
 {
   "trailingSlash": false,
   "routes": [
-    { "src": "/__ogtool-verify", "dest": "https://5fe7639a-b520-40ec-90fb-bade1def9b2b.blogs.ogtool.com/__ogtool-verify" },
-    { "src": "/blog/__ogtool-verify", "dest": "https://5fe7639a-b520-40ec-90fb-bade1def9b2b.blogs.ogtool.com/__ogtool-verify" },
-    { "src": "/blog", "dest": "https://5fe7639a-b520-40ec-90fb-bade1def9b2b.blogs.ogtool.com/blog" },
-    { "src": "/blog\\.data", "dest": "https://5fe7639a-b520-40ec-90fb-bade1def9b2b.blogs.ogtool.com/blog.data" },
-    { "src": "/blog/(.*)", "dest": "https://5fe7639a-b520-40ec-90fb-bade1def9b2b.blogs.ogtool.com/blog/$1" },
+    { "src": "/__ogtool-verify", "dest": "https://06416af9-1cb1-4910-8b87-c631b31038b2.blogs.ogtool.com/__ogtool-verify" },
+    { "src": "/blog/__ogtool-verify", "dest": "https://06416af9-1cb1-4910-8b87-c631b31038b2.blogs.ogtool.com/__ogtool-verify" },
+    { "src": "/blog", "dest": "https://06416af9-1cb1-4910-8b87-c631b31038b2.blogs.ogtool.com/blog" },
+    { "src": "/blog\\.data", "dest": "https://06416af9-1cb1-4910-8b87-c631b31038b2.blogs.ogtool.com/blog.data" },
+    { "src": "/blog/(.*)", "dest": "https://06416af9-1cb1-4910-8b87-c631b31038b2.blogs.ogtool.com/blog/$1" },
     { "src": "/blogs(/.*)?", "status": 301, "headers": { "Location": "/blog" } },
     { "handle": "filesystem" },
     { "src": "/admin$", "dest": "/admin.html" },

@@ -13,7 +13,7 @@ app.disable('x-powered-by');
 // OGTool-hosted blog, reverse-proxied (200 rewrite, never a redirect).
 // The full path must reach the blog unchanged — its client-side navigation
 // fetches /blog/<slug>.data, and stripping the prefix breaks post clicks.
-const BLOG_ORIGIN = 'https://5fe7639a-b520-40ec-90fb-bade1def9b2b.blogs.ogtool.com';
+const BLOG_ORIGIN = 'https://06416af9-1cb1-4910-8b87-c631b31038b2.blogs.ogtool.com';
 async function proxyBlog(req, res, overridePath) {
   try {
     const hasBody = !['GET', 'HEAD'].includes(req.method);
