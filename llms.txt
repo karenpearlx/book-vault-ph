@@ -1,0 +1,10 @@
+# The Book Vault PH
+
+> Online shop for pre-loved books in the Philippines, based in San Carlos City, Negros Occidental. Most books cost ₱150 to ₱350. Ships nationwide; payment by GCash, Maya, BPI, or cash on delivery.
+
+## Pages
+
+- [Browse the shelf](https://www.thebookvaultph.com/browse): the full catalog of books currently in stock
+- [Coming soon](https://www.thebookvaultph.com/coming-soon): titles arriving next
+- [Blog](https://www.thebookvaultph.com/blog): articles on book collecting and reading, with its own sitemap at https://www.thebookvaultph.com/blog/sitemap.xml and feed at https://www.thebookvaultph.com/blog/rss.xml
+- [Contact](https://www.thebookvaultph.com/contact): email info@thebookvaultph.com, Instagram @thebookvaultph
