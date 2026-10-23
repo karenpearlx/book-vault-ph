@@ -14,26 +14,30 @@ app.disable('x-powered-by');
 // The full path must reach the blog unchanged — its client-side navigation
 // fetches /blog/<slug>.data, and stripping the prefix breaks post clicks.
 const BLOG_ORIGIN = 'https://5fe7639a-b520-40ec-90fb-bade1def9b2b.blogs.ogtool.com';
-async function proxyBlog(req, res) {
+async function proxyBlog(req, res, overridePath) {
   try {
     const hasBody = !['GET', 'HEAD'].includes(req.method);
-    const upstream = await fetch(BLOG_ORIGIN + req.originalUrl, {
+    // Forward every request header except hop-by-hop ones; fetch sets Host
+    // to the blog origin itself (its edge routes by Host).
+    const fwd = {};
+    const dropReq = new Set(['host', 'connection', 'content-length', 'accept-encoding', 'transfer-encoding']);
+    for (const [k, v] of Object.entries(req.headers)) {
+      if (!dropReq.has(k.toLowerCase())) fwd[k] = v;
+    }
+    fwd['x-forwarded-host'] = req.headers.host || '';
+    fwd['x-forwarded-proto'] = 'https';
+    const upstream = await fetch(BLOG_ORIGIN + (typeof overridePath === 'string' ? overridePath : req.originalUrl), {
       method: req.method,
-      headers: {
-        accept: req.headers.accept || '*/*',
-        'accept-language': req.headers['accept-language'] || 'en',
-        'user-agent': req.headers['user-agent'] || 'bookvaultph-proxy',
-        'x-forwarded-host': req.headers.host || '',
-        'x-forwarded-proto': 'https',
-        ...(req.headers['content-type'] ? { 'content-type': req.headers['content-type'] } : {}),
-      },
+      headers: fwd,
       ...(hasBody ? { body: req, duplex: 'half' } : {}),
       redirect: 'manual',
     });
     res.status(upstream.status);
-    for (const h of ['content-type', 'cache-control', 'etag', 'last-modified']) {
-      const v = upstream.headers.get(h);
-      if (v) res.set(h, v);
+    // Return every upstream header except ones that no longer apply
+    // (fetch already decompressed the body).
+    const dropRes = new Set(['content-encoding', 'content-length', 'transfer-encoding', 'connection', 'location']);
+    for (const [k, v] of upstream.headers.entries()) {
+      if (!dropRes.has(k.toLowerCase())) res.append(k, v);
     }
     // Keep upstream redirects on this domain; never expose the ogtool.com URL.
     const loc = upstream.headers.get('location');
@@ -46,6 +50,9 @@ async function proxyBlog(req, res) {
 }
 app.all('/blog', proxyBlog);
 app.all('/blog.data', proxyBlog);
+// OGTool's verifier fetches <section>/__ogtool-verify expecting the JSON that
+// the hosted blog only serves at its root verify route, so map it there.
+app.all('/blog/__ogtool-verify', (req, res) => proxyBlog(req, res, '/__ogtool-verify'));
 app.all('/blog/*', proxyBlog);
 // OGTool's proxy-detection endpoint at the site root.
 app.all('/__ogtool-verify', proxyBlog);
