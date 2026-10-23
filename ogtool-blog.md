@@ -2,7 +2,7 @@
 
 This site's blog is hosted by OGTool and served under this site's own domain through a reverse proxy. The proxy rewrites (NOT redirects) each blog section to the hosted blog, which treats the first path segment as the section. Rewrites must forward the FULL path: /<section>/<anything> reaches the blog as /<section>/<anything>, never with the section prefix stripped, or clicking a post breaks in the browser while a refresh works.
 
-- Hosted blog origin (proxy target): https://3c092978-b4f0-42bc-a184-3690df0445cb.blogs.ogtool.com
+- Hosted blog origin (proxy target): https://5fe7639a-b520-40ec-90fb-bade1def9b2b.blogs.ogtool.com
 - Blog sections on this site: /blog
 - API base: https://app.ogtool.com/api
 - Auth: every API request sends the header `Authorization: Bearer $OGTOOL_API_KEY`
@@ -41,7 +41,7 @@ Workflow for restyling (do this whenever the site is redesigned):
 
 1. Extract the site's real design: primary and accent colors, background, heading and body fonts, logo, favicon, nav links, primary call to action.
 2. `PUT` them to the theme endpoint.
-3. Open the live blog at /blog on this site (or https://3c092978-b4f0-42bc-a184-3690df0445cb.blogs.ogtool.com/blog) and compare against the site.
+3. Open the live blog at /blog on this site (or https://5fe7639a-b520-40ec-90fb-bade1def9b2b.blogs.ogtool.com/blog) and compare against the site.
 4. Iterate on `customThemeCss` until the blog visually matches. Changes apply on reload.
 
 ## Verifying the setup
@@ -68,7 +68,7 @@ A successful verify also points the blog's canonical URLs and sitemap at this si
 
 ## Rules
 
-- Never bypass the proxy by linking to https://3c092978-b4f0-42bc-a184-3690df0445cb.blogs.ogtool.com in user-facing pages; always link the blog as /blog on this site.
+- Never bypass the proxy by linking to https://5fe7639a-b520-40ec-90fb-bade1def9b2b.blogs.ogtool.com in user-facing pages; always link the blog as /blog on this site.
 - Keep the blog sections crawlable; never add robots rules that block search or AI crawlers from them.
 - The root robots.txt must keep one `Sitemap:` line per section pointing at `https://<this site's domain>/<section>/sitemap.xml`.
 - To refresh this file: `curl -H "Authorization: Bearer $OGTOOL_API_KEY" https://app.ogtool.com/api/public-blog/agent-instructions`
