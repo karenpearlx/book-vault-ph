@@ -2,7 +2,7 @@
 
 This site's blog is hosted by OGTool and served under this site's own domain through a reverse proxy. The proxy rewrites (NOT redirects) each blog section to the hosted blog, which treats the first path segment as the section. Rewrites must forward the FULL path: /<section>/<anything> reaches the blog as /<section>/<anything>, never with the section prefix stripped, or clicking a post breaks in the browser while a refresh works.
 
-- Hosted blog origin (proxy target): https://06416af9-1cb1-4910-8b87-c631b31038b2.blogs.ogtool.com
+- Hosted blog origin (proxy target): https://4d7aa697-410b-4ba5-8ff0-c4d5f3170b00.blogs.ogtool.com
 - Blog sections on this site: /blog
 - API base: https://app.ogtool.com/api
 - Auth: every API request sends the header `Authorization: Bearer $OGTOOL_API_KEY`
@@ -23,6 +23,29 @@ Posts live in OGTool, not in this repo. Full CRUD at `https://app.ogtool.com/api
 
 New blogs start with three sample posts (slugs prefixed `sample-`). Delete them via the API once real posts are live.
 
+## Lead magnets (quizzes, calculators, checkers inside posts)
+
+A lead magnet is an interactive widget embedded in a post that collects the reader's email. Each one is a single self-contained HTML document (inline CSS and JS, styled to match this site) stored in OGTool:
+
+- `GET https://app.ogtool.com/api/public-blog/lead-magnets` lists them; `GET ?slug=<slug>` returns one with its html
+- `PUT` with `{ slug, name, html, isActive? }` creates or replaces one (slug: lowercase letters, digits, hyphens; html under 200 KB)
+- `DELETE ?slug=<slug>` deletes one; `PUT { slug, isActive: false }` hides it everywhere without editing posts
+
+Every response includes `embedTag`, e.g. `<leadmagnet data-props='{"slug":"pricing-calculator"}'></leadmagnet>`. Put that tag on its own line in a post's `content` (via the posts API) where the widget should appear.
+
+Inside the widget, capture the email with:
+
+```js
+await window.ogtool.lead({ email, name, fields: { plan: "pro", seats: 12 } });
+```
+
+It resolves once the lead is saved and rejects with a readable message otherwise (show it to the reader). Leads land in this team's OGTool attribution dashboard with the magnet slug, the post, and `fields`. Rules for the html:
+
+- It runs in a sandboxed iframe with no access to the blog page, cookies, or storage. Use `window.ogtool.lead()`, never your own form endpoint, so the lead is attributed
+- Links open in a new tab by default; use `target="_top"` for a link that should navigate the reader's page (e.g. a sign-up button)
+- `fetch` works only against APIs that allow any origin (CORS `*`), and never put secrets in the html
+- The iframe grows to fit the content automatically; design mobile-first and keep it self-contained
+
 ## Theming the blog
 
 The blog's look comes from a theme config OGTool applies instantly, with no deploy:
@@ -41,7 +64,7 @@ Workflow for restyling (do this whenever the site is redesigned):
 
 1. Extract the site's real design: primary and accent colors, background, heading and body fonts, logo, favicon, nav links, primary call to action.
 2. `PUT` them to the theme endpoint.
-3. Open the live blog at /blog on this site (or https://06416af9-1cb1-4910-8b87-c631b31038b2.blogs.ogtool.com/blog) and compare against the site.
+3. Open the live blog at /blog on this site (or https://4d7aa697-410b-4ba5-8ff0-c4d5f3170b00.blogs.ogtool.com/blog) and compare against the site.
 4. Iterate on `customThemeCss` until the blog visually matches. Changes apply on reload.
 
 ## Verifying the setup
@@ -68,7 +91,7 @@ A successful verify also points the blog's canonical URLs and sitemap at this si
 
 ## Rules
 
-- Never bypass the proxy by linking to https://06416af9-1cb1-4910-8b87-c631b31038b2.blogs.ogtool.com in user-facing pages; always link the blog as /blog on this site.
+- Never bypass the proxy by linking to https://4d7aa697-410b-4ba5-8ff0-c4d5f3170b00.blogs.ogtool.com in user-facing pages; always link the blog as /blog on this site.
 - Keep the blog sections crawlable; never add robots rules that block search or AI crawlers from them.
 - The root robots.txt must keep one `Sitemap:` line per section pointing at `https://<this site's domain>/<section>/sitemap.xml`.
 - To refresh this file: `curl -H "Authorization: Bearer $OGTOOL_API_KEY" https://app.ogtool.com/api/public-blog/agent-instructions`
